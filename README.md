@@ -7,7 +7,7 @@ Logging package to send log messages and exceptions to LOG engine service.
 
 
 # Installation
-Install the latest version with `composer require aventure-cloud/logengine-logger`
+Install the latest version with `composer require log-engine/logger-php`
 
 # Use in your application
 
