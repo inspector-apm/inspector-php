@@ -1,0 +1,39 @@
+{
+    "name": "aventure-cloud/logengine-logger",
+    "description": "LOG engine for PHP applications.",
+    "keywords": ["log", "php", "logengine"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Valerio Barbera",
+            "email": "support@logengine.dev"
+        }
+    ],
+    "require": {
+        "php": ">=7.0.0",
+        "psr/log": "^1.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "LogEngine\\": "src/"
+        }
+    },
+    "config": {
+        "preferred-install": "dist"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "require-dev": {
+        "phpunit/phpunit": "^5.5",
+        "fzaninotto/faker": "^1.6",
+        "mockery/mockery": "^0.9.5"
+    },
+    "autoload-dev": {
+        "psr-4": {
+        }
+    },
+    "scripts": {
+    },
+    "extra": {
+    }
+}
