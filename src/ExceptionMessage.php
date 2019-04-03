@@ -22,7 +22,7 @@ class ExceptionMessage extends LogMessage
 
         $record = $this->encoder->exceptionToArray($errorLog['exception']);
         $record['level'] = $errorLog['level'];
-        $record['context'] = $errorLog['level'];
+        $record['context'] = $errorLog['context'];
         $record['tag'] = 'exception';
         $record['type'] = $handled ? 'handled' : 'unhandled';
 

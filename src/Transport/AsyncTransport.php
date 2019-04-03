@@ -47,14 +47,13 @@ class AsyncTransport extends AbstractApiTransport
     /**
      * AsyncTransport constructor.
      *
-     * @param null|string $apiKey
-     * @param null|string $env
+     * @param Configuration $configuration
      * @param array $options
      * @throws LogEngineException
      */
-    public function __construct($apiKey = null, $env = null, array $options = array())
+    public function __construct($configuration, array $options = array())
     {
-        parent::__construct($apiKey, $env, $options);
+        parent::__construct($configuration, $options);
 
         if (!function_exists('exec')) {
             throw new LogEngineException("PHP function 'exec' is not available, is it disabled for security reasons?");
@@ -122,7 +121,7 @@ class AsyncTransport extends AbstractApiTransport
 
         $escapedData = $this->escapeArg($data);
 
-        $cmd .= " --data '$escapedData' '".$this->config->getBaseUrl()."' --max-time 5";
+        $cmd .= " --data '$escapedData' '".$this->config->getUrl()."' --max-time 5";
         if ($this->proxy) {
             $cmd .= " --proxy '$this->proxy'";
         }
