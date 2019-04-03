@@ -20,15 +20,11 @@ class ExceptionMessage extends LogMessage
     {
         $this->encoder = new ExceptionEncoder();
 
-        $record = array_merge(
-            $this->encoder->exceptionToArray($errorLog['exception']),
-            array(
-                'level' => $errorLog['level'],
-                'context' => $errorLog['context'],
-                'tag' => 'exception',
-                'type' => $handled ? 'handled' : 'unhandled',
-            )
-        );
+        $record = $this->encoder->exceptionToArray($errorLog['exception']);
+        $record['level'] = $errorLog['level'];
+        $record['context'] = $errorLog['level'];
+        $record['tag'] = 'exception';
+        $record['type'] = $handled ? 'handled' : 'unhandled';
 
         parent::__construct($record);
     }
