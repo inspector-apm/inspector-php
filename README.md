@@ -15,7 +15,7 @@ There are three different transport options that can be configured to send data 
 
 ## Async transport
 
-AsyncTransport is the most performant option to log versus LOG engine service. It collects log entries in batches, calls curl using the `exec` function, and sends data to the background immediately [`exec('curl ... &')`]. This will affect the performance of your application minimally, but it requires permissions to call `exec` inside the PHP script and it may cause silent data loss in the event of any network issues. 
+AsyncTransport is the most performant option to log versus LOG-Engine service. It collects log entries in batches, calls curl using the `exec` function, and sends data to the background immediately [`exec('curl ... &')`]. This will affect the performance of your application minimally, but it requires permissions to call `exec` inside the PHP script and it may cause silent data loss in the event of any network issues. 
 
 This transport method does not work on Windows. To configure AsyncTransport you need to pass the <u>API KEY</u> generated in your LOG engine administration console and environment name of your app installation:
 
