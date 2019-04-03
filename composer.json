@@ -1,5 +1,5 @@
 {
-    "name": "aventure-cloud/logengine-logger",
+    "name": "log-engine/logger-php",
     "description": "LOG engine for PHP applications.",
     "keywords": ["log", "php", "logengine"],
     "license": "MIT",
