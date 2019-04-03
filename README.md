@@ -23,8 +23,17 @@ This transport method does not work on Windows. To configure AsyncTransport you 
 use LogEngine\Transport\ExecTransport;
 use LogEngine\Standalone\Logger;
     
-$transport = new AsyncTransport('your_project_key', 'production');
+
+$configuration = new Configuration();
+$configuration->setUrl('logengine-api-endpoint')
+    ->setApiKey('API_KEY')
+    ->setEnvironment('production');
+
+$transport = new AsyncTransport($configuration);
 $logger = new Logger($transport);
+
+// Start logging
+$logger->info('Track your application behaviour');
 ```
 
 ### Options
@@ -34,7 +43,7 @@ $logger = new Logger($transport);
 AsyncTransport supports data delivery through proxy. Specify proxy using [libcurl format](http://curl.haxx.se/libcurl/c/CURLOPT_PROXY.html): <[protocol://][user:password@]proxyhost[:port]>
 
 ```php
-$transport = new AsyncTransport($apiKey, 'production', ['proxy' => 'https://55.88.22.11:3128']);
+$transport = new AsyncTransport($configuration, ['proxy' => 'https://55.88.22.11:3128']);
 ```
 
 **Curl path**
@@ -42,7 +51,7 @@ $transport = new AsyncTransport($apiKey, 'production', ['proxy' => 'https://55.8
 It can be useful to specify `curl` destination path for ExecTransport. This option is set to 'curl' by default.
 
 ```php
-$transport = new AsyncTransport($apiKey, 'production', ['curlPath' => '/usr/bin/curl']);
+$transport = new AsyncTransport($configuration, ['curlPath' => '/usr/bin/curl']);
 ```
 
 ## Curl transport
@@ -52,9 +61,17 @@ CurlTransport does not require a Stackify agent to be installed and it also send
 ```php
 use LogEngine\Transport\CurlTransport;
 use LogEngine\Standalone\Logger;
-    
-$transport = new CurlTransport('your_key', 'production');
+
+$configuration = new Configuration();
+$configuration->setUrl('logengine-api-endpoint')
+    ->setApiKey('API_KEY')
+    ->setEnvironment('production');
+
+$transport = new CurlTransport($configuration);
 $logger = new Logger($transport);
+
+// Start logging
+$logger->info('Track your application behaviour');
 ```
 
 ### Options
@@ -64,7 +81,7 @@ $logger = new Logger($transport);
 CurlTransport supports data delivery through proxy. Specify proxy using [libcurl format](http://curl.haxx.se/libcurl/c/CURLOPT_PROXY.html): <[protocol://][user:password@]proxyhost[:port]>
 
 ```php
-$transport = new CurlTransport($apiKey, 'production', ['proxy' => 'https://55.88.22.11:3128']);
+$transport = new CurlTransport($configuration, ['proxy' => 'https://55.88.22.11:3128']);
 ```
 
 # Trableshooting
@@ -72,7 +89,7 @@ $transport = new CurlTransport($apiKey, 'production', ['proxy' => 'https://55.88
 If transport does not work, try looking into `vendor\logengine\logger\src\debug\log.log` file (if it is available for writing). Errors are also written to global PHP [error_log](http://php.net/manual/en/errorfunc.configuration.php#ini.error-log). Note that AsyncTransport does not produce any errors at all because it is executed in the backgraound, but you can switch it to debug mode:
 
 ```php
-$transport = new AsyncTransport($apiKey, 'development', ['debug' => true]);
+$transport = new AsyncTransport($configuration, ['debug' => true]);
 ```
 
 ## LICENSE

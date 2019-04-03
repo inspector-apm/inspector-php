@@ -12,7 +12,7 @@ class Configuration
      *
      * @var string
      */
-    protected $baseUrl = 'https://www.logengine.dev/api/collect';
+    protected $url;
 
     /**
      * Authentication key.
@@ -38,45 +38,57 @@ class Configuration
     /**
      * Environment constructor.
      *
-     * @param string $apiKey
-     * @param string $environment
+     * @param string|null $url
+     * @param string|null $apiKey
+     * @param string|null $environment
      * @throws LogEngineException
      */
-    public function __construct($apiKey, $environment = null)
+    public function __construct($url = null, $apiKey = null, $environment = null)
     {
-        $this->apiKey = $this->validateApiKey($apiKey);
+        if(!is_null($url)){
+            $this->url = $this->setUrl($url);
+        }
+
+        if(!is_null($apiKey)){
+            $this->apiKey = $this->setApiKey($apiKey);
+        }
+
         $this->environment = $environment;
         $this->hostname = gethostname();
     }
 
-    public function getBaseUrl()
+    /**
+     * @param $value
+     * @return $this
+     * @throws LogEngineException
+     */
+    public function setUrl($value)
     {
-        return $this->baseUrl;
+        $value = trim($value);
+
+        if (filter_var($value, FILTER_VALIDATE_URL)) {
+            $this->url = $value;
+            return $this;
+        }
+        throw new LogEngineException('Invalid URL');
     }
 
-    public function getApiKey()
+    /**
+     * @return string
+     */
+    public function getUrl()
     {
-        return $this->apiKey;
-    }
-
-    public function getEnvironment()
-    {
-        return $this->environment;
-    }
-
-    public function getHostname()
-    {
-        return $this->hostname;
+        return $this->url;
     }
 
     /**
      * Verify if api key is well formed.
      *
      * @param $value
-     * @return string
+     * @return $this
      * @throws LogEngineException
      */
-    private function validateApiKey($value)
+    public function setApiKey($value)
     {
         $apiKey = trim($value);
 
@@ -84,6 +96,51 @@ class Configuration
             throw new LogEngineException('API key cannot be empty');
         }
 
-        return $apiKey;
+        $this->apiKey = $apiKey;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getApiKey()
+    {
+        return $this->apiKey;
+    }
+
+    /**
+     * @param string $value
+     * @return $this
+     */
+    public function setEnvironment($value)
+    {
+        $this->environment = $value;
+        return $this;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getEnvironment()
+    {
+        return $this->environment;
+    }
+
+    /**
+     * @param string $value
+     * @return $this
+     */
+    public function setHostname($value)
+    {
+        $this->hostname = $value;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getHostname()
+    {
+        return $this->hostname;
     }
 }

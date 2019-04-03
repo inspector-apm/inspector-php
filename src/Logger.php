@@ -27,10 +27,9 @@ class Logger extends AbstractLogger
      * Logger constructor.
      *
      * @param TransportInterface $transport
-     * @param bool $logServerVariables
      * @throws LogEngineException
      */
-    public function __construct(TransportInterface $transport = null, $logServerVariables = false)
+    public function __construct(TransportInterface $transport = null)
     {
         $this->transport = $transport ?? new AsyncTransport();
         $this->exceptionEncoder = new ExceptionEncoder();
