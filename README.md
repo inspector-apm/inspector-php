@@ -72,7 +72,7 @@ $transport = new CurlTransport($apiKey, 'production', ['proxy' => 'https://55.88
 If transport does not work, try looking into `vendor\logengine\logger\src\debug\log.log` file (if it is available for writing). Errors are also written to global PHP [error_log](http://php.net/manual/en/errorfunc.configuration.php#ini.error-log). Note that AsyncTransport does not produce any errors at all because it is executed in the backgraound, but you can switch it to debug mode:
 
 ```php
-$transport = new ExecTransport($apiKey, 'development', ['debug' => true]);
+$transport = new AsyncTransport($apiKey, 'development', ['debug' => true]);
 ```
 
 ## LICENSE
