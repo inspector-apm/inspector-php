@@ -22,10 +22,9 @@ This transport method does not work on Windows. To configure AsyncTransport you 
 ```php
 use LogEngine\Transport\ExecTransport;
 use LogEngine\Standalone\Logger;
-    
 
 $configuration = new Configuration();
-$configuration->setUrl('logengine-api-endpoint')
+$configuration->setUrl('LOGENGINE_API_URL')
     ->setApiKey('API_KEY')
     ->setEnvironment('production');
 
@@ -63,15 +62,12 @@ use LogEngine\Transport\CurlTransport;
 use LogEngine\Standalone\Logger;
 
 $configuration = new Configuration();
-$configuration->setUrl('logengine-api-endpoint')
+$configuration->setUrl('LOGENGINE_API_URL')
     ->setApiKey('API_KEY')
     ->setEnvironment('production');
 
 $transport = new CurlTransport($configuration);
 $logger = new Logger($transport);
-
-// Start logging
-$logger->info('Track your application behaviour');
 ```
 
 ### Options
