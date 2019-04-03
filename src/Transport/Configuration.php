@@ -12,7 +12,7 @@ class Configuration
      *
      * @var string
      */
-    protected $baseUrl = 'http://logengine.locl/api/collect';
+    protected $baseUrl = 'https://www.logengine.dev/api/collect';
 
     /**
      * Authentication key.
