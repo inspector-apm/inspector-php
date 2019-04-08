@@ -184,8 +184,8 @@ class ExceptionEncoder
 
             $codeLines = [];
 
-            $from = max(0, $line - $linesAround - 2);
-            $to = min($line + $linesAround - 1, $file->key() + 1);
+            $from = max(0, $line - $linesAround);
+            $to = min($line + $linesAround, $file->key() + 1);
 
             $file->seek($from);
 
@@ -194,7 +194,7 @@ class ExceptionEncoder
                 // `key()` returns 0 as the first line
                 $codeLines[] = [
                     'line' => $file->key() + 1,
-                    'code' => rtrim($file->current())
+                    'code' => rtrim($file->current()),
                 ];
             }
 

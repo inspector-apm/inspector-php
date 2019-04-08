@@ -4,8 +4,6 @@ namespace LogEngine;
 
 
 use LogEngine\Contracts\TransportInterface;
-use LogEngine\Transport\AsyncTransport;
-use LogEngine\Exceptions\LogEngineException;
 use Psr\Log\AbstractLogger;
 use Psr\Log\LogLevel;
 
@@ -27,11 +25,10 @@ class Logger extends AbstractLogger
      * Logger constructor.
      *
      * @param TransportInterface $transport
-     * @throws LogEngineException
      */
-    public function __construct(TransportInterface $transport = null)
+    public function __construct(TransportInterface $transport)
     {
-        $this->transport = $transport ?? new AsyncTransport();
+        $this->transport = $transport;
         $this->exceptionEncoder = new ExceptionEncoder();
     }
 
@@ -50,7 +47,7 @@ class Logger extends AbstractLogger
      * @param string $message
      * @param array $context
      * @return void
-     * @throws LogEngineException
+     * @throws \InvalidArgumentException
      */
     public function log($level, $message, array $context = array())
     {
@@ -76,12 +73,12 @@ class Logger extends AbstractLogger
      * @param array $context
      * @param bool $handled
      * @return void
-     * @throws LogEngineException
+     * @throws \InvalidArgumentException
      */
     public function logException($exception, array $context = array(), $handled = true)
     {
         if (!$exception instanceof \Exception && !$exception instanceof \Throwable) {
-            throw new LogEngineException('$exception need to be a PHP Exception instance.');
+            throw new \InvalidArgumentException('$exception need to be a PHP Exception instance.');
         }
 
         $log = new ExceptionMessage([
