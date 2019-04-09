@@ -54,7 +54,7 @@ class ExceptionEncoder
             'file' => $this->removeProjectRoot($exception->getFile()),
             'line' => $exception->getLine(),
             'stack' => $this->stackTraceToArray($trace, $exception->getFile(), $exception->getLine()),
-            'group_hash' => md5($className.$message),
+            'group_hash' => md5($className.$message.$exception->getLine()),
         ];
     }
 
