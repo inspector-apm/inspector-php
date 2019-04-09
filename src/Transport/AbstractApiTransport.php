@@ -46,15 +46,21 @@ abstract class AbstractApiTransport extends AbstractTransport
     /**
      * AbstractApiTransport constructor.
      *
-     * @param Configuration $configuration
+     * @param string $url
+     * @param string $apiKey
+     * @param string $environment
      * @param array $options
      * @throws LogEngineException
      */
-    public function __construct($configuration,  array $options = array())
+    public function __construct($url = null, $apiKey = null, $environment = null,  array $options = array())
     {
         parent::__construct();
 
-        $this->config = $configuration;
+        $this->config = new Configuration(
+            $url ?: getenv('LOGENGINE_URL'),
+            $apiKey ?: getenv('LOGENGINE_API_KEY'),
+            $environment ?: getenv('LOGENGINE_ENV')
+        );
 
         $this->extractOptions($options);
 

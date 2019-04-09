@@ -43,16 +43,10 @@ class Configuration
      * @param string|null $environment
      * @throws LogEngineException
      */
-    public function __construct($url = null, $apiKey = null, $environment = null)
+    public function __construct($url, $apiKey, $environment)
     {
-        if(!is_null($url)){
-            $this->url = $this->setUrl($url);
-        }
-
-        if(!is_null($apiKey)){
-            $this->apiKey = $this->setApiKey($apiKey);
-        }
-
+        $this->url = $this->setUrl($url);
+        $this->apiKey = $this->setApiKey($apiKey);
         $this->environment = $environment;
         $this->hostname = gethostname();
     }

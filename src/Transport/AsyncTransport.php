@@ -36,13 +36,15 @@ class AsyncTransport extends AbstractApiTransport
     /**
      * AsyncTransport constructor.
      *
-     * @param Configuration $configuration
+     * @param null|string $url
+     * @param null|string $apiKey
+     * @param null|string $environment
      * @param array $options
      * @throws LogEngineException
      */
-    public function __construct($configuration, array $options = array())
+    public function __construct($url = null, $apiKey = null, $environment = null, array $options = array())
     {
-        parent::__construct($configuration, $options);
+        parent::__construct($url, $apiKey, $environment, $options);
 
         if (!function_exists('exec')) {
             throw new LogEngineException("PHP function 'exec' is not available, is it disabled for security reasons?");
