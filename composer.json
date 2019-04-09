@@ -1,6 +1,6 @@
 {
     "name": "log-engine/logger-php",
-    "description": "LOG engine for PHP applications.",
+    "description": "LOG engine client library for PHP applications.",
     "keywords": ["log", "php", "logengine"],
     "license": "MIT",
     "authors": [
@@ -30,6 +30,7 @@
     },
     "autoload-dev": {
         "psr-4": {
+            "Tests\\": "tests/"
         }
     },
     "scripts": {
