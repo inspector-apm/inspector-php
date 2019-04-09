@@ -11,7 +11,7 @@ interface TransportInterface
      * @param LogEntryInterface $log
      * @return TransportInterface
      */
-    public function addEntry(LogEntryInterface $log): TransportInterface;
+    public function addEntry(LogEntryInterface $log);
 
     /**
      * Deliver everything on the queue to LOG Engine.

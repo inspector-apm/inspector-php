@@ -4,11 +4,24 @@ namespace LogEngine\Transport;
 
 
 use LogEngine\Contracts\LogEntryInterface;
+use LogEngine\Contracts\AbstractMessageBag;
 use LogEngine\Contracts\TransportInterface;
 use LogEngine\Exceptions\LogEngineException;
 
 abstract class AbstractApiTransport extends AbstractTransport
 {
+    /**
+     * Max size of a POST request content.
+     *
+     * @var integer
+     */
+    const MAX_POST_LENGTH = 65536;  // 1024 * 64
+
+    /**
+     * @var string
+     */
+    const ERROR_LENGTH = 'Batch is too long: %s';
+
     /**
      * Key to authenticate remote calls.
      *
@@ -70,33 +83,49 @@ abstract class AbstractApiTransport extends AbstractTransport
             return;
         }
 
-        $this->send($this->queue);
+        $this->send(new MessageBag(
+            $this->config->getEnvironment(),
+            $this->config->getHostname(),
+            $this->queue
+        ));
 
         $this->queue = array();
     }
 
     /**
-     * Build the request data to send.
+     * Send data chunks based on MAX_POST_LENGTH.
      *
-     * @param $data
-     * @return string
+     * @param AbstractMessageBag $message
      */
-    protected function buildRequestData($data)
+    protected function send($message)
     {
-        return json_encode([
-            'environment' => $this->config->getEnvironment(),
-            'hostname' => $this->config->getHostname(),
-            'logs' => $data,
-        ]);
+        $json = json_encode($message);
+        $jsonLength = strlen($json);
+        $count = count($message->getLogs());
+
+        if ($jsonLength > self::MAX_POST_LENGTH) {
+            if (1 === $count) {
+                // it makes no sense to divide into chunks, just fail
+                $this->logError(self::ERROR_LENGTH, $jsonLength);
+                return;
+            }
+            $maxCount = floor($count / ceil($jsonLength / self::MAX_POST_LENGTH));
+            $chunks = array_chunk($message->getLogs(), $maxCount);
+            foreach ($chunks as $chunk) {
+                $this->send($chunk);
+            }
+        } else {
+            $this->sendChunk($json);
+        }
     }
 
     /**
-     * Deliver items to LOG Engine.
+     * Send a portion of the load to the remote service.
      *
-     * @param mixed $items
-     * @return mixed
+     * @param string $data
+     * @return void
      */
-    protected abstract function send($items);
+    abstract protected function sendChunk($data);
 
     /**
      * List of available transport's options with validation regex.

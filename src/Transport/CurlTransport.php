@@ -41,13 +41,10 @@ class CurlTransport extends AbstractApiTransport
     /**
      * Deliver items to LOG Engine.
      *
-     * @param string $items
+     * @param string $data
      */
-    protected function send($items)
+    protected function sendChunk($data)
     {
-        $json = $this->buildRequestData($items);
-        $this->logDebug("Data to send with CURL: {$json}");
-
         $headers = array();
 
         foreach ($this->getApiHeaders() as $name => $value) {
@@ -59,7 +56,7 @@ class CurlTransport extends AbstractApiTransport
         curl_setopt($handle, CURLOPT_POST, 1);
         curl_setopt($handle, CURLOPT_TIMEOUT, 5);
         curl_setopt($handle, CURLOPT_HTTPHEADER, $headers);
-        curl_setopt($handle, CURLOPT_POSTFIELDS, $json);
+        curl_setopt($handle, CURLOPT_POSTFIELDS, $data);
         curl_setopt($handle, CURLOPT_RETURNTRANSFER, true);
         if ($this->proxy) {
             curl_setopt($handle, CURLOPT_PROXY, $this->proxy);

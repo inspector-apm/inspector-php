@@ -3,6 +3,7 @@
 namespace LogEngine\Transport;
 
 
+use LogEngine\Contracts\AbstractMessageBag;
 use LogEngine\Exceptions\LogEngineException;
 
 /**
@@ -17,18 +18,6 @@ class AsyncTransport extends AbstractApiTransport
      * @var string
      */
     protected $curlPath = 'curl';
-
-    /**
-     * Max size of a POST request content.
-     *
-     * @var integer
-     */
-    const MAX_POST_LENGTH = 65536;  // 1024 * 64
-
-    /**
-     * @var string
-     */
-    const ERROR_LENGTH = 'Batch is too long: %s';
 
     /**
      * String template for curl error message.
@@ -79,39 +68,12 @@ class AsyncTransport extends AbstractApiTransport
     }
 
     /**
-     * Send data chunks based on MAX_POST_LENGTH.
-     *
-     * @param array $items
-     */
-    protected function send($items)
-    {
-        $json = $this->buildRequestData($items);
-        $jsonLength = strlen($json);
-        $count = count($items);
-
-        if ($jsonLength > self::MAX_POST_LENGTH) {
-            if (1 === $count) {
-                // it makes no sense to divide into chunks, just fail
-                $this->logError(self::ERROR_LENGTH, $jsonLength);
-                return;
-            }
-            $maxCount = floor($count / ceil($jsonLength / self::MAX_POST_LENGTH));
-            $chunks = array_chunk($items, $maxCount);
-            foreach ($chunks as $chunk) {
-                $this->send($chunk);
-            }
-        } else {
-            $this->sendChunk($json);
-        }
-    }
-
-    /**
-     * Send a log entry to the remote service.
+     * Send a portion of the load to the remote service.
      *
      * @param string $data
      * @return mixed
      */
-    protected function sendChunk(string $data)
+    protected function sendChunk($data)
     {
         $cmd = "$this->curlPath -X POST";
 
