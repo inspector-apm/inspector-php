@@ -8,7 +8,7 @@ use LogEngine\Contracts\AbstractMessageBag;
 use LogEngine\Contracts\TransportInterface;
 use LogEngine\Exceptions\LogEngineException;
 
-abstract class AbstractApiTransport extends AbstractTransport
+abstract class AbstractApiTransport implements TransportInterface
 {
     /**
      * Max size of a POST request content.
@@ -68,13 +68,32 @@ abstract class AbstractApiTransport extends AbstractTransport
     }
 
     /**
+     * Verify if given options match constraints.
+     *
+     * @param $options
+     * @throws LogEngineException
+     */
+    protected function extractOptions($options)
+    {
+        foreach ($this->getAllowedOptions() as $name => $regex) {
+            if (isset($options[$name])) {
+                $value = $options[$name];
+                if (preg_match($regex, $value)) {
+                    $this->$name = $value;
+                } else {
+                    throw new LogEngineException("Option '$name' has invalid value");
+                }
+            }
+        }
+    }
+
+    /**
      * @param LogEntryInterface $log
      * @return TransportInterface
      */
     public function addEntry(LogEntryInterface $log): TransportInterface
     {
         $this->queue[] = $log;
-        $this->logDebug("Message added to the queue: {$log}");
         return $this;
     }
 
@@ -112,7 +131,6 @@ abstract class AbstractApiTransport extends AbstractTransport
         if ($jsonLength > self::MAX_POST_LENGTH) {
             if (1 === $count) {
                 // it makes no sense to divide into chunks, just fail
-                $this->logError(self::ERROR_LENGTH, $jsonLength);
                 return;
             }
             $maxCount = floor($count / ceil($jsonLength / self::MAX_POST_LENGTH));

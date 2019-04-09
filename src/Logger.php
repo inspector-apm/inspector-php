@@ -4,6 +4,8 @@ namespace LogEngine;
 
 
 use LogEngine\Contracts\TransportInterface;
+use LogEngine\Transport\AsyncTransport;
+use LogEngine\Transport\CurlTransport;
 use Psr\Log\AbstractLogger;
 use Psr\Log\LogLevel;
 
@@ -24,11 +26,22 @@ class Logger extends AbstractLogger
     /**
      * Logger constructor.
      *
-     * @param TransportInterface $transport
+     * @param null|string $url
+     * @param null|string $apiKey
+     * @param null|string $environment
+     * @param array $options
+     * @throws Exceptions\LogEngineException
      */
-    public function __construct(TransportInterface $transport)
+    public function __construct($url = null, $apiKey = null, $environment = null, array $options = array())
     {
-        $this->transport = $transport;
+        switch (getenv('LOGENGINE_TRANSPORT')){
+            case 'async':
+                $this->transport = new AsyncTransport($url, $apiKey, $environment, $options);
+                break;
+            default:
+                $this->transport = new CurlTransport($url, $apiKey, $environment, $options);
+        }
+
         $this->exceptionEncoder = new ExceptionEncoder();
     }
 
