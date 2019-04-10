@@ -88,6 +88,8 @@ abstract class AbstractApiTransport implements TransportInterface
     }
 
     /**
+     * Add a message to the queue.
+     *
      * @param LogEntryInterface $log
      * @return TransportInterface
      */
@@ -108,11 +110,15 @@ abstract class AbstractApiTransport implements TransportInterface
             return;
         }
 
-        $this->send(new MessageBag(
-            $this->config->getEnvironment(),
-            $this->config->getHostname(),
-            $this->queue
-        ));
+        // add latest info
+        foreach ($this->queue as $log) {
+            $log->merge([
+                'environment' => $this->config->getEnvironment(),
+                'hostname' => $this->config->getHostname(),
+            ]);
+        }
+
+        $this->send($this->queue);
 
         $this->queue = array();
     }
@@ -120,21 +126,21 @@ abstract class AbstractApiTransport implements TransportInterface
     /**
      * Send data chunks based on MAX_POST_LENGTH.
      *
-     * @param AbstractMessageBag $message
+     * @param array $logs
      */
-    protected function send($message)
+    protected function send($logs)
     {
-        $json = json_encode($message);
+        $json = json_encode($logs);
         $jsonLength = strlen($json);
-        $count = count($message->getLogs());
+        $count = count($logs);
 
         if ($jsonLength > self::MAX_POST_LENGTH) {
-            if (1 === $count) {
+            if ($count === 1) {
                 // it makes no sense to divide into chunks, just fail
                 return;
             }
             $maxCount = floor($count / ceil($jsonLength / self::MAX_POST_LENGTH));
-            $chunks = array_chunk($message->getLogs(), $maxCount);
+            $chunks = array_chunk($logs, $maxCount);
             foreach ($chunks as $chunk) {
                 $this->send($chunk);
             }

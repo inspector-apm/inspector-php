@@ -3,7 +3,7 @@
 namespace LogEngine;
 
 
-class ExceptionMessage extends LogMessage
+class ExceptionEntry extends LogEntry
 {
     /**
      * @var ExceptionEncoder
@@ -14,17 +14,15 @@ class ExceptionMessage extends LogMessage
      * ExceptionRecord constructor.
      *
      * @param array $errorLog
-     * @param bool $handled
      */
-    public function __construct(array $errorLog, $handled = false)
+    public function __construct(array $errorLog)
     {
         $this->encoder = new ExceptionEncoder();
 
         $record = $this->encoder->exceptionToArray($errorLog['exception']);
         $record['level'] = $errorLog['level'];
         $record['context'] = $errorLog['context'];
-        $record['tag'] = 'exception';
-        $record['type'] = $handled ? 'handled' : 'unhandled';
+        $record['type'] = 'exception';
 
         parent::__construct($record);
     }

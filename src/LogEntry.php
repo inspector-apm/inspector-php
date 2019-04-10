@@ -5,7 +5,7 @@ namespace LogEngine;
 
 use LogEngine\Contracts\LogEntryInterface;
 
-class LogMessage implements LogEntryInterface
+class LogEntry implements LogEntryInterface
 {
     /**
      * Data.
@@ -24,7 +24,7 @@ class LogMessage implements LogEntryInterface
         $this->record = array_merge(
             array(
                 'timestamp' => round(microtime(true) * 1000),
-                'tag' => 'log',
+                'type' => 'log',
             ),
             $record
         );
@@ -60,6 +60,18 @@ class LogMessage implements LogEntryInterface
     public function getContext()
     {
         return $this->record['context'];
+    }
+
+    /**
+     * Merge params in current object.
+     *
+     * @param array $params
+     * @return $this
+     */
+    public function merge(array $params)
+    {
+        $this->record = array_merge($this->record, $params);
+        return $this;
     }
 
     /**

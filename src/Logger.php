@@ -73,9 +73,9 @@ class Logger extends AbstractLogger
         }
 
         if (isset($exception) && $exception !== null) {
-            $this->logException($exception, $context, false);
+            $this->logException($exception, $context);
         } else {
-            $this->transport->addEntry(new LogMessage(compact('level', 'message', 'context')));
+            $this->transport->addEntry(new LogEntry(compact('level', 'message', 'context')));
         }
     }
 
@@ -84,21 +84,20 @@ class Logger extends AbstractLogger
      *
      * @param \Exception $exception
      * @param array $context
-     * @param bool $handled
      * @return void
      * @throws \InvalidArgumentException
      */
-    public function logException($exception, array $context = array(), $handled = true)
+    public function logException($exception, array $context = array())
     {
         if (!$exception instanceof \Exception && !$exception instanceof \Throwable) {
             throw new \InvalidArgumentException('$exception need to be a PHP Exception instance.');
         }
 
-        $log = new ExceptionMessage([
+        $log = new ExceptionEntry([
             'level' => LogLevel::ERROR,
             'exception' => $exception,
             'context' => $context,
-        ], $handled);
+        ]);
 
         $this->transport->addEntry($log);
     }

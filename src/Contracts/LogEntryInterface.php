@@ -26,6 +26,14 @@ interface LogEntryInterface extends \JsonSerializable
     public function getContext();
 
     /**
+     * Merge params in current object.
+     *
+     * @param array $params
+     * @return $this
+     */
+    public function merge(array $params);
+
+    /**
      * Array representation of the log.
      *
      * @return array
