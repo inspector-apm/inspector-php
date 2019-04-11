@@ -45,10 +45,10 @@ class Configuration
      */
     public function __construct($url, $apiKey, $environment)
     {
-        $this->url = $this->setUrl($url);
-        $this->apiKey = $this->setApiKey($apiKey);
-        $this->environment = $environment;
-        $this->hostname = gethostname();
+        $this->setUrl($url);
+        $this->setApiKey($apiKey);
+        $this->setEnvironment($environment);
+        $this->setHostname(gethostname());
     }
 
     /**

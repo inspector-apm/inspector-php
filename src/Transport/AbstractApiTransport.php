@@ -25,7 +25,7 @@ abstract class AbstractApiTransport implements TransportInterface
     /**
      * Key to authenticate remote calls.
      *
-     * @var string
+     * @var Configuration
      */
     protected $config;
 
