@@ -105,9 +105,7 @@ class AsyncTransport extends AbstractApiTransport
         if ($this->debug) {
             if ($result !== 0) {
                 // curl returned some error
-                $this->logError(self::ERROR_CURL, $cmd, $result, implode(' ', $output));
-            } else {
-                $this->logDebug(self::SUCCESS_CURL, $cmd);
+                error_log(date('Y-m-d H:i:s')." - [Error] [".get_class($this)."] $result ");
             }
         }
     }

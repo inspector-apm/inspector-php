@@ -69,9 +69,7 @@ class CurlTransport extends AbstractApiTransport
         $error = curl_error($handle);
 
         if (0 !== $errorNo || 200 !== $code) {
-            $this->logError(self::ERROR_CURL, $errorNo, $code, $error, $response);
-        } else {
-            $this->logDebug(self::SUCCESS_CURL, $code, $response);
+            error_log(date('Y-m-d H:i:s')." - [Error] [".get_class($this)."] $error ");
         }
 
         curl_close($handle);
