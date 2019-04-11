@@ -54,8 +54,6 @@ abstract class AbstractApiTransport implements TransportInterface
      */
     public function __construct($url = null, $apiKey = null, $environment = null,  array $options = array())
     {
-        parent::__construct();
-
         $this->config = new Configuration(
             $url ?: getenv('LOGENGINE_URL'),
             $apiKey ?: getenv('LOGENGINE_API_KEY'),
