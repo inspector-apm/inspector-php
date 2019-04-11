@@ -26,13 +26,12 @@ class CurlTransport extends AbstractApiTransport
      *
      * @param null|string $url
      * @param null|string $apiKey
-     * @param null|string $environment
      * @param array $options
      * @throws LogEngineException
      */
-    public function __construct($url = null, $apiKey = null, $environment = null, array $options = array())
+    public function __construct($url = null, $apiKey = null, array $options = array())
     {
-        parent::__construct($url, $apiKey, $environment, $options);
+        parent::__construct($url, $apiKey, $options);
 
         // System need to have CURL available
         if (!function_exists('curl_init')) {
@@ -69,7 +68,7 @@ class CurlTransport extends AbstractApiTransport
         $error = curl_error($handle);
 
         if (0 !== $errorNo || 200 !== $code) {
-            error_log(date('Y-m-d H:i:s')." - [Error] [".get_class($this)."] $error ");
+            error_log(date('Y-m-d H:i:s')." - [Error] [".get_class($this)."] $error - $code $errorNo");
         }
 
         curl_close($handle);

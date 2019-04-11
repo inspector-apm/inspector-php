@@ -8,10 +8,10 @@ interface TransportInterface
     /**
      * Add new log entry to the queue.
      *
-     * @param LogEntryInterface $log
+     * @param array $log
      * @return TransportInterface
      */
-    public function addEntry(LogEntryInterface $log);
+    public function addEntry(array $log);
 
     /**
      * Deliver everything on the queue to LOG Engine.

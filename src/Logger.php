@@ -3,8 +3,10 @@
 namespace LogEngine;
 
 
+use LogEngine\Contracts\LogEntryInterface;
 use LogEngine\Contracts\TransportInterface;
 use LogEngine\Transport\AsyncTransport;
+use LogEngine\Transport\Configuration;
 use LogEngine\Transport\CurlTransport;
 use Psr\Log\AbstractLogger;
 use Psr\Log\LogLevel;
@@ -28,18 +30,17 @@ class Logger extends AbstractLogger
      *
      * @param null|string $url
      * @param null|string $apiKey
-     * @param null|string $environment
      * @param array $options
      * @throws Exceptions\LogEngineException
      */
-    public function __construct($url = null, $apiKey = null, $environment = null, array $options = array())
+    public function __construct($url = null, $apiKey = null, array $options = array())
     {
         switch (getenv('LOGENGINE_TRANSPORT')){
             case 'async':
-                $this->transport = new AsyncTransport($url, $apiKey, $environment, $options);
+                $this->transport = new AsyncTransport($url, $apiKey, $options);
                 break;
             default:
-                $this->transport = new CurlTransport($url, $apiKey, $environment, $options);
+                $this->transport = new CurlTransport($url, $apiKey, $options);
         }
 
         $this->exceptionEncoder = new ExceptionEncoder();
@@ -73,32 +74,15 @@ class Logger extends AbstractLogger
         }
 
         if (isset($exception) && $exception !== null) {
-            $this->logException($exception, $context);
+            $entry = new ExceptionEntry([
+                'level' => LogLevel::ERROR,
+                'exception' => $exception,
+                'context' => $context,
+            ]);
         } else {
-            $this->transport->addEntry(new LogEntry(compact('level', 'message', 'context')));
-        }
-    }
-
-    /**
-     * Logs directly an Exception object.
-     *
-     * @param \Exception $exception
-     * @param array $context
-     * @return void
-     * @throws \InvalidArgumentException
-     */
-    public function logException($exception, array $context = array())
-    {
-        if (!$exception instanceof \Exception && !$exception instanceof \Throwable) {
-            throw new \InvalidArgumentException('$exception need to be a PHP Exception instance.');
+            $entry = new LogEntry(compact('level', 'message', 'context'));
         }
 
-        $log = new ExceptionEntry([
-            'level' => LogLevel::ERROR,
-            'exception' => $exception,
-            'context' => $context,
-        ]);
-
-        $this->transport->addEntry($log);
+        $this->transport->addEntry((array) $entry);
     }
 }

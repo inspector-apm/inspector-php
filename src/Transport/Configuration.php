@@ -22,33 +22,16 @@ class Configuration
     protected $apiKey;
 
     /**
-     * Environment name.
-     *
-     * @var string
-     */
-    protected $environment;
-
-    /**
-     * Machine's readable name.
-     *
-     * @var string
-     */
-    protected $hostname;
-
-    /**
      * Environment constructor.
      *
      * @param string|null $url
      * @param string|null $apiKey
-     * @param string|null $environment
      * @throws LogEngineException
      */
-    public function __construct($url, $apiKey, $environment)
+    public function __construct($url, $apiKey)
     {
         $this->setUrl($url);
         $this->setApiKey($apiKey);
-        $this->setEnvironment($environment);
-        $this->setHostname(gethostname());
     }
 
     /**
@@ -100,41 +83,5 @@ class Configuration
     public function getApiKey()
     {
         return $this->apiKey;
-    }
-
-    /**
-     * @param string $value
-     * @return $this
-     */
-    public function setEnvironment($value)
-    {
-        $this->environment = $value;
-        return $this;
-    }
-
-    /**
-     * @return null|string
-     */
-    public function getEnvironment()
-    {
-        return $this->environment;
-    }
-
-    /**
-     * @param string $value
-     * @return $this
-     */
-    public function setHostname($value)
-    {
-        $this->hostname = $value;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getHostname()
-    {
-        return $this->hostname;
     }
 }

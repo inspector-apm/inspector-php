@@ -48,16 +48,14 @@ abstract class AbstractApiTransport implements TransportInterface
      *
      * @param string $url
      * @param string $apiKey
-     * @param string $environment
      * @param array $options
      * @throws LogEngineException
      */
-    public function __construct($url = null, $apiKey = null, $environment = null,  array $options = array())
+    public function __construct($url = null, $apiKey = null,  array $options = array())
     {
         $this->config = new Configuration(
             $url ?: getenv('LOGENGINE_URL'),
-            $apiKey ?: getenv('LOGENGINE_API_KEY'),
-            $environment ?: getenv('LOGENGINE_ENV')
+            $apiKey ?: getenv('LOGENGINE_API_KEY')
         );
 
         $this->extractOptions($options);
@@ -88,10 +86,10 @@ abstract class AbstractApiTransport implements TransportInterface
     /**
      * Add a message to the queue.
      *
-     * @param LogEntryInterface $log
+     * @param array $log
      * @return TransportInterface
      */
-    public function addEntry(LogEntryInterface $log): TransportInterface
+    public function addEntry(array $log): TransportInterface
     {
         $this->queue[] = $log;
         return $this;
@@ -106,14 +104,6 @@ abstract class AbstractApiTransport implements TransportInterface
     {
         if (empty($this->queue)) {
             return;
-        }
-
-        // add latest info
-        foreach ($this->queue as $log) {
-            $log->merge([
-                'environment' => $this->config->getEnvironment(),
-                'hostname' => $this->config->getHostname(),
-            ]);
         }
 
         $this->send($this->queue);

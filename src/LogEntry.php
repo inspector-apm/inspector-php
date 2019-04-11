@@ -24,6 +24,7 @@ class LogEntry implements LogEntryInterface
         $this->record = array_merge(
             array(
                 'timestamp' => round(microtime(true) * 1000),
+                'hostname' => gethostname(),
                 'type' => 'log',
             ),
             $record
