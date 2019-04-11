@@ -90,23 +90,15 @@ class AsyncTransport extends AbstractApiTransport
             $cmd .= " --proxy '$this->proxy'";
         }
 
-        if ($this->debug) {
-            $cmd .= ' --verbose';
-        } else {
-            // return immediately while curl will run in the background
-            $cmd .= ' > /dev/null 2>&1 &';
-        }
+        // return immediately while curl will run in the background
+        $cmd .= ' > /dev/null 2>&1 &';
 
         $output = array();
         $r = exec($cmd, $output, $result);
 
-        // if debug mode is off, it makes no sense to check result,
-        // because command is send to background
-        if ($this->debug) {
-            if ($result !== 0) {
-                // curl returned some error
-                error_log(date('Y-m-d H:i:s')." - [Error] [".get_class($this)."] $result ");
-            }
+        if ($result !== 0) {
+            // curl returned some error
+            error_log(date('Y-m-d H:i:s')." - [Error] [".get_class($this)."] $result ");
         }
     }
 
