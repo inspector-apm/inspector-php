@@ -3,7 +3,7 @@
 namespace LogEngine\Transport;
 
 
-use LogEngine\Contracts\LogEntryInterface;
+use LogEngine\Contracts\LogFormatterInterface;
 use LogEngine\Contracts\AbstractMessageBag;
 use LogEngine\Contracts\TransportInterface;
 use LogEngine\Exceptions\LogEngineException;
@@ -86,10 +86,10 @@ abstract class AbstractApiTransport implements TransportInterface
     /**
      * Add a message to the queue.
      *
-     * @param array $log
+     * @param string $log
      * @return TransportInterface
      */
-    public function addEntry(array $log): TransportInterface
+    public function addEntry($log): TransportInterface
     {
         $this->queue[] = $log;
         return $this;

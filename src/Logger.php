@@ -3,7 +3,7 @@
 namespace LogEngine;
 
 
-use LogEngine\Contracts\LogEntryInterface;
+use LogEngine\Contracts\LogFormatterInterface;
 use LogEngine\Contracts\TransportInterface;
 use LogEngine\Transport\AsyncTransport;
 use LogEngine\Transport\Configuration;
@@ -14,6 +14,16 @@ use Psr\Log\LogLevel;
 class Logger extends AbstractLogger
 {
     /**
+     * @var int
+     */
+    public $facility;
+
+    /**
+     * @var string
+     */
+    public $identity;
+
+    /**
      * Transport strategy.
      *
      * @var TransportInterface
@@ -21,9 +31,18 @@ class Logger extends AbstractLogger
     protected $transport;
 
     /**
-     * @var ExceptionEncoder
+     * Translates PSR-3 log levels to syslog log severity.
      */
-    protected $exceptionEncoder;
+    protected $syslogSeverityMap = array(
+        LogLevel::DEBUG     => LOG_DEBUG,
+        LogLevel::INFO      => LOG_INFO,
+        LogLevel::NOTICE    => LOG_NOTICE,
+        LogLevel::WARNING   => LOG_WARNING,
+        LogLevel::ERROR     => LOG_ERR,
+        LogLevel::CRITICAL  => LOG_CRIT,
+        LogLevel::ALERT     => LOG_ALERT,
+        LogLevel::EMERGENCY => LOG_EMERG,
+    );
 
     /**
      * Logger constructor.
@@ -31,10 +50,15 @@ class Logger extends AbstractLogger
      * @param null|string $url
      * @param null|string $apiKey
      * @param array $options
+     * @param int $facility
+     * @param string $identity
      * @throws Exceptions\LogEngineException
      */
-    public function __construct($url = null, $apiKey = null, array $options = array())
+    public function __construct($url = null, $apiKey = null, array $options = array(), $facility = LOG_USER, $identity = 'php')
     {
+        $this->facility = $facility;
+        $this->identity = $identity;
+
         switch (getenv('LOGENGINE_TRANSPORT')){
             case 'async':
                 $this->transport = new AsyncTransport($url, $apiKey, $options);
@@ -42,8 +66,6 @@ class Logger extends AbstractLogger
             default:
                 $this->transport = new CurlTransport($url, $apiKey, $options);
         }
-
-        $this->exceptionEncoder = new ExceptionEncoder();
     }
 
     /**
@@ -65,24 +87,37 @@ class Logger extends AbstractLogger
      */
     public function log($level, $message, array $context = array())
     {
-        // find exception, remove it from context,
-        if (isset($context['exception']) && ($context['exception'] instanceof \Exception || $context['exception'] instanceof \Throwable)) {
-            $exception = $context['exception'];
-            unset($context['exception']);
-        } elseif ($message instanceof \Exception || $message instanceof \Throwable) {
-            $exception = $message;
+        $headers = $this->makeSyslogHeader($this->syslogSeverityMap[$level]);
+
+        $this->transport->addEntry($this->assembleMessage($message, $headers));
+    }
+
+    /**
+     * @param $line
+     * @param $header
+     * @return string
+     */
+    protected function assembleMessage($line, $header)
+    {
+        return $header . $line;
+    }
+
+
+    /**
+     * @param integer $severity
+     * @return string
+     */
+    protected function makeSyslogHeader($severity)
+    {
+        $priority = $this->facility*8 + $severity;
+
+        if (!$hostname = gethostname()) {
+            $hostname = '-';
         }
 
-        if (isset($exception) && $exception !== null) {
-            $entry = new ExceptionEntry([
-                'level' => LogLevel::ERROR,
-                'exception' => $exception,
-                'context' => $context,
-            ]);
-        } else {
-            $entry = new LogEntry(compact('level', 'message', 'context'));
-        }
-
-        $this->transport->addEntry((array) $entry);
+        return "<$priority> " .
+            date(\DateTime::RFC3339) . " " .
+            $hostname . " " .
+            $this->identity . " ";
     }
 }
