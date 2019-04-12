@@ -82,7 +82,7 @@ class Logger extends AbstractLogger
         $headers = $this->makeSyslogHeader($this->syslogSeverityMap[$level]);
 
         $this->transport->send(
-            $this->assembleMessage(compact('level', 'message', 'context'), $headers)
+            $this->assembleMessage(compact('message', 'context'), $headers)
         );
     }
 
@@ -95,7 +95,6 @@ class Logger extends AbstractLogger
     {
         return json_encode(array_merge($record, $header));
     }
-
 
     /**
      * @param integer $severity
