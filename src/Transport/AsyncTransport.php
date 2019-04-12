@@ -3,7 +3,6 @@
 namespace LogEngine\Transport;
 
 
-use LogEngine\Contracts\AbstractMessageBag;
 use LogEngine\Exceptions\LogEngineException;
 
 /**

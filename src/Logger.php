@@ -81,35 +81,35 @@ class Logger extends AbstractLogger
     {
         $headers = $this->makeSyslogHeader($this->syslogSeverityMap[$level]);
 
-        $this->transport->send($this->assembleMessage($message, $headers));
+        $this->transport->send(
+            $this->assembleMessage(compact('level', 'message', 'context'), $headers)
+        );
     }
 
     /**
-     * @param $line
+     * @param $record
      * @param $header
      * @return string
      */
-    protected function assembleMessage($line, $header)
+    protected function assembleMessage($record, $header)
     {
-        return $header . $line;
+        return json_encode(array_merge($record, $header));
     }
 
 
     /**
      * @param integer $severity
-     * @return string
+     * @return array
      */
     protected function makeSyslogHeader($severity)
     {
         $priority = $this->facility*8 + $severity;
 
-        if (!$hostname = gethostname()) {
-            $hostname = '-';
-        }
-
-        return "<$priority> " .
-            date(\DateTime::RFC3339) . " " .
-            $hostname . " " .
-            $this->identity . " ";
+        return [
+            'priority' => $priority,
+            'timestamp' => date(\DateTime::RFC3339),
+            'hostname' => gethostname(),
+            'identity' => $this->identity,
+        ];
     }
 }
