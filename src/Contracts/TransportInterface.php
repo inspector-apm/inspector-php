@@ -11,12 +11,5 @@ interface TransportInterface
      * @param string $log
      * @return TransportInterface
      */
-    public function addEntry($log);
-
-    /**
-     * Deliver everything on the queue to LOG Engine.
-     *
-     * @return void
-     */
-    public function flush();
+    public function send($log);
 }

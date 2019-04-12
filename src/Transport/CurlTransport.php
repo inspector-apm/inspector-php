@@ -44,7 +44,7 @@ class CurlTransport extends AbstractApiTransport
      *
      * @param string $data
      */
-    protected function sendChunk($data)
+    public function send($data)
     {
         $headers = array();
 

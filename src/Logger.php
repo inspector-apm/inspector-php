@@ -69,14 +69,6 @@ class Logger extends AbstractLogger
     }
 
     /**
-     * Catch object destruction.
-     */
-    public function __destruct()
-    {
-        $this->transport->flush();
-    }
-
-    /**
      * Logs with an arbitrary level.
      *
      * @param mixed $level
@@ -89,7 +81,7 @@ class Logger extends AbstractLogger
     {
         $headers = $this->makeSyslogHeader($this->syslogSeverityMap[$level]);
 
-        $this->transport->addEntry($this->assembleMessage($message, $headers));
+        $this->transport->send($this->assembleMessage($message, $headers));
     }
 
     /**
