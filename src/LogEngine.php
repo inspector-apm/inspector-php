@@ -34,6 +34,13 @@ class LogEngine extends AbstractLogger
     protected $exceptionEncoder;
 
     /**
+     * Default severity level.
+     *
+     * @var string
+     */
+    protected $defaultLevel = LogLevel::DEBUG;
+
+    /**
      * Translates PSR-3 log levels to syslog log severity.
      */
     protected $syslogSeverityMap = array(
@@ -73,15 +80,17 @@ class LogEngine extends AbstractLogger
     }
 
     /**
-     * Static factory.
+     * Set a new default severity level.
      *
-     * @param mixed ...$args
-     * @return static
-     * @throws Exceptions\LogEngineException
+     * @param string $level
      */
-    public static function make(...$args)
+    public function setSeverityLevel($level)
     {
-        return new static(...$args);
+        if (!in_array($level, array_keys($this->syslogSeverityMap))) {
+            syslog(LOG_WARNING, 'LOG Engine Warning: Invalid notify level supplied to LOG Engine Logger');
+        } else {
+            $this->defaultLevel = $level;
+        }
     }
 
     /**
@@ -95,6 +104,10 @@ class LogEngine extends AbstractLogger
      */
     public function log($level, $message, array $context = array())
     {
+        if (!$this->isAboveLevel($level, $this->defaultLevel)) {
+            return;
+        }
+
         $headers = $this->makeSyslogHeader($this->syslogSeverityMap[$level]);
 
         // find exception, remove it from context,
@@ -150,8 +163,32 @@ class LogEngine extends AbstractLogger
         return [
             'priority' => $this->facility + $severity,
             'timestamp' => date(\DateTime::RFC3339),
-            'hostname' => gethostname(),
+            'hostname' => getenv('LOGENGINE_HOSTNAME') ?? gethostname(),
             'identity' => $this->identity,
         ];
+    }
+
+    /**
+     * Checks whether the selected level is above another level.
+     *
+     * @param string $level
+     * @param string $base
+     *
+     * @return bool
+     */
+    protected function isAboveLevel($level, $base)
+    {
+        $levelOrder = array_keys($this->syslogSeverityMap);
+        $baseIndex = array_search($base, $levelOrder);
+        $levelIndex = array_search($level, $levelOrder);
+        return $levelIndex >= $baseIndex;
+    }
+
+    /**
+     * Flush all messages queue programmatically.
+     */
+    public function flush()
+    {
+        $this->transport->flush();
     }
 }
