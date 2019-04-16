@@ -55,7 +55,14 @@ class CurlTransport extends AbstractApiTransport
         $handle = curl_init($this->config->getUrl());
 
         curl_setopt($handle, CURLOPT_POST, 1);
-        curl_setopt($handle, CURLOPT_TIMEOUT, 5);
+
+        // Tell cURL that it should only spend 10 seconds
+        // trying to connect to the URL in question.
+        curl_setopt($handle, CURLOPT_CONNECTTIMEOUT, 5);
+        // A given cURL operation should only take
+        // 30 seconds max.
+        curl_setopt($handle, CURLOPT_TIMEOUT, 10);
+
         curl_setopt($handle, CURLOPT_HTTPHEADER, $headers);
         curl_setopt($handle, CURLOPT_POSTFIELDS, $data);
         curl_setopt($handle, CURLOPT_RETURNTRANSFER, true);
@@ -68,7 +75,7 @@ class CurlTransport extends AbstractApiTransport
         $error = curl_error($handle);
 
         if (0 !== $errorNo || 200 !== $code) {
-            error_log(date('Y-m-d H:i:s')." - [Error] [".get_class($this)."] $error - $code $errorNo");
+            error_log(date('Y-m-d H:i:s') . " - [Error] [" . get_class($this) . "] $error - $code $errorNo");
         }
 
         curl_close($handle);
