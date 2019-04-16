@@ -83,6 +83,7 @@ class LogEngine extends AbstractLogger
      * Set a new default severity level.
      *
      * @param string $level
+     * @return $this
      */
     public function setSeverityLevel($level)
     {
@@ -91,6 +92,7 @@ class LogEngine extends AbstractLogger
         } else {
             $this->defaultLevel = $level;
         }
+        return $this;
     }
 
     /**
