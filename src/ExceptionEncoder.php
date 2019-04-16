@@ -48,6 +48,7 @@ class ExceptionEncoder
         $message = $exception->getMessage() ? $exception->getMessage() : $className;
 
         return [
+            'type' => 'exception',
             'message' => $message,
             'class' => $className,
             'code' => $exception->getCode(),
