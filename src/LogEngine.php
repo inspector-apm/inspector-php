@@ -147,13 +147,17 @@ class LogEngine extends AbstractLogger
     }
 
     /**
-     * @param $record
+     * @param $message
+     * @param $context
      * @param $header
      * @return array
      */
-    protected function assembleMessage($record, $header)
+    protected function assembleMessage($message, $context, $header)
     {
-        return array_merge($record, $header);
+        return array_merge([
+            'message' => $message . ' - ' . json_encode($context),
+            'context' => $context,
+        ], $header);
     }
 
     /**
