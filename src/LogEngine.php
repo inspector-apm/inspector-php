@@ -125,7 +125,7 @@ class LogEngine extends AbstractLogger
         }
 
         $this->transport->addEntry(
-            $this->assembleMessage(compact('message', 'context'), $headers)
+            $this->assembleMessage($message, $context, $headers)
         );
     }
 
