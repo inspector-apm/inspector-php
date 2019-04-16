@@ -37,14 +37,14 @@ class LogEngine extends AbstractLogger
      * Translates PSR-3 log levels to syslog log severity.
      */
     protected $syslogSeverityMap = array(
-        LogLevel::DEBUG     => LOG_DEBUG,
-        LogLevel::INFO      => LOG_INFO,
-        LogLevel::NOTICE    => LOG_NOTICE,
-        LogLevel::WARNING   => LOG_WARNING,
-        LogLevel::ERROR     => LOG_ERR,
-        LogLevel::CRITICAL  => LOG_CRIT,
-        LogLevel::ALERT     => LOG_ALERT,
-        LogLevel::EMERGENCY => LOG_EMERG,
+        LogLevel::DEBUG     => 7,
+        LogLevel::INFO      => 6,
+        LogLevel::NOTICE    => 5,
+        LogLevel::WARNING   => 4,
+        LogLevel::ERROR     => 3,
+        LogLevel::CRITICAL  => 2,
+        LogLevel::ALERT     => 1,
+        LogLevel::EMERGENCY => 0,
     );
 
     /**
@@ -147,10 +147,8 @@ class LogEngine extends AbstractLogger
      */
     protected function makeSyslogHeader($severity)
     {
-        $priority = $this->facility*8 + $severity;
-
         return [
-            'priority' => $priority,
+            'priority' => $this->facility + $severity,
             'timestamp' => date(\DateTime::RFC3339),
             'hostname' => gethostname(),
             'identity' => $this->identity,
