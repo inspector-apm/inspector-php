@@ -3,15 +3,13 @@
 namespace LogEngine;
 
 
-use LogEngine\Contracts\LogFormatterInterface;
 use LogEngine\Contracts\TransportInterface;
 use LogEngine\Transport\AsyncTransport;
-use LogEngine\Transport\Configuration;
 use LogEngine\Transport\CurlTransport;
 use Psr\Log\AbstractLogger;
 use Psr\Log\LogLevel;
 
-class Logger extends AbstractLogger
+class LogEngine extends AbstractLogger
 {
     /**
      * @var int
@@ -29,6 +27,11 @@ class Logger extends AbstractLogger
      * @var TransportInterface
      */
     protected $transport;
+
+    /**
+     * @var ExceptionEncoder
+     */
+    protected $exceptionEncoder;
 
     /**
      * Translates PSR-3 log levels to syslog log severity.
@@ -58,6 +61,7 @@ class Logger extends AbstractLogger
     {
         $this->facility = $facility;
         $this->identity = $identity;
+        $this->exceptionEncoder = new ExceptionEncoder();
 
         switch (getenv('LOGENGINE_TRANSPORT')){
             case 'async':
@@ -66,6 +70,18 @@ class Logger extends AbstractLogger
             default:
                 $this->transport = new CurlTransport($url, $apiKey, $options);
         }
+    }
+
+    /**
+     * Static factory.
+     *
+     * @param mixed ...$args
+     * @return static
+     * @throws Exceptions\LogEngineException
+     */
+    public static function make(...$args)
+    {
+        return new static(...$args);
     }
 
     /**
@@ -81,9 +97,38 @@ class Logger extends AbstractLogger
     {
         $headers = $this->makeSyslogHeader($this->syslogSeverityMap[$level]);
 
+        // find exception, remove it from context,
+        if (isset($context['exception']) && ($context['exception'] instanceof \Exception || $context['exception'] instanceof \Throwable)) {
+            $exception = $context['exception'];
+            unset($context['exception']);
+        } elseif ($message instanceof \Exception || $message instanceof \Throwable) {
+            $exception = $message;
+        }
+
+        if(isset($exception)){
+            $headers = array_merge($this->exceptionEncoder->exceptionToArray($exception), $headers);
+        }
+
         $this->transport->addEntry(
             $this->assembleMessage(compact('message', 'context'), $headers)
         );
+    }
+
+    /**
+     * Direct log an Exception object.
+     *
+     * @param \Exception $exception
+     * @param array $context
+     * @return void
+     * @throws \InvalidArgumentException
+     */
+    public function logException($exception, array $context = array())
+    {
+        if (!$exception instanceof \Exception && !$exception instanceof \Throwable) {
+            throw new \InvalidArgumentException('$exception need to be a PHP Exception instance.');
+        }
+
+        $this->log(LogLevel::ERROR, $exception, $context);
     }
 
     /**

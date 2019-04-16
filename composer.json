@@ -1,5 +1,5 @@
 {
-    "name": "log-engine/logger-php",
+    "name": "logengine/logengine-php",
     "description": "LOG engine client library for PHP applications.",
     "keywords": ["log", "php", "logengine"],
     "license": "MIT",
