@@ -128,7 +128,7 @@ class LogEngine extends AbstractLogger
             throw new \InvalidArgumentException('$exception need to be a PHP Exception instance.');
         }
 
-        $this->log(LogLevel::ERROR, $exception, $context);
+        $this->error($exception, $context);
     }
 
     /**
