@@ -57,6 +57,8 @@ abstract class AbstractApiTransport implements TransportInterface
         );
 
         $this->extractOptions($options);
+
+        register_shutdown_function(array($this, 'flush'));
     }
 
     /**
@@ -80,12 +82,66 @@ abstract class AbstractApiTransport implements TransportInterface
     }
 
     /**
+     * Add a message to the queue.
+     *
+     * @param array $log
+     * @return TransportInterface
+     */
+    public function addEntry($log): TransportInterface
+    {
+        $this->queue[] = $log;
+        return $this;
+    }
+
+    /**
+     * Deliver everything on the queue to LOG Engine.
+     *
+     * @return void
+     */
+    public function flush()
+    {
+        if (empty($this->queue)) {
+            return;
+        }
+
+        $this->send($this->queue);
+
+        $this->queue = array();
+    }
+
+    /**
+     * Send data chunks based on MAX_POST_LENGTH.
+     *
+     * @param array $logs
+     */
+    public function send($logs)
+    {
+        $json = json_encode($logs);
+        $jsonLength = strlen($json);
+        $count = count($logs);
+
+        if ($jsonLength > self::MAX_POST_LENGTH) {
+            if ($count === 1) {
+                // it makes no sense to divide into chunks, just fail
+                return;
+            }
+            $maxCount = floor($count / ceil($jsonLength / self::MAX_POST_LENGTH));
+            $chunks = array_chunk($logs, $maxCount);
+            foreach ($chunks as $chunk) {
+                $this->send($chunk);
+            }
+        } else {
+            $this->sendChunk($json);
+        }
+    }
+
+    /**
      * Send a portion of the load to the remote service.
      *
      * @param string $data
      * @return void
      */
-    abstract public function send($data);
+    abstract protected function sendChunk($data);
 
     /**
      * List of available transport's options with validation regex.

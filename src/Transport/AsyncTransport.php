@@ -73,7 +73,7 @@ class AsyncTransport extends AbstractApiTransport
      * @param string $data
      * @return mixed
      */
-    public function send($data)
+    public function sendChunk($data)
     {
         $cmd = "$this->curlPath -X POST";
 
