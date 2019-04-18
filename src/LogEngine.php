@@ -155,7 +155,7 @@ class LogEngine extends AbstractLogger
     protected function assembleMessage($message, $context, $header)
     {
         return array_merge([
-            'message' => $message . ' - ' . json_encode($context),
+            'message' => $message . ' ' . json_encode($context),
             'context' => $context,
         ], $header);
     }
