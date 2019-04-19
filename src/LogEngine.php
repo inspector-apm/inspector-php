@@ -34,6 +34,11 @@ class LogEngine extends AbstractLogger
     protected $exceptionEncoder;
 
     /**
+     * @var string
+     */
+    protected $transaction;
+
+    /**
      * Default severity level.
      *
      * @var string
@@ -69,6 +74,7 @@ class LogEngine extends AbstractLogger
         $this->facility = $facility;
         $this->identity = $identity;
         $this->exceptionEncoder = new ExceptionEncoder();
+        $this->transaction = $this->generateTransactionId();
 
         switch (getenv('LOGENGINE_TRANSPORT')){
             case 'async':
@@ -110,7 +116,7 @@ class LogEngine extends AbstractLogger
             return;
         }
 
-        $headers = $this->makeSyslogHeader($this->syslogSeverityMap[$level]);
+        $entry = $this->makeSyslogHeader($this->syslogSeverityMap[$level]);
 
         // find exception, remove it from context,
         if (isset($context['exception']) && ($context['exception'] instanceof \Exception || $context['exception'] instanceof \Throwable)) {
@@ -121,11 +127,11 @@ class LogEngine extends AbstractLogger
         }
 
         if(isset($exception)){
-            $headers = array_merge($this->exceptionEncoder->exceptionToArray($exception), $headers);
+            $entry = array_merge($this->exceptionEncoder->exceptionToArray($exception), $entry);
         }
 
         $this->transport->addEntry(
-            $this->assembleMessage($message, $context, $headers)
+            $this->assembleMessage($message, $context, $entry)
         );
     }
 
@@ -149,15 +155,16 @@ class LogEngine extends AbstractLogger
     /**
      * @param $message
      * @param $context
-     * @param $header
+     * @param $entry
      * @return array
      */
-    protected function assembleMessage($message, $context, $header)
+    protected function assembleMessage($message, $context, $entry)
     {
         return array_merge([
             'message' => $message . ' ' . json_encode($context),
             'context' => $context,
-        ], $header);
+            'transaction' => $this->transaction,
+        ], $entry);
     }
 
     /**
@@ -196,5 +203,15 @@ class LogEngine extends AbstractLogger
     public function flush()
     {
         $this->transport->flush();
+    }
+
+    /**
+     * generate unique ID for grouping events.
+     *
+     * @return string
+     */
+    public function generateTransactionId()
+    {
+        return uniqid();
     }
 }
