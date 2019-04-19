@@ -57,8 +57,6 @@ abstract class AbstractApiTransport implements TransportInterface
         );
 
         $this->extractOptions($options);
-
-        register_shutdown_function(array($this, 'flush'));
     }
 
     /**

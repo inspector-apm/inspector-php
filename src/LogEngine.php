@@ -74,7 +74,6 @@ class LogEngine extends AbstractLogger
         $this->facility = $facility;
         $this->identity = $identity;
         $this->exceptionEncoder = new ExceptionEncoder();
-        $this->transaction = $this->generateTransactionId();
 
         switch (getenv('LOGENGINE_TRANSPORT')){
             case 'async':
@@ -83,6 +82,9 @@ class LogEngine extends AbstractLogger
             default:
                 $this->transport = new CurlTransport($url, $apiKey, $options);
         }
+
+        $this->generateTransactionId();
+        register_shutdown_function(array($this, 'flush'));
     }
 
     /**
@@ -203,6 +205,7 @@ class LogEngine extends AbstractLogger
     public function flush()
     {
         $this->transport->flush();
+        $this->generateTransactionId();
     }
 
     /**
@@ -215,7 +218,7 @@ class LogEngine extends AbstractLogger
     public function generateTransactionId()
     {
         mt_srand();
-        return sprintf(
+        $this->transaction = sprintf(
             '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
             // 32 bits for "time_low"
             mt_rand(0, 0xffff),
