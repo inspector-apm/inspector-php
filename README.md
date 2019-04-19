@@ -11,17 +11,22 @@ Install the latest version with `composer require logengine/logengine-php`
 
 # Use in your application
 
-## Async transport
-
-AsyncTransport is the most performant option to log versus LOG-Engine service. It collects log entries in batches, calls curl using the `exec` function, and sends data to the background immediately [`exec('curl ... &')`]. This will affect the performance of your application minimally, but it requires permissions to call `exec` inside the PHP script and it may cause silent data loss in the event of any network issues. 
-
-This transport method does not work on Windows. 
-
 ```php
-$logengine = new LogEngine\LogEngine('LOGENGINE_URL', 'API_KEY', 'production');
+<?php
+require __DIR__ . '/../vendor/autoload.php';
+use LogEngine\LogEngine;
+
+$logengine = new LogEngine('https://www.logengine.dev/api', 'API_KEY');
 
 // Start logging
-$logengine->info('Track your application behaviour');
+try {
+
+    $logengine->info('Track your app behaviour');
+    throw new UnauthorizedException("You don't have permission to access.");
+
+} catch(UnauthorizedException $exception) {
+    $logengine->logException($exception);
+}
 ```
 
 ### Options
@@ -32,9 +37,8 @@ LOG Engine library supports data delivery through proxy. Specify proxy using [li
 
 ```php
 $logengine = new LogEngine\LogEngine(
-    'LOGENGINE_URL', 
+    'https://www.logengine.dev/api', 
     'API_KEY', 
-    'production', 
     ['proxy' => 'https://55.88.22.11:3128']
 );
 ```
@@ -45,31 +49,17 @@ It can be useful to specify `curl` destination path for AsyncTransport. This opt
 
 ```php
 $logengine = new LogEngine\LogEngine(
-    'LOGENGINE_URL', 
+    'https://www.logengine.dev/api', 
     'API_KEY', 
-    'production', 
     ['curlPath' => '/usr/bin/curl']
 );
 ```
 
-# Trableshooting
-
-If transport does not work, try looking into `vendor\log-engine\logger-php\src\debug\log.log` file (if it is available for writing). Errors are also written to global PHP [error_log](http://php.net/manual/en/errorfunc.configuration.php#ini.error-log). Note that AsyncTransport does not produce any errors at all because it is executed in the backgraound, but you can switch it to debug mode to investigate if needed:
-
-```php
-$logengine = new LogEngine\LogEngine(
-    'LOGENGINE_URL', 
-    'API_KEY', 
-    'production', 
-    ['debug' => true]
-);
-```
-
-# Log an exception
+# Log Exceptions
 
 LOG Engine give you the ability to send exceptions to the platform for better investigation and reporting.
 
-You can use specialized `logException` method inside the `LogEngine` service class:
+You can use `logException` method inside the `LogEngine` service class:
 
 ```php
 try {
