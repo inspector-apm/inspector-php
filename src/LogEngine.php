@@ -176,7 +176,7 @@ class LogEngine extends AbstractLogger
         return [
             'priority' => $this->facility + $severity,
             'timestamp' => date(\DateTime::RFC3339),
-            'hostname' => getenv('LOGENGINE_HOSTNAME') ?? gethostname(),
+            'hostname' => getenv('LOGENGINE_HOSTNAME') ?: gethostname(),
             'identity' => $this->identity,
         ];
     }
@@ -214,6 +214,7 @@ class LogEngine extends AbstractLogger
      */
     public function generateTransactionId()
     {
+        mt_srand();
         return sprintf(
             '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
             // 32 bits for "time_low"
