@@ -213,29 +213,20 @@ class LogEngine extends AbstractLogger
      *
      * http://www.php.net/manual/en/function.uniqid.php#94959
      *
+     * @param int $length
      * @return string
+     * @throws \Exception
      */
-    public function generateTransactionId()
+    public function generateTransactionId($length = 32)
     {
-        mt_srand();
-        $this->transaction = sprintf(
-            '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
-            // 32 bits for "time_low"
-            mt_rand(0, 0xffff),
-            mt_rand(0, 0xffff),
-            // 16 bits for "time_mid"
-            mt_rand(0, 0xffff),
-            // 16 bits for "time_hi_and_version",
-            // four most significant bits holds version number 4
-            mt_rand(0, 0x0fff) | 0x4000,
-            // 16 bits, 8 bits for "clk_seq_hi_res",
-            // 8 bits for "clk_seq_low",
-            // two most significant bits holds zero and one for variant DCE1.1
-            mt_rand(0, 0x3fff) | 0x8000,
-            // 48 bits for "node"
-            mt_rand(0, 0xffff),
-            mt_rand(0, 0xffff),
-            mt_rand(0, 0xffff)
-        );
+        if(!isset($length) || intval($length) <= 8 ){
+            $length = 32;
+        }
+
+        if (function_exists('random_bytes')) {
+            $this->transaction =  bin2hex(random_bytes($length));
+        } elseif (function_exists('openssl_random_pseudo_bytes')) {
+            $this->transaction = bin2hex(openssl_random_pseudo_bytes($length));
+        }
     }
 }
