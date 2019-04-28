@@ -62,7 +62,6 @@ class LogEngine extends AbstractLogger
     /**
      * Logger constructor.
      *
-     * @param null|string $url
      * @param null|string $apiKey
      * @param array $options
      * @param int $facility
@@ -201,6 +200,7 @@ class LogEngine extends AbstractLogger
 
     /**
      * Flush all messages queue programmatically.
+     * @throws \Exception
      */
     public function flush()
     {

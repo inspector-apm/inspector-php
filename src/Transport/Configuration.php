@@ -3,8 +3,6 @@
 namespace LogEngine\Transport;
 
 
-use LogEngine\Exceptions\LogEngineException;
-
 class Configuration
 {
     /**
@@ -26,7 +24,7 @@ class Configuration
      *
      * @param string|null $url
      * @param string|null $apiKey
-     * @throws LogEngineException
+     * @throws \InvalidArgumentException
      */
     public function __construct($url, $apiKey)
     {
@@ -37,7 +35,7 @@ class Configuration
     /**
      * @param $value
      * @return $this
-     * @throws LogEngineException
+     * @throws \InvalidArgumentException
      */
     public function setUrl($value)
     {
@@ -47,7 +45,7 @@ class Configuration
             $this->url = $value;
             return $this;
         }
-        throw new LogEngineException('Invalid URL');
+        throw new \InvalidArgumentException('Invalid URL');
     }
 
     /**
@@ -63,14 +61,14 @@ class Configuration
      *
      * @param $value
      * @return $this
-     * @throws LogEngineException
+     * @throws \InvalidArgumentException
      */
     public function setApiKey($value)
     {
         $apiKey = trim($value);
 
         if (empty($apiKey)) {
-            throw new LogEngineException('API key cannot be empty');
+            throw new \InvalidArgumentException('API key cannot be empty');
         }
 
         $this->apiKey = $apiKey;
