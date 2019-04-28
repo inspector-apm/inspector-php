@@ -1,6 +1,6 @@
 {
     "name": "log-engine/logengine-php",
-    "description": "LOG engine client library for PHP applications.",
+    "description": "LOG Engine integration package for PHP applications.",
     "keywords": ["log", "php", "logengine"],
     "license": "MIT",
     "authors": [
