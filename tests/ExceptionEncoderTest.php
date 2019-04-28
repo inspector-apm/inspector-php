@@ -90,11 +90,7 @@ class ExceptionEncoderTest extends TestCase
     {
         $encoder = new ExceptionEncoder();
         $stackTraceArray = $encoder->stackTraceToArray($exception->getTrace());
-        if (Utils::startsWith(phpversion(), '7.2')) {
-            $this->assertSame('__PHP_Incomplete_Class', $stackTraceArray[$index]['args'][0]);
-        } else {
-            $this->assertSame('object(__PHP_Incomplete_Class)', $stackTraceArray[$index]['args'][0]);
-        }
+        $this->assertSame('__PHP_Incomplete_Class', $stackTraceArray[$index]['args'][0]);
     }
 
     public function testStackTraceLimit()
