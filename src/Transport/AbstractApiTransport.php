@@ -9,6 +9,13 @@ use LogEngine\Exceptions\LogEngineException;
 abstract class AbstractApiTransport implements TransportInterface
 {
     /**
+     * Events collector endpoint.
+     *
+     * @var string
+     */
+    protected $url = 'https://app.logengine.dev/api';
+
+    /**
      * Max size of a POST request content.
      *
      * @var integer
@@ -49,10 +56,10 @@ abstract class AbstractApiTransport implements TransportInterface
      * @param array $options
      * @throws LogEngineException
      */
-    public function __construct($url = null, $apiKey = null,  array $options = array())
+    public function __construct($apiKey = null, $url = null, array $options = array())
     {
         $this->config = new Configuration(
-            $url ?: getenv('LOGENGINE_URL'),
+            $url ?: $this->url,
             $apiKey ?: getenv('LOGENGINE_API_KEY')
         );
 

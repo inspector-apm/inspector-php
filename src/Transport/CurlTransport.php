@@ -29,9 +29,9 @@ class CurlTransport extends AbstractApiTransport
      * @param array $options
      * @throws LogEngineException
      */
-    public function __construct($url = null, $apiKey = null, array $options = array())
+    public function __construct($apiKey = null, $url = null, array $options = array())
     {
-        parent::__construct($url, $apiKey, $options);
+        parent::__construct($apiKey, $url, $options);
 
         // System need to have CURL available
         if (!function_exists('curl_init')) {

@@ -69,7 +69,7 @@ class LogEngine extends AbstractLogger
      * @param string $identity
      * @throws Exceptions\LogEngineException
      */
-    public function __construct($url = null, $apiKey = null, array $options = array(), $facility = LOG_USER, $identity = 'php')
+    public function __construct($apiKey = null, $url = null, array $options = array(), $facility = LOG_USER, $identity = 'php')
     {
         $this->facility = $facility;
         $this->identity = $identity;
@@ -77,10 +77,10 @@ class LogEngine extends AbstractLogger
 
         switch (getenv('LOGENGINE_TRANSPORT')){
             case 'async':
-                $this->transport = new AsyncTransport($url, $apiKey, $options);
+                $this->transport = new AsyncTransport($apiKey, $url, $options);
                 break;
             default:
-                $this->transport = new CurlTransport($url, $apiKey, $options);
+                $this->transport = new CurlTransport($apiKey, $url, $options);
         }
 
         $this->generateTransactionId();
@@ -211,7 +211,7 @@ class LogEngine extends AbstractLogger
     /**
      * Generate unique ID for grouping events.
      *
-     * http://www.php.net/manual/en/function.uniqid.php#94959
+     * http://www.php.net/manual/en/function.uniqid.php
      *
      * @param int $length
      * @return string
