@@ -1,5 +1,11 @@
 # LOG Engine for php
 
+
+[![Build Status](https://travis-ci.org/log-engine/logengine-php.svg?branch=master)](https://travis-ci.org/log-engine/logengine-php)
+[![Latest Stable Version](https://poser.pugx.org/log-engine/logengine-php/v/stable)](https://packagist.org/packages/log-engine/logengine-php)
+[![License](https://poser.pugx.org/log-engine/logengine-php/license)](https://packagist.org/packages/log-engine/logengine-php)
+
+
 LOG Engine is a PHP application monitoring system.
 
 It allows engineers to collect, tail and search their application events in real time 
