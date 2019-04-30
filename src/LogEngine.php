@@ -68,7 +68,7 @@ class LogEngine extends AbstractLogger
      * @param string $identity
      * @throws Exceptions\LogEngineException
      */
-    public function __construct($apiKey = null, array $options = array(), $facility = LOG_USER, $identity = 'php')
+    public function __construct($apiKey = null, array $options = array(), $url = null, $facility = LOG_USER, $identity = 'php')
     {
         $this->facility = $facility;
         $this->identity = $identity;
@@ -76,10 +76,10 @@ class LogEngine extends AbstractLogger
 
         switch (getenv('LOGENGINE_TRANSPORT')){
             case 'async':
-                $this->transport = new AsyncTransport($apiKey, null, $options);
+                $this->transport = new AsyncTransport($apiKey, $url, $options);
                 break;
             default:
-                $this->transport = new CurlTransport($apiKey, null, $options);
+                $this->transport = new CurlTransport($apiKey, $url, $options);
         }
 
         $this->generateTransactionId();
