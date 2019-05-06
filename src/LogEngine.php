@@ -117,7 +117,7 @@ class LogEngine extends AbstractLogger
             return;
         }
 
-        $entry = $this->makeSyslogHeader($this->syslogSeverityMap[$level]);
+        $entries = $this->makeSyslogHeader($this->syslogSeverityMap[$level]);
 
         // find exception, remove it from context,
         if (isset($context['exception']) && ($context['exception'] instanceof \Exception || $context['exception'] instanceof \Throwable)) {
@@ -128,11 +128,11 @@ class LogEngine extends AbstractLogger
         }
 
         if(isset($exception)){
-            $entry = array_merge($this->exceptionEncoder->exceptionToArray($exception), $entry);
+            $entries = array_merge($this->exceptionEncoder->exceptionToArray($exception), $entries);
         }
 
         $this->transport->addEntry(
-            $this->assembleMessage($message, $context, $entry)
+            $this->assembleMessage($message, $context, $entries)
         );
     }
 
@@ -156,16 +156,16 @@ class LogEngine extends AbstractLogger
     /**
      * @param $message
      * @param $context
-     * @param $entry
+     * @param $entries
      * @return array
      */
-    protected function assembleMessage($message, $context, $entry)
+    protected function assembleMessage($message, $context, $entries)
     {
         return array_merge([
-            'message' => $message . ' ' . json_encode($context),
+            'message' => $message,
             'context' => $context,
             'transaction' => $this->transaction,
-        ], $entry);
+        ], $entries);
     }
 
     /**
