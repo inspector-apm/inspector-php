@@ -6,10 +6,11 @@ namespace LogEngine;
 use LogEngine\Contracts\TransportInterface;
 use LogEngine\Transport\AsyncTransport;
 use LogEngine\Transport\CurlTransport;
+use LogEngine\Transport\TransportConfiguration;
 use Psr\Log\AbstractLogger;
 use Psr\Log\LogLevel;
 
-class LogEngine extends AbstractLogger
+class LogEngineAgent extends AbstractLogger
 {
     /**
      * @var int
@@ -48,7 +49,7 @@ class LogEngine extends AbstractLogger
     /**
      * Translates PSR-3 log levels to syslog log severity.
      */
-    protected $syslogSeverityMap = array(
+    protected $severityMap = array(
         LogLevel::DEBUG     => 7,
         LogLevel::INFO      => 6,
         LogLevel::NOTICE    => 5,
@@ -62,27 +63,22 @@ class LogEngine extends AbstractLogger
     /**
      * Logger constructor.
      *
-     * @param null|string $apiKey
+     * @param TransportConfiguration $configuration
      * @param array $options
-     * @param int $facility
-     * @param string $identity
      * @throws Exceptions\LogEngineException
      */
-    public function __construct($apiKey = null, array $options = array(), $url = null, $facility = LOG_USER, $identity = 'php')
+    public function __construct($configuration, array $options = array())
     {
-        $this->facility = $facility;
-        $this->identity = $identity;
         $this->exceptionEncoder = new ExceptionEncoder();
 
         switch (getenv('LOGENGINE_TRANSPORT')){
             case 'async':
-                $this->transport = new AsyncTransport($apiKey, $url, $options);
+                $this->transport = new AsyncTransport($configuration, $options);
                 break;
             default:
-                $this->transport = new CurlTransport($apiKey, $url, $options);
+                $this->transport = new CurlTransport($configuration, $options);
         }
 
-        $this->generateTransactionId();
         register_shutdown_function(array($this, 'flush'));
     }
 
@@ -94,7 +90,7 @@ class LogEngine extends AbstractLogger
      */
     public function setSeverityLevel($level)
     {
-        if (!in_array($level, array_keys($this->syslogSeverityMap))) {
+        if (!in_array($level, array_keys($this->severityMap))) {
             syslog(LOG_WARNING, 'LOG Engine Warning: Invalid notify level supplied to LOG Engine Logger');
         } else {
             $this->defaultLevel = $level;
@@ -117,7 +113,7 @@ class LogEngine extends AbstractLogger
             return;
         }
 
-        $entries = $this->makeSyslogHeader($this->syslogSeverityMap[$level]);
+        $entries = $this->makeHeaders($this->severityMap[$level]);
 
         // find exception, remove it from context,
         if (isset($context['exception']) && ($context['exception'] instanceof \Exception || $context['exception'] instanceof \Throwable)) {
@@ -172,13 +168,12 @@ class LogEngine extends AbstractLogger
      * @param integer $severity
      * @return array
      */
-    protected function makeSyslogHeader($severity)
+    protected function makeHeaders($severity)
     {
         return [
-            'priority' => $this->facility + $severity,
+            'severity' => $severity,
             'timestamp' => date(\DateTime::RFC3339),
             'hostname' => getenv('LOGENGINE_HOSTNAME') ?: gethostname(),
-            'identity' => $this->identity,
         ];
     }
 
@@ -192,7 +187,7 @@ class LogEngine extends AbstractLogger
      */
     protected function isAboveLevel($level, $base)
     {
-        $levelOrder = array_keys($this->syslogSeverityMap);
+        $levelOrder = array_keys($this->severityMap);
         $baseIndex = array_search($base, $levelOrder);
         $levelIndex = array_search($level, $levelOrder);
         return $levelIndex >= $baseIndex;

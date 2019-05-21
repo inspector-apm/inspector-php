@@ -9,20 +9,6 @@ use LogEngine\Exceptions\LogEngineException;
 abstract class AbstractApiTransport implements TransportInterface
 {
     /**
-     * Events collector endpoint.
-     *
-     * @var string
-     */
-    protected $url = 'https://app.logengine.dev/api';
-
-    /**
-     * Max size of a POST request content.
-     *
-     * @var integer
-     */
-    const MAX_POST_LENGTH = 65536;  // 1024 * 64
-
-    /**
      * @var string
      */
     const ERROR_LENGTH = 'Batch is too long: %s';
@@ -51,18 +37,13 @@ abstract class AbstractApiTransport implements TransportInterface
     /**
      * AbstractApiTransport constructor.
      *
-     * @param string $url
-     * @param string $apiKey
+     * @param TransportConfiguration $configuration
      * @param array $options
      * @throws LogEngineException
      */
-    public function __construct($apiKey = null, $url = null, array $options = array())
+    public function __construct($configuration, array $options = array())
     {
-        $this->config = new Configuration(
-            $url ?: $this->url,
-            $apiKey ?: getenv('LOGENGINE_API_KEY')
-        );
-
+        $this->config = $configuration;
         $this->extractOptions($options);
     }
 
@@ -125,12 +106,12 @@ abstract class AbstractApiTransport implements TransportInterface
         $jsonLength = strlen($json);
         $count = count($logs);
 
-        if ($jsonLength > self::MAX_POST_LENGTH) {
+        if ($jsonLength > $this->config::MAX_POST_LENGTH) {
             if ($count === 1) {
                 // it makes no sense to divide into chunks, just fail
                 return;
             }
-            $maxCount = floor($count / ceil($jsonLength / self::MAX_POST_LENGTH));
+            $maxCount = floor($count / ceil($jsonLength / $this->config::MAX_POST_LENGTH));
             $chunks = array_chunk($logs, $maxCount);
             foreach ($chunks as $chunk) {
                 $this->send($chunk);

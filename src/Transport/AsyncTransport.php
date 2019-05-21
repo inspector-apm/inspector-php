@@ -35,15 +35,12 @@ class AsyncTransport extends AbstractApiTransport
     /**
      * AsyncTransport constructor.
      *
-     * @param null|string $url
-     * @param null|string $apiKey
+     * @param TransportConfiguration $configuration
      * @param array $options
      * @throws LogEngineException
      */
-    public function __construct($apiKey = null, $url = null, array $options = array())
+    public function __construct($configuration, array $options = array())
     {
-        parent::__construct($apiKey, $url, $options);
-
         if (!function_exists('exec')) {
             throw new LogEngineException("PHP function 'exec' is not available, is it disabled for security reasons?");
         }
@@ -51,6 +48,8 @@ class AsyncTransport extends AbstractApiTransport
         if ('WIN' === strtoupper(substr(PHP_OS, 0, 3))) {
             throw new LogEngineException('Exec transport is not supposed to work on Windows OS');
         }
+
+        parent::__construct($configuration, $options);
     }
 
     /**

@@ -3,14 +3,21 @@
 namespace LogEngine\Transport;
 
 
-class Configuration
+class TransportConfiguration
 {
     /**
-     * Remote web service endpoint to store log entries.
+     * Max size of a POST request content.
+     *
+     * @var integer
+     */
+    const MAX_POST_LENGTH = 65536;  // 1024 * 64
+
+    /**
+     * Remote endpoint to send data.
      *
      * @var string
      */
-    protected $url;
+    protected $url = 'https://www.app.logengine.dev/api';
 
     /**
      * Authentication key.
@@ -22,14 +29,17 @@ class Configuration
     /**
      * Environment constructor.
      *
-     * @param string|null $url
      * @param string|null $apiKey
+     * @param string|null $url
      * @throws \InvalidArgumentException
      */
-    public function __construct($url, $apiKey)
+    public function __construct($apiKey, $url = null)
     {
-        $this->setUrl($url);
         $this->setApiKey($apiKey);
+
+        if(!is_null($url)){
+            $this->setUrl($url);
+        }
     }
 
     /**
