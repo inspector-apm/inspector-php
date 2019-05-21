@@ -1,13 +1,12 @@
 <?php
 
 
-namespace LogEngine\Transaction;
+namespace LogEngine\Models;
 
 
-use JsonSerializable;
-use LogEngine\Transaction\Context\SpanContext;
+use LogEngine\Models\Context\SpanContext;
 
-class Span implements JsonSerializable
+class Span implements \JsonSerializable
 {
     /**
      * The Transaction that own the span.
@@ -43,17 +42,12 @@ class Span implements JsonSerializable
      *
      * @param string $type
      * @param Transaction $transaction
-     * @param bool $autoplay
      */
-    public function __construct($type, Transaction $transaction, $autoplay = false)
+    public function __construct($type, Transaction $transaction)
     {
         $this->type = $type;
         $this->transaction = $transaction;
         $this->context = new SpanContext();
-
-        if($autoplay){
-            $this->start();
-        }
     }
 
     public function getType(): string
@@ -71,6 +65,11 @@ class Span implements JsonSerializable
     {
         $this->duration = round((microtime(true) - $this->start)*1000, 2); // milliseconds
         return $this;
+    }
+
+    public function getContext(): SpanContext
+    {
+        return $this->context;
     }
 
     /**
@@ -97,10 +96,5 @@ class Span implements JsonSerializable
     public function __toString()
     {
         return json_encode($this->jsonSerialize());
-    }
-
-    public function toString()
-    {
-        return $this->__toString();
     }
 }

@@ -25,17 +25,16 @@ class CurlTransport extends AbstractApiTransport
      * CurlTransport constructor.
      *
      * @param TransportConfiguration $configuration
-     * @param array $options
      * @throws LogEngineException
      */
-    public function __construct($configuration, array $options = array())
+    public function __construct($configuration)
     {
         // System need to have CURL available
         if (!function_exists('curl_init')) {
             throw new LogEngineException('cURL PHP extension is not available');
         }
 
-        parent::__construct($configuration, $options);
+        parent::__construct($configuration);
     }
 
     /**

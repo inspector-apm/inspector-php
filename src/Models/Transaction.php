@@ -1,16 +1,31 @@
 <?php
 
 
-namespace LogEngine\Transaction;
+namespace LogEngine\Models;
 
 
 use Exception;
 use LogEngine\Exceptions\LogEngineException;
-use JsonSerializable;
-use LogEngine\Transaction\Context\TransactionContext;
+use LogEngine\Models\Context\TransactionContext;
 
-class Transaction implements JsonSerializable
+class Transaction implements \JsonSerializable
 {
+    const TYPE_REQUEST = 'request';
+
+    /**
+     * Keyword of specific relevance in the service's domain (eg:  'request', 'backgroundjob').
+     *
+     * @var string
+     */
+    protected $type;
+
+    /**
+     * Human readable reference.
+     *
+     * @var string
+     */
+    protected $name;
+
     /**
      * Unique identifier.
      *
@@ -62,7 +77,29 @@ class Transaction implements JsonSerializable
 
     public function end(): Transaction
     {
-        $this->duration = round((microtime(true) - $this->start)*1000, 2); // milliseconds
+        $this->duration = round((microtime(true) - $this->start) * 1000, 2); // milliseconds
+        return $this;
+    }
+
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    public function setType($type): Transaction
+    {
+        $this->type = $type;
+        return $this;
+    }
+
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): Transaction
+    {
+        $this->name = $name;
         return $this;
     }
 
@@ -105,18 +142,6 @@ class Transaction implements JsonSerializable
     }
 
     /**
-     * Attach a new Span to the transaction.
-     *
-     * @param $name
-     * @return Span
-     */
-    public function startSpan($name): Span
-    {
-        $span = new Span($name, $this);
-        return $span->start();
-    }
-
-    /**
      * Generate unique ID for grouping events.
      *
      * http://www.php.net/manual/en/function.uniqid.php
@@ -127,12 +152,12 @@ class Transaction implements JsonSerializable
      */
     public function generateUniqueHash($length = 32)
     {
-        if(!isset($length) || intval($length) <= 8 ){
+        if (!isset($length) || intval($length) <= 8) {
             $length = 32;
         }
 
         if (function_exists('random_bytes')) {
-            return  bin2hex(random_bytes($length));
+            return bin2hex(random_bytes($length));
         } elseif (function_exists('openssl_random_pseudo_bytes')) {
             return bin2hex(openssl_random_pseudo_bytes($length));
         }
@@ -151,9 +176,13 @@ class Transaction implements JsonSerializable
     public function jsonSerialize()
     {
         return [
+            'type' => $this->type,
+            'name' => $this->name,
             'hash' => $this->hash,
             'start' => $this->start,
             'duration' => $this->duration,
+            'result' => $this->result,
+            'context' => $this->context,
         ];
     }
 
@@ -165,10 +194,5 @@ class Transaction implements JsonSerializable
     public function __toString()
     {
         return json_encode($this->jsonSerialize());
-    }
-
-    public function toString()
-    {
-        return $this->__toString();
     }
 }

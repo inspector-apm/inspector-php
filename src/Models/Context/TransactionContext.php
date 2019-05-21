@@ -1,14 +1,10 @@
 <?php
 
 
-namespace LogEngine\Transaction\Context;
+namespace LogEngine\Models\Context;
 
 
-use LogEngine\Transaction\Context\Models\Request;
-use LogEngine\Transaction\Context\Models\Response;
-use LogEngine\Transaction\Context\Models\User;
-
-class TransactionContext
+class TransactionContext implements \JsonSerializable
 {
     /**
      * @var Request
@@ -83,5 +79,27 @@ class TransactionContext
     public function hasCustom()
     {
         return !empty($this->custom);
+    }
+
+    /**
+     * Specify data which should be serialized to JSON
+     * @link https://php.net/manual/en/jsonserializable.jsonserialize.php
+     * @return mixed data which can be serialized by <b>json_encode</b>,
+     * which is a value of any type other than a resource.
+     * @since 5.4.0
+     */
+    public function jsonSerialize()
+    {
+        return [
+            'request' => $this->request,
+            'response' => $this->response,
+            'user' => $this->user,
+            'custom' => $this->custom,
+        ];
+    }
+
+    public function __toString()
+    {
+        return json_encode($this->jsonSerialize());
     }
 }

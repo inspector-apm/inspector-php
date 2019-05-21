@@ -1,10 +1,10 @@
 <?php
 
 
-namespace LogEngine\Transaction\Context\Models;
+namespace LogEngine\Models\Context;
 
 
-class User
+class User implements \JsonSerializable
 {
     /**
      * Identifier of the logged in user, e.g. the primary key of the user
@@ -53,5 +53,26 @@ class User
         return $this->id != null ||
             $this->email != null ||
             $this->username != null;
+    }
+
+    /**
+     * Specify data which should be serialized to JSON
+     * @link https://php.net/manual/en/jsonserializable.jsonserialize.php
+     * @return mixed data which can be serialized by <b>json_encode</b>,
+     * which is a value of any type other than a resource.
+     * @since 5.4.0
+     */
+    public function jsonSerialize()
+    {
+        return [
+            'id' => $this->id,
+            'username' => $this->username,
+            'email' => $this->email,
+        ];
+    }
+
+    public function __toString()
+    {
+        return json_encode($this->jsonSerialize());
     }
 }

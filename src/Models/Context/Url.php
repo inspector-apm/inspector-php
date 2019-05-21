@@ -1,10 +1,10 @@
 <?php
 
 
-namespace LogEngine\Transaction\Context\Models;
+namespace LogEngine\Models\Context;
 
 
-class Url
+class Url implements \JsonSerializable
 {
     protected $protocol;
 
@@ -78,5 +78,28 @@ class Url
             $this->port != null ||
             $this->path != null ||
             $this->search != null;
+    }
+
+    /**
+     * Specify data which should be serialized to JSON
+     * @link https://php.net/manual/en/jsonserializable.jsonserialize.php
+     * @return mixed data which can be serialized by <b>json_encode</b>,
+     * which is a value of any type other than a resource.
+     * @since 5.4.0
+     */
+    public function jsonSerialize()
+    {
+        return [
+            'protocol' => $this->protocol,
+            'hostname' => $this->hostname,
+            'port' => $this->port,
+            'path' => $this->path,
+            'search' => $this->search,
+        ];
+    }
+
+    public function __toString()
+    {
+        return json_encode($this->jsonSerialize());
     }
 }

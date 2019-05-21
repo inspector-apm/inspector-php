@@ -36,10 +36,9 @@ class AsyncTransport extends AbstractApiTransport
      * AsyncTransport constructor.
      *
      * @param TransportConfiguration $configuration
-     * @param array $options
      * @throws LogEngineException
      */
-    public function __construct($configuration, array $options = array())
+    public function __construct($configuration)
     {
         if (!function_exists('exec')) {
             throw new LogEngineException("PHP function 'exec' is not available, is it disabled for security reasons?");
@@ -49,7 +48,7 @@ class AsyncTransport extends AbstractApiTransport
             throw new LogEngineException('Exec transport is not supposed to work on Windows OS');
         }
 
-        parent::__construct($configuration, $options);
+        parent::__construct($configuration);
     }
 
     /**

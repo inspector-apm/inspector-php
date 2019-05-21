@@ -16,7 +16,7 @@ abstract class AbstractApiTransport implements TransportInterface
     /**
      * Key to authenticate remote calls.
      *
-     * @var Configuration
+     * @var TransportConfiguration
      */
     protected $config;
 
@@ -38,13 +38,12 @@ abstract class AbstractApiTransport implements TransportInterface
      * AbstractApiTransport constructor.
      *
      * @param TransportConfiguration $configuration
-     * @param array $options
      * @throws LogEngineException
      */
-    public function __construct($configuration, array $options = array())
+    public function __construct(TransportConfiguration $configuration)
     {
         $this->config = $configuration;
-        $this->extractOptions($options);
+        $this->verifyOptions($configuration->getOptions());
     }
 
     /**
@@ -53,7 +52,7 @@ abstract class AbstractApiTransport implements TransportInterface
      * @param $options
      * @throws LogEngineException
      */
-    protected function extractOptions($options)
+    protected function verifyOptions($options)
     {
         foreach ($this->getAllowedOptions() as $name => $regex) {
             if (isset($options[$name])) {
@@ -70,12 +69,12 @@ abstract class AbstractApiTransport implements TransportInterface
     /**
      * Add a message to the queue.
      *
-     * @param array $log
+     * @param $item
      * @return TransportInterface
      */
-    public function addEntry($log): TransportInterface
+    public function addEntry($item): TransportInterface
     {
-        $this->queue[] = $log;
+        $this->queue[] = $item;
         return $this;
     }
 
@@ -108,7 +107,7 @@ abstract class AbstractApiTransport implements TransportInterface
 
         if ($jsonLength > $this->config::MAX_POST_LENGTH) {
             if ($count === 1) {
-                // it makes no sense to divide into chunks, just fail
+                // It makes no sense to divide into chunks, just fail silently
                 return;
             }
             $maxCount = floor($count / ceil($jsonLength / $this->config::MAX_POST_LENGTH));

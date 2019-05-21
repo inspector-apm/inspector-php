@@ -1,10 +1,10 @@
 <?php
 
 
-namespace LogEngine\Transaction\Context\Models;
+namespace LogEngine\Models\Context;
 
 
-class Request
+class Request implements \JsonSerializable
 {
     /**
      * @var Url
@@ -171,5 +171,31 @@ class Request
             !empty($this->cookies) ||
             !empty($this->postParams) ||
             $this->rawBody != null;
+    }
+
+    /**
+     * Specify data which should be serialized to JSON
+     * @link https://php.net/manual/en/jsonserializable.jsonserialize.php
+     * @return mixed data which can be serialized by <b>json_encode</b>,
+     * which is a value of any type other than a resource.
+     * @since 5.4.0
+     */
+    public function jsonSerialize()
+    {
+        return [
+            'url' => $this->url,
+            'socket' => $this->socket,
+            'http_version' => $this->httpVersion,
+            'method' => $this->method,
+            'headers' => $this->headers,
+            'cookies' => $this->cookies,
+            'post_params' => $this->postParams,
+            'raw_body' => $this->rawBody,
+        ];
+    }
+
+    public function __toString()
+    {
+        return json_encode($this->jsonSerialize());
     }
 }

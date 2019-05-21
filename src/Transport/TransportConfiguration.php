@@ -10,7 +10,7 @@ class TransportConfiguration
      *
      * @var integer
      */
-    const MAX_POST_LENGTH = 65536;  // 1024 * 64
+    const MAX_POST_LENGTH = 65536;
 
     /**
      * Remote endpoint to send data.
@@ -27,19 +27,21 @@ class TransportConfiguration
     protected $apiKey;
 
     /**
+     * Transport options.
+     *
+     * @var array
+     */
+    protected $options = [];
+
+    /**
      * Environment constructor.
      *
-     * @param string|null $apiKey
-     * @param string|null $url
+     * @param string $apiKey
      * @throws \InvalidArgumentException
      */
-    public function __construct($apiKey, $url = null)
+    public function __construct($apiKey)
     {
         $this->setApiKey($apiKey);
-
-        if(!is_null($url)){
-            $this->setUrl($url);
-        }
     }
 
     /**
@@ -85,11 +87,24 @@ class TransportConfiguration
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getApiKey()
     {
         return $this->apiKey;
+    }
+
+    public function getOptions(): array
+    {
+        return $this->options;
+    }
+
+    public function addOption($key, $value): TransportConfiguration
+    {
+        $this->options[$key] = $value;
+        return $this;
+    }
+
+    public function setOptions(array $options)
+    {
+        $this->options = $options;
     }
 }
