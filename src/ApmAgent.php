@@ -31,7 +31,7 @@ class ApmAgent
      * Logger constructor.
      *
      * @param TransportConfiguration $configuration
-     * @throws Exceptions\LogEngineException
+     * @throws Exceptions\LogEngineApmException
      */
     public function __construct(TransportConfiguration $configuration)
     {

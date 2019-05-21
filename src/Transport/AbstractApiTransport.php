@@ -4,7 +4,7 @@ namespace LogEngine\Transport;
 
 
 use LogEngine\Contracts\TransportInterface;
-use LogEngine\Exceptions\LogEngineException;
+use LogEngine\Exceptions\LogEngineApmException;
 
 abstract class AbstractApiTransport implements TransportInterface
 {
@@ -38,7 +38,7 @@ abstract class AbstractApiTransport implements TransportInterface
      * AbstractApiTransport constructor.
      *
      * @param TransportConfiguration $configuration
-     * @throws LogEngineException
+     * @throws LogEngineApmException
      */
     public function __construct(TransportConfiguration $configuration)
     {
@@ -50,7 +50,7 @@ abstract class AbstractApiTransport implements TransportInterface
      * Verify if given options match constraints.
      *
      * @param $options
-     * @throws LogEngineException
+     * @throws LogEngineApmException
      */
     protected function verifyOptions($options)
     {
@@ -60,7 +60,7 @@ abstract class AbstractApiTransport implements TransportInterface
                 if (preg_match($regex, $value)) {
                     $this->$name = $value;
                 } else {
-                    throw new LogEngineException("Option '$name' has invalid value");
+                    throw new LogEngineApmException("Option '$name' has invalid value");
                 }
             }
         }

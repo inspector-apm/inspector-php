@@ -3,7 +3,7 @@
 namespace LogEngine\Transport;
 
 
-use LogEngine\Exceptions\LogEngineException;
+use LogEngine\Exceptions\LogEngineApmException;
 
 /**
  * This transport collects log data until the end of processing.
@@ -36,16 +36,16 @@ class AsyncTransport extends AbstractApiTransport
      * AsyncTransport constructor.
      *
      * @param TransportConfiguration $configuration
-     * @throws LogEngineException
+     * @throws LogEngineApmException
      */
     public function __construct($configuration)
     {
         if (!function_exists('exec')) {
-            throw new LogEngineException("PHP function 'exec' is not available, is it disabled for security reasons?");
+            throw new LogEngineApmException("PHP function 'exec' is not available, is it disabled for security reasons?");
         }
 
         if ('WIN' === strtoupper(substr(PHP_OS, 0, 3))) {
-            throw new LogEngineException('Exec transport is not supposed to work on Windows OS');
+            throw new LogEngineApmException('Exec transport is not supposed to work on Windows OS');
         }
 
         parent::__construct($configuration);

@@ -65,7 +65,7 @@ class LogEngineAgent extends AbstractLogger
      *
      * @param TransportConfiguration $configuration
      * @param array $options
-     * @throws Exceptions\LogEngineException
+     * @throws Exceptions\LogEngineApmException
      */
     public function __construct($configuration, array $options = array())
     {

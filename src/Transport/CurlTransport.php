@@ -3,7 +3,7 @@
 namespace LogEngine\Transport;
 
 
-use LogEngine\Exceptions\LogEngineException;
+use LogEngine\Exceptions\LogEngineApmException;
 
 class CurlTransport extends AbstractApiTransport
 {
@@ -25,13 +25,13 @@ class CurlTransport extends AbstractApiTransport
      * CurlTransport constructor.
      *
      * @param TransportConfiguration $configuration
-     * @throws LogEngineException
+     * @throws LogEngineApmException
      */
     public function __construct($configuration)
     {
         // System need to have CURL available
         if (!function_exists('curl_init')) {
-            throw new LogEngineException('cURL PHP extension is not available');
+            throw new LogEngineApmException('cURL PHP extension is not available');
         }
 
         parent::__construct($configuration);

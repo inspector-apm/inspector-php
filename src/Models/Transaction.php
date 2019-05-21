@@ -5,7 +5,7 @@ namespace LogEngine\Models;
 
 
 use Exception;
-use LogEngine\Exceptions\LogEngineException;
+use LogEngine\Exceptions\LogEngineApmException;
 use LogEngine\Models\Context\TransactionContext;
 
 class Transaction implements \JsonSerializable
@@ -162,7 +162,7 @@ class Transaction implements \JsonSerializable
             return bin2hex(openssl_random_pseudo_bytes($length));
         }
 
-        throw new LogEngineException('Can\'t create unique transaction hash.');
+        throw new LogEngineApmException('Can\'t create unique transaction hash.');
     }
 
     /**
