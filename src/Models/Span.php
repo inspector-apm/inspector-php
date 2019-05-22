@@ -106,7 +106,7 @@ class Span implements \JsonSerializable
             'type' => $this->type,
             'start' => $this->start,
             'duration' => $this->duration,
-            'context' => $this->context->toArray(),
+            'context' => $this->context->jsonSerialize(),
             'backtrace' => $this->backtrace,
         ];
     }

@@ -219,7 +219,7 @@ class Transaction implements \JsonSerializable
             'start' => $this->start,
             'duration' => $this->duration,
             'result' => $this->result,
-            'context' => $this->context->toArray(),
+            'context' => $this->context->jsonSerialize(),
             'backtrace' => $this->backtrace,
         ];
     }
