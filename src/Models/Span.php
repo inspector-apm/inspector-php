@@ -8,6 +8,8 @@ use LogEngine\Models\Context\SpanContext;
 
 class Span implements \JsonSerializable
 {
+    const MODEL_NAME = 'span';
+
     /**
      * The Transaction that own the span.
      *
@@ -99,11 +101,12 @@ class Span implements \JsonSerializable
     public function jsonSerialize()
     {
         return [
+            'model' => self::MODEL_NAME,
             'transaction' => $this->transaction->getHash(),
             'type' => $this->type,
             'start' => $this->start,
             'duration' => $this->duration,
-            'context' => $this->context,
+            'context' => $this->context->toArray(),
             'backtrace' => $this->backtrace,
         ];
     }

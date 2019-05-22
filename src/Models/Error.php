@@ -6,6 +6,8 @@ namespace LogEngine\Models;
 
 class Error implements \JsonSerializable
 {
+    const MODEL_NAME = 'error';
+
     /**
      * @var Transaction
      */
@@ -168,7 +170,7 @@ class Error implements \JsonSerializable
         $message = $this->throwable->getMessage() ? $this->throwable->getMessage() : $className;
 
         return [
-            'type' => 'exception',
+            'model' => self::MODEL_NAME,
             'transaction' => $this->transaction->getHash(),
             'message' => $message,
             'timestamp' => $this->timestamp,

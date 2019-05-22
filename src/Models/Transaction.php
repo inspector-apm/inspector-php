@@ -10,6 +10,7 @@ use LogEngine\Models\Context\TransactionContext;
 
 class Transaction implements \JsonSerializable
 {
+    const MODEL_NAME = 'transaction';
     const TYPE_REQUEST = 'request';
     const TYPE_PROCESS = 'process';
 
@@ -211,13 +212,14 @@ class Transaction implements \JsonSerializable
     public function jsonSerialize()
     {
         return [
+            'model' => self::MODEL_NAME,
             'type' => $this->type,
             'name' => $this->name,
             'hash' => $this->hash,
             'start' => $this->start,
             'duration' => $this->duration,
             'result' => $this->result,
-            'context' => $this->context,
+            'context' => $this->context->toArray(),
             'backtrace' => $this->backtrace,
         ];
     }
