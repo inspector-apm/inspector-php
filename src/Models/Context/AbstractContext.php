@@ -19,10 +19,12 @@ abstract class AbstractContext implements \JsonSerializable
             if (is_array($item)) {
                 $payload[$key] = $this->arrayFilterRecursive($item);
             }
+
+            if (empty ($payload [$key])) {
+                unset ($payload [$key]);
+            }
         }
 
-        return array_filter($payload, function ($value) {
-            return !is_null($value);
-        });
+        return $payload;
     }
 }
