@@ -97,9 +97,9 @@ class TransactionContext extends AbstractContext
     public function toArray(): array
     {
         return [
-            'request' => $this->request,
-            'response' => $this->response,
-            'user' => $this->user,
+            'request' => $this->request->toArray(),
+            'response' => $this->response->toArray(),
+            'user' => $this->user->toArray(),
             'custom' => $this->custom,
         ];
     }

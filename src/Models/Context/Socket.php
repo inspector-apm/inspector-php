@@ -4,7 +4,7 @@
 namespace LogEngine\Models\Context;
 
 
-class Socket implements \JsonSerializable
+class Socket extends AbstractContext
 {
     protected $encrypted = false;
 
@@ -51,22 +51,15 @@ class Socket implements \JsonSerializable
     }
 
     /**
-     * Specify data which should be serialized to JSON
-     * @link https://php.net/manual/en/jsonserializable.jsonserialize.php
-     * @return mixed data which can be serialized by <b>json_encode</b>,
-     * which is a value of any type other than a resource.
-     * @since 5.4.0
+     * Array representation.
+     *
+     * @return array
      */
-    public function jsonSerialize()
+    public function toArray(): array
     {
         return [
             'remote_address' => $this->remoteAddress,
             'encrypted' => $this->encrypted,
         ];
-    }
-
-    public function __toString()
-    {
-        return json_encode($this->jsonSerialize());
     }
 }

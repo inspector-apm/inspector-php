@@ -4,7 +4,7 @@
 namespace LogEngine\Models\Context;
 
 
-class Request implements \JsonSerializable
+class Request extends AbstractContext
 {
     /**
      * @var Url
@@ -182,13 +182,11 @@ class Request implements \JsonSerializable
     }
 
     /**
-     * Specify data which should be serialized to JSON
-     * @link https://php.net/manual/en/jsonserializable.jsonserialize.php
-     * @return mixed data which can be serialized by <b>json_encode</b>,
-     * which is a value of any type other than a resource.
-     * @since 5.4.0
+     * Array representation.
+     *
+     * @return array
      */
-    public function jsonSerialize()
+    public function toArray(): array
     {
         return [
             'url' => $this->url,
@@ -200,10 +198,5 @@ class Request implements \JsonSerializable
             'post_params' => $this->postParams,
             'raw_body' => $this->rawBody,
         ];
-    }
-
-    public function __toString()
-    {
-        return json_encode($this->jsonSerialize());
     }
 }

@@ -4,8 +4,8 @@
 namespace LogEngine\Models\Context;
 
 
-use LogEngine\Models\Db;
-use LogEngine\Models\Http;
+use LogEngine\Models\Context\Db;
+use LogEngine\Models\Context\Http;
 
 class SpanContext extends AbstractContext
 {
@@ -56,8 +56,8 @@ class SpanContext extends AbstractContext
     public function toArray(): array
     {
         return [
-            'db' => $this->db,
-            'http' => $this->http,
+            'db' => $this->db->toArray(),
+            'http' => $this->http->toArray(),
         ];
     }
 }
