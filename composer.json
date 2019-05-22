@@ -1,6 +1,6 @@
 {
     "name": "log-engine/logengine-php",
-    "description": "LOG Engine package for PHP applications.",
+    "description": "LOG-Engine package for PHP applications.",
     "keywords": ["apm", "php", "logengine"],
     "license": "MIT",
     "authors": [
