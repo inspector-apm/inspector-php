@@ -62,7 +62,7 @@ class SpanContext implements \JsonSerializable
             'http' => $this->http,
         ];
 
-        return array_filter($content, function ($key, $value) {
+        return array_filter($content, function ($value) {
             return !is_null($value);
         });
     }

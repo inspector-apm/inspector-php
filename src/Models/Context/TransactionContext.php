@@ -97,7 +97,7 @@ class TransactionContext implements \JsonSerializable
             'custom' => $this->custom,
         ];
 
-        return array_filter($content, function ($key, $value) {
+        return array_filter($content, function ($value) {
             return !is_null($value);
         });
     }
