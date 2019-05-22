@@ -7,7 +7,7 @@ namespace LogEngine\Models\Context;
 use LogEngine\Models\Db;
 use LogEngine\Models\Http;
 
-class SpanContext implements \JsonSerializable
+class SpanContext extends AbstractContext
 {
     /**
      * Database interaction details
@@ -57,18 +57,9 @@ class SpanContext implements \JsonSerializable
      */
     public function jsonSerialize()
     {
-        $content = [
+        return [
             'db' => $this->db,
             'http' => $this->http,
         ];
-
-        return array_filter($content, function ($value) {
-            return !is_null($value);
-        });
-    }
-
-    public function __toString()
-    {
-        return json_encode($this->jsonSerialize());
     }
 }

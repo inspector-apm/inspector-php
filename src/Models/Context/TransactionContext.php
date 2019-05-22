@@ -4,7 +4,7 @@
 namespace LogEngine\Models\Context;
 
 
-class TransactionContext implements \JsonSerializable
+class TransactionContext extends AbstractContext
 {
     /**
      * @var Request
@@ -81,6 +81,14 @@ class TransactionContext implements \JsonSerializable
         return !empty($this->custom);
     }
 
+    public function hasContent(): bool
+    {
+        return !empty($this->custom) ||
+            $this->user->hasContent() ||
+            $this->request->hasContent() ||
+            $this->response->hasContent();
+    }
+
     /**
      * Specify data which should be serialized to JSON
      * @link https://php.net/manual/en/jsonserializable.jsonserialize.php
@@ -90,20 +98,11 @@ class TransactionContext implements \JsonSerializable
      */
     public function jsonSerialize()
     {
-        $content = [
+        return [
             'request' => $this->request,
             'response' => $this->response,
             'user' => $this->user,
             'custom' => $this->custom,
         ];
-
-        return array_filter($content, function ($value) {
-            return !is_null($value);
-        });
-    }
-
-    public function __toString()
-    {
-        return json_encode($this->jsonSerialize());
     }
 }
