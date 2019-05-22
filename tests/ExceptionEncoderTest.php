@@ -16,17 +16,16 @@ class ExceptionEncoderTest extends TestCase
     public $apm;
 
     /**
-     * ExceptionEncoderTest constructor.
-     * @param null $name
-     * @param array $data
-     * @param string $dataName
+     * Sets up the fixture, for example, open a network connection.
+     * This method is called before a test is executed.
+     *
      * @throws \Exception
      */
-    public function __construct($name = null, array $data = [], $dataName = '')
+    public function setUp()
     {
-        parent::__construct($name, $data, $dataName);
-
-        $this->apm = new ApmAgent(new Configuration('example-key'));
+        $configuration = new Configuration('example-key');
+        $configuration->setEnabled(false);
+        $this->apm = new ApmAgent($configuration);
         $this->apm->startTransaction('testcase');
     }
 

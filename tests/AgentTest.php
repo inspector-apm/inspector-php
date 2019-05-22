@@ -7,14 +7,15 @@ use LogEngine\ApmAgent;
 use LogEngine\Configuration;
 use PHPUnit\Framework\TestCase;
 
-class LogEngineTest extends TestCase
+class AgentTest extends TestCase
 {
     /**
      * @throws \LogEngine\Exceptions\LogEngineApmException
      */
     public function testLogEngineInstance()
     {
-        $configuration = new Configuration('key');
+        $configuration = new Configuration('example-key');
+        $configuration->setEnabled(false);
 
         $this->assertInstanceOf(ApmAgent::class, new ApmAgent($configuration));
     }

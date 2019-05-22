@@ -116,10 +116,13 @@ class ApmAgent
      */
     public function flush()
     {
-        $this->transaction->end();
+        if(isset($this->transaction)){
+            $this->transaction->end();
 
-        if($this->configuration->isEnabled()){
-            $this->transport->flush();
+            if($this->configuration->isEnabled()){
+                $this->transport->flush();
+            }
         }
+
     }
 }
