@@ -1,7 +1,7 @@
 {
     "name": "log-engine/logengine-php",
-    "description": "LOG Engine integration package for PHP applications.",
-    "keywords": ["log", "php", "logengine"],
+    "description": "LOG Engine package for PHP applications.",
+    "keywords": ["apm", "php", "logengine"],
     "license": "MIT",
     "authors": [
         {
@@ -13,7 +13,8 @@
         "php": ">=7.0.0",
         "psr/log": "^1.1",
         "ext-curl": "*",
-        "ext-json": "*"
+        "ext-json": "*",
+        "ext-apache": "*"
     },
     "autoload": {
         "psr-4": {

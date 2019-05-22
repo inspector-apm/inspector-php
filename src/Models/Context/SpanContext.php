@@ -9,10 +9,23 @@ use LogEngine\Models\Http;
 
 class SpanContext implements \JsonSerializable
 {
+    /**
+     * Database interaction details
+     *
+     * @var Db
+     */
     protected $db;
 
+    /**
+     * External HTTP request details.
+     *
+     * @var Http
+     */
     protected $http;
 
+    /**
+     * SpanContext constructor.
+     */
     public function __construct()
     {
         $this->db = new Db();

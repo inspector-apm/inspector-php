@@ -16,6 +16,21 @@ class Url implements \JsonSerializable
 
     protected $search;
 
+    protected $full;
+
+    /**
+     * Url constructor.
+     */
+    public function __construct()
+    {
+        $this->protocol = isset($_SERVER['HTTPS']) ? 'https' : 'http';
+        $this->hostname = $_SERVER['SERVER_NAME'] ?? '';
+        $this->port = $_SERVER['SERVER_PORT'] ?? '';
+        $this->path = $_SERVER['SCRIPT_NAME'] ?? '';
+        $this->search = '?' . (($_SERVER['QUERY_STRING'] ?? '') ?? '');
+        $this->full = isset($_SERVER['HTTP_HOST']) ? $this->protocol . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] : '';
+    }
+
     public function getProtocol(): string
     {
         return $this->protocol;
@@ -68,6 +83,17 @@ class Url implements \JsonSerializable
     public function setSearch($search): Url
     {
         $this->search = $search;
+        return $this;
+    }
+
+    public function getFull(): string
+    {
+        return $this->full;
+    }
+
+    public function setFull(string $full): Url
+    {
+        $this->full = $full;
         return $this;
     }
 

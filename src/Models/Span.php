@@ -16,6 +16,13 @@ class Span implements \JsonSerializable
     protected $transaction;
 
     /**
+     * Segmenting span type.
+     *
+     * @var string
+     */
+    protected $type;
+
+    /**
      * @var float
      */
     protected $start;
@@ -25,12 +32,21 @@ class Span implements \JsonSerializable
      *
      * @var float
      */
-    protected $duration;
+    protected $duration = 0.0;
 
     /**
-     * @var string
+     * PHP backtrace.
+     *
+     * @var array
      */
-    protected $type;
+    protected $backtrace = [];
+
+    /**
+     * Limit the number of stack frames returned.
+     *
+     * @var int
+     */
+    protected $backtraceLimit = 0;
 
     /**
      * @var SpanContext
@@ -64,6 +80,7 @@ class Span implements \JsonSerializable
     public function end(): Span
     {
         $this->duration = round((microtime(true) - $this->start)*1000, 2); // milliseconds
+        $this->backtrace = debug_backtrace($this->backtraceLimit);
         return $this;
     }
 
@@ -82,9 +99,12 @@ class Span implements \JsonSerializable
     public function jsonSerialize()
     {
         return [
-            'transaction_hash' => $this->transaction->hash,
+            'transaction' => $this->transaction->hash,
+            'type' => $this->type,
             'start' => $this->start,
             'duration' => $this->duration,
+            'context' => $this->context,
+            'backtrace' => $this->backtrace,
         ];
     }
 

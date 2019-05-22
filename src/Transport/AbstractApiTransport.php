@@ -3,6 +3,7 @@
 namespace LogEngine\Transport;
 
 
+use LogEngine\Configuration;
 use LogEngine\Contracts\TransportInterface;
 use LogEngine\Exceptions\LogEngineApmException;
 
@@ -16,7 +17,7 @@ abstract class AbstractApiTransport implements TransportInterface
     /**
      * Key to authenticate remote calls.
      *
-     * @var TransportConfiguration
+     * @var Configuration
      */
     protected $config;
 
@@ -37,10 +38,10 @@ abstract class AbstractApiTransport implements TransportInterface
     /**
      * AbstractApiTransport constructor.
      *
-     * @param TransportConfiguration $configuration
+     * @param Configuration $configuration
      * @throws LogEngineApmException
      */
-    public function __construct(TransportConfiguration $configuration)
+    public function __construct(Configuration $configuration)
     {
         $this->config = $configuration;
         $this->verifyOptions($configuration->getOptions());

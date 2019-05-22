@@ -59,6 +59,10 @@ class Request implements \JsonSerializable
     {
         $this->url = new Url();
         $this->socket = new Socket();
+        $this->method = $_SERVER['REQUEST_METHOD'] ?? 'cli';
+        $this->httpVersion = substr($_SERVER['SERVER_PROTOCOL'], strpos($_SERVER['SERVER_PROTOCOL'], '/'));
+        $this->headers = getallheaders();
+        $this->cookies = $_COOKIE;
     }
 
     public function getUrl()

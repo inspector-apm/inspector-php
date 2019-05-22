@@ -11,6 +11,7 @@ use LogEngine\Models\Context\TransactionContext;
 class Transaction implements \JsonSerializable
 {
     const TYPE_REQUEST = 'request';
+    const TYPE_PROCESS = 'process';
 
     /**
      * Keyword of specific relevance in the service's domain (eg:  'request', 'backgroundjob').
@@ -20,7 +21,7 @@ class Transaction implements \JsonSerializable
     protected $type;
 
     /**
-     * Human readable reference.
+     * Name reference for grouping transactions.
      *
      * @var string
      */
@@ -45,12 +46,26 @@ class Transaction implements \JsonSerializable
      *
      * @var float
      */
-    protected $duration;
+    protected $duration = 0.0;
 
     /**
      * @var TransactionContext
      */
     protected $context;
+
+    /**
+     * PHP backtrace.
+     *
+     * @var array
+     */
+    protected $backtrace = [];
+
+    /**
+     * Limit the number of stack frames returned.
+     *
+     * @var int
+     */
+    protected $backtraceLimit = 0;
 
     /**
      * @var string
@@ -60,10 +75,13 @@ class Transaction implements \JsonSerializable
     /**
      * Transaction constructor.
      *
+     * @param string $name
      * @throws Exception
      */
-    public function __construct()
+    public function __construct($name)
     {
+        $this->name = $name;
+        $this->type = $_SERVER['REQUEST_METHOD'] ? self::TYPE_REQUEST : self::TYPE_PROCESS;
         $this->hash = $this->generateUniqueHash();
         $this->start = microtime(true);
         $this->context = new TransactionContext();
@@ -78,6 +96,7 @@ class Transaction implements \JsonSerializable
     public function end(): Transaction
     {
         $this->duration = round((microtime(true) - $this->start) * 1000, 2); // milliseconds
+        $this->backtrace = debug_backtrace($this->backtraceLimit);
         return $this;
     }
 
@@ -106,6 +125,17 @@ class Transaction implements \JsonSerializable
     public function getContext(): TransactionContext
     {
         return $this->context;
+    }
+
+    public function getBacktraceLimit(): int
+    {
+        return $this->backtraceLimit;
+    }
+
+    public function setBacktraceLimit(int $backtraceLimit): Transaction
+    {
+        $this->backtraceLimit = $backtraceLimit;
+        return $this;
     }
 
     public function withUser($id, $username = null, $email = null): Transaction
@@ -183,6 +213,7 @@ class Transaction implements \JsonSerializable
             'duration' => $this->duration,
             'result' => $this->result,
             'context' => $this->context,
+            'backtrace' => $this->backtrace,
         ];
     }
 

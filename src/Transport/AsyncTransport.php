@@ -3,6 +3,7 @@
 namespace LogEngine\Transport;
 
 
+use LogEngine\Configuration;
 use LogEngine\Exceptions\LogEngineApmException;
 
 /**
@@ -35,7 +36,7 @@ class AsyncTransport extends AbstractApiTransport
     /**
      * AsyncTransport constructor.
      *
-     * @param TransportConfiguration $configuration
+     * @param Configuration $configuration
      * @throws LogEngineApmException
      */
     public function __construct($configuration)

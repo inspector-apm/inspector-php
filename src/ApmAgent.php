@@ -5,16 +5,23 @@ namespace LogEngine;
 
 
 use LogEngine\Contracts\TransportInterface;
+use LogEngine\Models\Error;
 use LogEngine\Models\Span;
 use LogEngine\Models\Transaction;
 use LogEngine\Transport\AsyncTransport;
 use LogEngine\Transport\CurlTransport;
-use LogEngine\Transport\TransportConfiguration;
 
 class ApmAgent
 {
     /**
-     * Transport strategy instance.
+     * Agent configuration.
+     *
+     * @var Configuration
+     */
+    protected $configuration;
+
+    /**
+     * Transport strategy.
      *
      * @var TransportInterface
      */
@@ -28,12 +35,17 @@ class ApmAgent
     protected $transaction;
 
     /**
+     * @var ExceptionEncoder
+     */
+    protected $exceptionEncoder;
+
+    /**
      * Logger constructor.
      *
-     * @param TransportConfiguration $configuration
+     * @param Configuration $configuration
      * @throws Exceptions\LogEngineApmException
      */
-    public function __construct(TransportConfiguration $configuration)
+    public function __construct(Configuration $configuration)
     {
         switch (getenv('LOGENGINE_TRANSPORT')){
             case 'async':
@@ -43,16 +55,31 @@ class ApmAgent
                 $this->transport = new CurlTransport($configuration);
         }
 
+        $this->configuration = $configuration;
+        $this->exceptionEncoder = new ExceptionEncoder();
         register_shutdown_function(array($this, 'flush'));
     }
 
-    public function startTransaction()
+    /**
+     * Create and start new Transaction.
+     *
+     * @param string $name
+     * @return Transaction
+     * @throws \Exception
+     */
+    public function startTransaction($name)
     {
-        $transaction = (new Transaction())->start();
+        $transaction = new Transaction($name);
+        $transaction->start();
         $this->transport->addEntry($transaction);
         return $transaction;
     }
 
+    /**
+     * Get current transaction instance.
+     *
+     * @return Transaction
+     */
     public function currentTransaction()
     {
         return $this->transaction;
@@ -66,18 +93,39 @@ class ApmAgent
      */
     public function startSpan($type)
     {
-        $span = (new Span($type, $this->transaction))->start();
+        $span = new Span($type, $this->transaction);
+        $span->start();
         $this->transport->addEntry($span);
         return $span;
     }
 
     /**
-     * Flush all messages queue programmatically.
+     * Error reporting.
+     *
+     * @param \Throwable $exception
+     * @return ApmAgent
+     */
+    public function reportException(\Throwable $exception)
+    {
+        if (!$exception instanceof \Exception && !$exception instanceof \Throwable) {
+            throw new \InvalidArgumentException('$exception need to be an instance of Exception or Throwable.');
+        }
+
+        $this->transport->addEntry(new Error($exception));
+        return $this;
+    }
+
+    /**
+     * Flush queue to the remote platform.
+     *
      * @throws \Exception
      */
     public function flush()
     {
         $this->transaction->end();
-        $this->transport->flush();
+
+        if($this->configuration->isEnabled()){
+            $this->transport->flush();
+        }
     }
 }

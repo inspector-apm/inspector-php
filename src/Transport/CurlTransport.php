@@ -3,6 +3,7 @@
 namespace LogEngine\Transport;
 
 
+use LogEngine\Configuration;
 use LogEngine\Exceptions\LogEngineApmException;
 
 class CurlTransport extends AbstractApiTransport
@@ -24,7 +25,7 @@ class CurlTransport extends AbstractApiTransport
     /**
      * CurlTransport constructor.
      *
-     * @param TransportConfiguration $configuration
+     * @param Configuration $configuration
      * @throws LogEngineApmException
      */
     public function __construct($configuration)

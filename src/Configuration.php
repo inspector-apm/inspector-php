@@ -1,9 +1,9 @@
 <?php
 
-namespace LogEngine\Transport;
+namespace LogEngine;
 
 
-class TransportConfiguration
+class Configuration
 {
     /**
      * Max size of a POST request content.
@@ -34,6 +34,21 @@ class TransportConfiguration
     protected $options = [];
 
     /**
+     * @var string
+     */
+    protected $hostname;
+
+    /**
+     * @var string
+     */
+    protected $environment;
+
+    /**
+     * @var bool
+     */
+    protected $enabled = true;
+
+    /**
      * Environment constructor.
      *
      * @param string $apiKey
@@ -42,6 +57,8 @@ class TransportConfiguration
     public function __construct($apiKey)
     {
         $this->setApiKey($apiKey);
+        $this->hostname = gethostname();
+        $this->environment = getenv('LOGENGINE_ENV');
     }
 
     /**
@@ -97,7 +114,7 @@ class TransportConfiguration
         return $this->options;
     }
 
-    public function addOption($key, $value): TransportConfiguration
+    public function addOption($key, $value): Configuration
     {
         $this->options[$key] = $value;
         return $this;
@@ -106,5 +123,38 @@ class TransportConfiguration
     public function setOptions(array $options)
     {
         $this->options = $options;
+    }
+
+    public function getHostname(): string
+    {
+        return $this->hostname;
+    }
+
+    public function setHostname(string $hostname): Configuration
+    {
+        $this->hostname = $hostname;
+        return $this;
+    }
+
+    public function getEnvironment(): string
+    {
+        return $this->environment;
+    }
+
+    public function setEnvironment(string $environment): Configuration
+    {
+        $this->environment = $environment;
+        return $this;
+    }
+
+    public function isEnabled(): bool
+    {
+        return $this->enabled;
+    }
+
+    public function setEnabled(bool $enabled): Configuration
+    {
+        $this->enabled = $enabled;
+        return $this;
     }
 }

@@ -3,7 +3,7 @@
 namespace LogEngine\Tests;
 
 
-use LogEngine\Transport\Configuration;
+use LogEngine\Configuration;
 use PHPUnit\Framework\TestCase;
 
 class ConfigurationTest extends TestCase
