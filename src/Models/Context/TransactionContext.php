@@ -90,12 +90,16 @@ class TransactionContext implements \JsonSerializable
      */
     public function jsonSerialize()
     {
-        return [
+        $content = [
             'request' => $this->request,
             'response' => $this->response,
             'user' => $this->user,
             'custom' => $this->custom,
         ];
+
+        return array_filter($content, function ($key, $value) {
+            return !is_null($value);
+        });
     }
 
     public function __toString()

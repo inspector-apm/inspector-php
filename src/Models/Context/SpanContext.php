@@ -57,10 +57,14 @@ class SpanContext implements \JsonSerializable
      */
     public function jsonSerialize()
     {
-        return [
+        $content = [
             'db' => $this->db,
             'http' => $this->http,
         ];
+
+        return array_filter($content, function ($key, $value) {
+            return !is_null($value);
+        });
     }
 
     public function __toString()
