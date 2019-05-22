@@ -32,14 +32,14 @@ class Transaction implements \JsonSerializable
      *
      * @var string
      */
-    public $hash;
+    protected $hash;
 
     /**
      * Start time of transaction.
      *
      * @var float
      */
-    public $start;
+    protected $start;
 
     /**
      * Number of milliseconds until Transaction ends.
@@ -98,6 +98,11 @@ class Transaction implements \JsonSerializable
         $this->duration = round((microtime(true) - $this->start) * 1000, 2); // milliseconds
         $this->backtrace = debug_backtrace($this->backtraceLimit);
         return $this;
+    }
+
+    public function getHash(): string
+    {
+        return $this->hash;
     }
 
     public function getType()

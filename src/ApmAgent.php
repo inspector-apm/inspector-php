@@ -35,11 +35,6 @@ class ApmAgent
     protected $transaction;
 
     /**
-     * @var ExceptionEncoder
-     */
-    protected $exceptionEncoder;
-
-    /**
      * Logger constructor.
      *
      * @param Configuration $configuration
@@ -56,7 +51,6 @@ class ApmAgent
         }
 
         $this->configuration = $configuration;
-        $this->exceptionEncoder = new ExceptionEncoder();
         register_shutdown_function(array($this, 'flush'));
     }
 
@@ -111,7 +105,7 @@ class ApmAgent
             throw new \InvalidArgumentException('$exception need to be an instance of Exception or Throwable.');
         }
 
-        $this->transport->addEntry(new Error($exception));
+        $this->transport->addEntry(new Error($exception, $this->transaction));
         return $this;
     }
 

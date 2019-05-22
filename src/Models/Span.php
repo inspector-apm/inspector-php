@@ -77,9 +77,9 @@ class Span implements \JsonSerializable
         return $this;
     }
 
-    public function end(): Span
+    public function end($duration = null): Span
     {
-        $this->duration = round((microtime(true) - $this->start)*1000, 2); // milliseconds
+        $this->duration = $duration ?? round((microtime(true) - $this->start)*1000, 2); // milliseconds
         $this->backtrace = debug_backtrace($this->backtraceLimit);
         return $this;
     }
@@ -99,7 +99,7 @@ class Span implements \JsonSerializable
     public function jsonSerialize()
     {
         return [
-            'transaction' => $this->transaction->hash,
+            'transaction' => $this->transaction->getHash(),
             'type' => $this->type,
             'start' => $this->start,
             'duration' => $this->duration,

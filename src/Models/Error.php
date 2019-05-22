@@ -6,6 +6,14 @@ namespace LogEngine\Models;
 
 class Error implements \JsonSerializable
 {
+    /**
+     * @var Transaction
+     */
+    protected $transaction;
+
+    /**
+     * @var
+     */
     protected $timestamp;
 
     /**
@@ -17,10 +25,13 @@ class Error implements \JsonSerializable
      * Error constructor.
      *
      * @param $throwable
+     * @param $transaction
      */
-    public function __construct($throwable)
+    public function __construct($throwable, $transaction)
     {
         $this->throwable = $throwable;
+        $this->transaction = $transaction;
+        $this->timestamp = microtime();
     }
 
     /**
@@ -147,11 +158,9 @@ class Error implements \JsonSerializable
     }
 
     /**
-     * Specify data which should be serialized to JSON
-     * @link https://php.net/manual/en/jsonserializable.jsonserialize.php
-     * @return mixed data which can be serialized by <b>json_encode</b>,
-     * which is a value of any type other than a resource.
-     * @since 5.4.0
+     * The stacktrace reporting was moved here to be executed after the application sent the response to the user.
+     *
+     * @return mixed
      */
     public function jsonSerialize()
     {
@@ -160,7 +169,9 @@ class Error implements \JsonSerializable
 
         return [
             'type' => 'exception',
+            'transaction' => $this->transaction->getHash(),
             'message' => $message,
+            'timestamp' => $this->timestamp,
             'file' => $this->throwable->getFile(),
             'class' => $className,
             'code' => $this->throwable->getCode(),
