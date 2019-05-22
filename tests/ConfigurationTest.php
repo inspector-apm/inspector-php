@@ -12,7 +12,7 @@ class ConfigurationTest extends TestCase
     {
         $this->expectException(\InvalidArgumentException::class);
 
-        new Configuration('', '');
+        new Configuration('');
     }
 
     public function testCreateInstance()
@@ -20,7 +20,8 @@ class ConfigurationTest extends TestCase
         $initialUrl = 'http://www.example.com/api';
         $initialApiKey = 'aaa';
 
-        $configuration = new Configuration($initialUrl, $initialApiKey);
+        $configuration = new Configuration($initialApiKey);
+        $configuration->setUrl($initialUrl);
 
         $this->assertSame($initialUrl, $configuration->getUrl());
         $this->assertSame($initialApiKey, $configuration->getApiKey());
