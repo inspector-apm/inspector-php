@@ -33,7 +33,7 @@ class ContextTest extends TestCase
     {
         $transaction = $this->apm->startTransaction('testcase');
 
-        $this->assertSame([], $transaction->getContext()->toArray());
+        $this->assertSame([], $transaction->getContext()->jsonSerialize());
     }
 
     /**
@@ -44,6 +44,6 @@ class ContextTest extends TestCase
         $this->apm->startTransaction('testcase');
         $span = $this->apm->startSpan('testSpanContextEmpty');
 
-        $this->assertSame([], $span->getContext()->toArray());
+        $this->assertSame([], $span->getContext()->jsonSerialize());
     }
 }

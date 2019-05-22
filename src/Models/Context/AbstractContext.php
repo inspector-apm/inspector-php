@@ -22,23 +22,25 @@ abstract class AbstractContext implements \JsonSerializable
         return $this->arrayFilterRecursive($this->toArray());
     }
 
-    public function __toString()
-    {
-        return json_encode($this->jsonSerialize());
-    }
-
     protected function arrayFilterRecursive(array $payload)
     {
+        $filtered = [];
+
         foreach ($payload as $key => $item) {
             if (is_array($item)) {
-                $payload[$key] = $this->arrayFilterRecursive($item);
+                $item = $this->arrayFilterRecursive($item);
             }
 
-            if (!isset($payload[$key]) || empty ($payload[$key])) {
-                unset ($payload[$key]);
+            if (!empty($item)) {
+                $filtered[$key] = $item;
             }
         }
 
-        return $payload;
+        return $filtered;
+    }
+
+    public function __toString()
+    {
+        return json_encode($this->jsonSerialize());
     }
 }
