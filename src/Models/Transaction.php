@@ -81,7 +81,7 @@ class Transaction implements \JsonSerializable
     public function __construct($name)
     {
         $this->name = $name;
-        $this->type = $_SERVER['REQUEST_METHOD'] ? self::TYPE_REQUEST : self::TYPE_PROCESS;
+        $this->type = !empty($_SERVER['REQUEST_METHOD']) ? self::TYPE_REQUEST : self::TYPE_PROCESS;
         $this->hash = $this->generateUniqueHash();
         $this->start = microtime(true);
         $this->context = new TransactionContext();

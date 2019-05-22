@@ -57,6 +57,10 @@ class Request implements \JsonSerializable
      */
     public function __construct()
     {
+        if(PHP_SAPI === 'cli'){
+            return;
+        }
+
         $this->url = new Url();
         $this->socket = new Socket();
         $this->method = $_SERVER['REQUEST_METHOD'] ?? 'cli';

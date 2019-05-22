@@ -63,10 +63,10 @@ class ApmAgent
      */
     public function startTransaction($name)
     {
-        $transaction = new Transaction($name);
-        $transaction->start();
-        $this->transport->addEntry($transaction);
-        return $transaction;
+        $this->transaction = new Transaction($name);
+        $this->transaction->start();
+        $this->transport->addEntry($this->transaction);
+        return $this->transaction;
     }
 
     /**
