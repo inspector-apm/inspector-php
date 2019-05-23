@@ -99,7 +99,7 @@ class ApmAgent
      * @param \Throwable $exception
      * @return Error
      */
-    public function reportException(\Throwable $exception, $context)
+    public function reportException(\Throwable $exception)
     {
         if (!$exception instanceof \Exception && !$exception instanceof \Throwable) {
             throw new \InvalidArgumentException('$exception need to be an instance of Exception or Throwable.');
