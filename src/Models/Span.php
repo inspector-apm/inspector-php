@@ -65,7 +65,7 @@ class Span extends AbstractModel
             'type' => $this->type,
             'timestamp' => $this->timestamp,
             'duration' => $this->duration,
-            'context' => $this->context->toArray(),
+            'context' => $this->context->jsonSerialize(),
             'backtrace' => $this->backtrace,
         ];
     }

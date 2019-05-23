@@ -163,7 +163,7 @@ class Transaction extends AbstractModel
             'timestamp' => $this->timestamp,
             'duration' => $this->duration,
             'result' => $this->result,
-            'context' => $this->context->toArray(),
+            'context' => $this->context->jsonSerialize(),
             'backtrace' => $this->backtrace,
         ];
     }
