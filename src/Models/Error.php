@@ -209,6 +209,7 @@ class Error extends AbstractModel
             'transaction' => $this->transaction->getHash(),
             'message' => $message,
             'timestamp' => $this->timestamp,
+            'duration' => $this->duration,
             'file' => $this->throwable->getFile(),
             'class' => $className,
             'code' => $this->throwable->getCode(),
