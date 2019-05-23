@@ -24,6 +24,7 @@ class ContextTest extends TestCase
         $config->setEnabled(false);
 
         $this->apm = new ApmAgent($config);
+        $this->apm->startTransaction('testcase');
     }
 
     /**
@@ -31,9 +32,7 @@ class ContextTest extends TestCase
      */
     public function testTransactionContextEmpty()
     {
-        $transaction = $this->apm->startTransaction('testcase');
-
-        $this->assertSame([], $transaction->getContext()->jsonSerialize());
+        $this->assertSame(json_encode([]), json_encode($this->apm->currentTransaction()->getContext()));
     }
 
     /**
@@ -41,9 +40,18 @@ class ContextTest extends TestCase
      */
     public function testSpanContextEmpty()
     {
-        $this->apm->startTransaction('testcase');
         $span = $this->apm->startSpan('testSpanContextEmpty');
 
-        $this->assertSame([], $span->getContext()->jsonSerialize());
+        $this->assertSame(json_encode([]), json_encode($span->getContext()));
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function testErrorContextEmpty()
+    {
+        $error = $this->apm->reportException(new \Exception('testSpanContextEmpty'));
+
+        $this->assertSame(json_encode([]), json_encode($error->getContext()));
     }
 }
