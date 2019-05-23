@@ -6,7 +6,7 @@ namespace LogEngine\Models;
 
 use LogEngine\Models\Context\SpanContext;
 
-class Span implements \JsonSerializable
+class Span extends AbstractModel
 {
     const MODEL_NAME = 'span';
 
@@ -23,37 +23,6 @@ class Span implements \JsonSerializable
      * @var string
      */
     protected $type;
-
-    /**
-     * @var float
-     */
-    protected $start;
-
-    /**
-     * Number of milliseconds until Span ends.
-     *
-     * @var float
-     */
-    protected $duration = 0.0;
-
-    /**
-     * PHP backtrace.
-     *
-     * @var array
-     */
-    protected $backtrace = [];
-
-    /**
-     * Limit the number of stack frames returned.
-     *
-     * @var int
-     */
-    protected $backtraceLimit = 0;
-
-    /**
-     * @var SpanContext
-     */
-    protected $context;
 
     /**
      * Span constructor.
@@ -73,51 +42,21 @@ class Span implements \JsonSerializable
         return $this->type;
     }
 
-    public function start(): Span
-    {
-        $this->start = microtime(true);
-        return $this;
-    }
-
-    public function end($duration = null): Span
-    {
-        $this->duration = $duration ?? round((microtime(true) - $this->start)*1000, 2); // milliseconds
-        $this->backtrace = debug_backtrace($this->backtraceLimit);
-        return $this;
-    }
-
-    public function getContext(): SpanContext
-    {
-        return $this->context;
-    }
-
     /**
-     * Specify data which should be serialized to JSON
-     * @link https://php.net/manual/en/jsonserializable.jsonserialize.php
-     * @return mixed data which can be serialized by <b>json_encode</b>,
-     * which is a value of any type other than a resource.
-     * @since 5.4.0
+     * Array representation.
+     *
+     * @return array
      */
-    public function jsonSerialize()
+    public function toArray(): array
     {
         return [
             'model' => self::MODEL_NAME,
             'transaction' => $this->transaction->getHash(),
             'type' => $this->type,
-            'start' => $this->start,
+            'timestamp' => $this->timestamp,
             'duration' => $this->duration,
-            'context' => $this->context->jsonSerialize(),
+            'context' => $this->context->toArray(),
             'backtrace' => $this->backtrace,
         ];
-    }
-
-    /**
-     * String representation.
-     *
-     * @return false|string
-     */
-    public function __toString()
-    {
-        return json_encode($this->jsonSerialize());
     }
 }

@@ -42,7 +42,7 @@ class ApmAgent
      */
     public function __construct(Configuration $configuration)
     {
-        switch (getenv('LOGENGINE_TRANSPORT')){
+        switch (getenv('LOGENGINE_TRANSPORT')) {
             case 'async':
                 $this->transport = new AsyncTransport($configuration);
                 break;
@@ -99,30 +99,33 @@ class ApmAgent
      * @param \Throwable $exception
      * @return ApmAgent
      */
-    public function reportException(\Throwable $exception)
+    public function reportException(\Throwable $exception, $context)
     {
         if (!$exception instanceof \Exception && !$exception instanceof \Throwable) {
             throw new \InvalidArgumentException('$exception need to be an instance of Exception or Throwable.');
         }
 
-        $this->transport->addEntry(new Error($exception, $this->transaction));
+        $error = new Error($exception, $this->transaction);
+        $error->start();
+        $this->transport->addEntry($error);
+        $error->end();
         return $this;
     }
 
     /**
-     * Flush queue to the remote platform.
+     * Flush data to the remote platform.
      *
      * @throws \Exception
      */
     public function flush()
     {
-        if(isset($this->transaction)){
-            $this->transaction->end();
-
-            if($this->configuration->isEnabled()){
-                $this->transport->flush();
-            }
+        if (!$this->configuration->isEnabled()) {
+            return;
         }
 
+        if (isset($this->transaction)) {
+            $this->transaction->end();
+            $this->transport->flush();
+        }
     }
 }

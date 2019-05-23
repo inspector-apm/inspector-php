@@ -4,7 +4,7 @@
 namespace LogEngine\Models;
 
 
-class Error implements \JsonSerializable
+class Error extends AbstractModel
 {
     const MODEL_NAME = 'error';
 
@@ -12,11 +12,6 @@ class Error implements \JsonSerializable
      * @var Transaction
      */
     protected $transaction;
-
-    /**
-     * @var
-     */
-    protected $timestamp;
 
     /**
      * @var \Throwable
@@ -33,7 +28,6 @@ class Error implements \JsonSerializable
     {
         $this->throwable = $throwable;
         $this->transaction = $transaction;
-        $this->timestamp = microtime();
     }
 
     /**
@@ -162,9 +156,9 @@ class Error implements \JsonSerializable
     /**
      * The stacktrace reporting was moved here to be executed after the application sent the response to the user.
      *
-     * @return mixed
+     * @return array
      */
-    public function jsonSerialize()
+    public function toArray(): array
     {
         $className = get_class($this->throwable);
         $message = $this->throwable->getMessage() ? $this->throwable->getMessage() : $className;
@@ -181,10 +175,5 @@ class Error implements \JsonSerializable
             'stack' => $this->stackTraceToArray($this->throwable->getTrace(), $this->throwable->getFile(), $this->throwable->getLine()),
             'group_hash' => md5($className.$this->throwable->getFile().$this->throwable->getLine()),
         ];
-    }
-
-    public function __toString()
-    {
-        return json_encode($this->jsonSerialize());
     }
 }
