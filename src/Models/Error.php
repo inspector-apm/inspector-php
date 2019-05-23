@@ -48,6 +48,16 @@ class Error extends AbstractModel
         return $this->context;
     }
 
+    public function withUser($id, $username = null, $email = null): Error
+    {
+        $this->getContext()->getUser()
+            ->setId($id)
+            ->setUsername($username)
+            ->setEmail($email);
+
+        return $this;
+    }
+
     public function start(): AbstractModel
     {
         parent::start();
