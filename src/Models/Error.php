@@ -9,7 +9,7 @@ use LogEngine\Models\Context\ErrorContext;
 /**
  * Class Error.
  * @package LogEngine\Models
- * @metod ErrorContext getContext()
+ * @property ErrorContext $context
  */
 class Error extends AbstractModel
 {
