@@ -4,6 +4,8 @@
 namespace LogEngine\Models;
 
 
+use LogEngine\Models\Context\AbstractContext;
+
 abstract class AbstractModel implements \JsonSerializable
 {
     /**
@@ -19,7 +21,7 @@ abstract class AbstractModel implements \JsonSerializable
     protected $duration = 0.0;
 
     /**
-     * @var mixed
+     * @var AbstractContext
      */
     protected $context;
 

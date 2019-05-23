@@ -6,6 +6,11 @@ namespace LogEngine\Models;
 
 use LogEngine\Models\Context\ErrorContext;
 
+/**
+ * Class Error.
+ * @package LogEngine\Models
+ * @property $context ErrorContext
+ */
 class Error extends AbstractModel
 {
     const MODEL_NAME = 'error';
@@ -195,6 +200,7 @@ class Error extends AbstractModel
             'line' => $this->throwable->getLine(),
             'stack' => $this->stack,
             'group_hash' => md5($className.$this->throwable->getFile().$this->throwable->getLine()),
+            'context' => $this->context->toArray(),
         ];
     }
 }
