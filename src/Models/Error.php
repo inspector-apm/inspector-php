@@ -6,11 +6,6 @@ namespace LogEngine\Models;
 
 use LogEngine\Models\Context\ErrorContext;
 
-/**
- * Class Error.
- * @package LogEngine\Models
- * @property ErrorContext $context
- */
 class Error extends AbstractModel
 {
     const MODEL_NAME = 'error';
@@ -31,6 +26,11 @@ class Error extends AbstractModel
     protected $stack;
 
     /**
+     * @var ErrorContext
+     */
+    protected $context;
+
+    /**
      * Error constructor.
      *
      * @param $throwable
@@ -41,6 +41,11 @@ class Error extends AbstractModel
         $this->throwable = $throwable;
         $this->transaction = $transaction;
         $this->context = new ErrorContext();
+    }
+
+    public function getContext(): ErrorContext
+    {
+        return $this->context;
     }
 
     public function start(): AbstractModel

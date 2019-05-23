@@ -21,11 +21,6 @@ abstract class AbstractModel implements \JsonSerializable
     protected $duration = 0.0;
 
     /**
-     * @var AbstractContext
-     */
-    protected $context;
-
-    /**
      * PHP backtrace.
      *
      * @var array
@@ -39,10 +34,7 @@ abstract class AbstractModel implements \JsonSerializable
      */
     protected $backtraceLimit = 0;
 
-    public function getContext()
-    {
-        return $this->context;
-    }
+    public abstract function getContext();
 
     public function getBacktraceLimit(): int
     {

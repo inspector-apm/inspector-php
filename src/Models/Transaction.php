@@ -41,6 +41,11 @@ class Transaction extends AbstractModel
     protected $result;
 
     /**
+     * @var TransactionContext
+     */
+    protected $context;
+
+    /**
      * Transaction constructor.
      *
      * @param string $name
@@ -81,9 +86,14 @@ class Transaction extends AbstractModel
         return $this;
     }
 
+    public function getContext(): TransactionContext
+    {
+        return $this->context;
+    }
+
     public function withUser($id, $username = null, $email = null): Transaction
     {
-        $this->context->getUser()
+        $this->getContext()->getUser()
             ->setId($id)
             ->setUsername($username)
             ->setEmail($email);

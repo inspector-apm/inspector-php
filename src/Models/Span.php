@@ -25,6 +25,11 @@ class Span extends AbstractModel
     protected $type;
 
     /**
+     * @var SpanContext
+     */
+    protected $context;
+
+    /**
      * Span constructor.
      *
      * @param string $type
@@ -40,6 +45,11 @@ class Span extends AbstractModel
     public function getType(): string
     {
         return $this->type;
+    }
+
+    public function getContext(): SpanContext
+    {
+        return $this->context;
     }
 
     /**

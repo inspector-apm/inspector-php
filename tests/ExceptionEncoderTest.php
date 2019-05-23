@@ -49,7 +49,8 @@ class ExceptionEncoderTest extends TestCase
     {
         $exception = new \DomainException;
         $error = new Error($exception, $this->apm->currentTransaction());
-        $errorSerialized = $error->jsonSerialize();
+        $error->start();
+        $errorSerialized = $error->toArray();
 
         $originalStackTrace = $exception->getTrace();
 
