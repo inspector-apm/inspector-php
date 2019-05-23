@@ -12,16 +12,27 @@ class ErrorContext extends AbstractContext
     protected $user;
 
     /**
+     * @var Request
+     */
+    protected $request;
+
+    /**
      * ErrorContext constructor.
      */
     public function __construct()
     {
         $this->user = new User();
+        $this->request = new Request();
     }
 
     public function getUser(): User
     {
         return $this->user;
+    }
+
+    public function getRequest(): Request
+    {
+        return $this->request;
     }
 
     public function hasContent(): bool
@@ -32,7 +43,8 @@ class ErrorContext extends AbstractContext
     public function toArray(): array
     {
         return [
-            'user' => $this->user->toArray()
+            'user' => $this->user->toArray(),
+            'request' => $this->request->toArray(),
         ];
     }
 }

@@ -4,6 +4,8 @@
 namespace LogEngine\Models;
 
 
+use LogEngine\Models\Context\ErrorContext;
+
 class Error extends AbstractModel
 {
     const MODEL_NAME = 'error';
@@ -19,6 +21,11 @@ class Error extends AbstractModel
     protected $throwable;
 
     /**
+     * @var array
+     */
+    protected $stack;
+
+    /**
      * Error constructor.
      *
      * @param $throwable
@@ -28,6 +35,20 @@ class Error extends AbstractModel
     {
         $this->throwable = $throwable;
         $this->transaction = $transaction;
+        $this->context = new ErrorContext();
+    }
+
+    public function start(): AbstractModel
+    {
+        parent::start();
+
+        $this->stack = $this->stackTraceToArray(
+            $this->throwable->getTrace(),
+            $this->throwable->getFile(),
+            $this->throwable->getLine()
+        );
+
+        return $this;
     }
 
     /**
@@ -154,7 +175,7 @@ class Error extends AbstractModel
     }
 
     /**
-     * The stacktrace reporting was moved here to be executed after the application sent the response to the user.
+     * Array representation.
      *
      * @return array
      */
@@ -172,7 +193,7 @@ class Error extends AbstractModel
             'class' => $className,
             'code' => $this->throwable->getCode(),
             'line' => $this->throwable->getLine(),
-            'stack' => $this->stackTraceToArray($this->throwable->getTrace(), $this->throwable->getFile(), $this->throwable->getLine()),
+            'stack' => $this->stack,
             'group_hash' => md5($className.$this->throwable->getFile().$this->throwable->getLine()),
         ];
     }

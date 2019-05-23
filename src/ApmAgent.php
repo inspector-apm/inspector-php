@@ -97,7 +97,7 @@ class ApmAgent
      * Error reporting.
      *
      * @param \Throwable $exception
-     * @return ApmAgent
+     * @return Error
      */
     public function reportException(\Throwable $exception, $context)
     {
@@ -109,7 +109,8 @@ class ApmAgent
         $error->start();
         $this->transport->addEntry($error);
         $error->end();
-        return $this;
+
+        return $error;
     }
 
     /**
