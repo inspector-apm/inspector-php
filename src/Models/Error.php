@@ -206,7 +206,6 @@ class Error extends AbstractModel
 
         return [
             'model' => self::MODEL_NAME,
-            'transaction' => $this->transaction->getHash(),
             'message' => $message,
             'timestamp' => $this->timestamp,
             'duration' => $this->duration,
@@ -215,6 +214,7 @@ class Error extends AbstractModel
             'code' => $this->throwable->getCode(),
             'line' => $this->throwable->getLine(),
             'stack' => $this->stack,
+            'transaction' => $this->transaction->getHash(),
             'group_hash' => md5($className.$this->throwable->getFile().$this->throwable->getLine()),
             'context' => $this->context->jsonSerialize(),
         ];

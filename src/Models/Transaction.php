@@ -164,7 +164,6 @@ class Transaction extends AbstractModel
             'duration' => $this->duration,
             'result' => $this->result,
             'context' => $this->context->jsonSerialize(),
-            'backtrace' => $this->backtrace,
         ];
     }
 }

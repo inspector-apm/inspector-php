@@ -36,6 +36,7 @@ class ExceptionEncoderTest extends TestCase
         $exception = new \DomainException($message, $code);
 
         $error = new Error($exception, $this->apm->currentTransaction());
+        $error->start()->end();
         $errorSerialized = $error->jsonSerialize();
 
         $this->assertSame($message, $errorSerialized['message']);
