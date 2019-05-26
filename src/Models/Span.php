@@ -77,10 +77,11 @@ class Span extends AbstractModel
     {
         return [
             'model' => self::MODEL_NAME,
-            'transaction' => $this->transaction->getHash(),
             'type' => $this->type,
+            'timestamp' => $this->timestamp,
             'start' => $this->start,
             'duration' => $this->duration,
+            'transaction' => $this->transaction->getHash(),
             'context' => $this->context->jsonSerialize(),
             'backtrace' => $this->backtrace,
         ];
