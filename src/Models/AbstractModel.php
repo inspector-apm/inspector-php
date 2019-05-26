@@ -4,8 +4,6 @@
 namespace LogEngine\Models;
 
 
-use LogEngine\Models\Context\AbstractContext;
-
 abstract class AbstractModel implements \JsonSerializable
 {
     /**
@@ -35,6 +33,14 @@ abstract class AbstractModel implements \JsonSerializable
     protected $backtraceLimit = 0;
 
     public abstract function getContext();
+
+    /**
+     * @return float
+     */
+    public function getTimestamp(): float
+    {
+        return $this->timestamp;
+    }
 
     public function getBacktraceLimit(): int
     {
