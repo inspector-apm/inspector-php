@@ -34,16 +34,6 @@ class Configuration
     protected $options = [];
 
     /**
-     * @var string
-     */
-    protected $hostname;
-
-    /**
-     * @var string
-     */
-    protected $environment;
-
-    /**
      * @var bool
      */
     protected $enabled = true;
@@ -57,8 +47,6 @@ class Configuration
     public function __construct($apiKey)
     {
         $this->setApiKey($apiKey);
-        $this->hostname = gethostname();
-        $this->environment = getenv('LOGENGINE_ENV');
     }
 
     /**
@@ -123,28 +111,6 @@ class Configuration
     public function setOptions(array $options)
     {
         $this->options = $options;
-    }
-
-    public function getHostname(): string
-    {
-        return $this->hostname;
-    }
-
-    public function setHostname(string $hostname): Configuration
-    {
-        $this->hostname = $hostname;
-        return $this;
-    }
-
-    public function getEnvironment(): string
-    {
-        return $this->environment;
-    }
-
-    public function setEnvironment(string $environment): Configuration
-    {
-        $this->environment = $environment;
-        return $this;
     }
 
     public function isEnabled(): bool
