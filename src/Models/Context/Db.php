@@ -20,6 +20,11 @@ class Db extends AbstractContext
      */
     protected $sql;
 
+    /**
+     * @var array
+     */
+    protected $bindings = [];
+
     public function getType(): string
     {
         return $this->type;
@@ -42,6 +47,17 @@ class Db extends AbstractContext
         return $this;
     }
 
+    public function getBindings(): array
+    {
+        return $this->bindings;
+    }
+
+    public function setBindings(array $bindings): Db
+    {
+        $this->bindings = $bindings;
+        return $this;
+    }
+
     public function hasContent(): bool
     {
         return $this->type != null ||
@@ -58,6 +74,7 @@ class Db extends AbstractContext
         return [
             'type' => $this->type,
             'sql' => $this->sql,
+            'bindings' => $this->bindings,
         ];
     }
 }
