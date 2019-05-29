@@ -111,6 +111,7 @@ class Configuration
     public function setOptions(array $options)
     {
         $this->options = $options;
+        return $this;
     }
 
     public function isEnabled(): bool
