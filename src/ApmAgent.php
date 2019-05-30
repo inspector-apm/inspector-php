@@ -80,6 +80,16 @@ class ApmAgent
     }
 
     /**
+     * Check if a transaction was just started.
+     *
+     * @return bool
+     */
+    public function hasTransaction(): bool
+    {
+        return isset($this->transaction);
+    }
+
+    /**
      * Add new span to the queue.
      *
      * @param $type
@@ -127,6 +137,7 @@ class ApmAgent
         if (isset($this->transaction)) {
             $this->transaction->end();
             $this->transport->flush();
+            unset($this->transaction);
         }
     }
 }
