@@ -1,7 +1,7 @@
 <?php
 
 
-namespace LogEngine\Models\Context;
+namespace Inspector\Models\Context;
 
 
 class Request extends AbstractContext

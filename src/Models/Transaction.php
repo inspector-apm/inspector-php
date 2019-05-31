@@ -1,12 +1,12 @@
 <?php
 
 
-namespace LogEngine\Models;
+namespace Inspector\Models;
 
 
 use Exception;
-use LogEngine\Exceptions\LogEngineApmException;
-use LogEngine\Models\Context\TransactionContext;
+use Inspector\Exceptions\LogEngineApmException;
+use Inspector\Models\Context\TransactionContext;
 
 class Transaction extends AbstractModel
 {

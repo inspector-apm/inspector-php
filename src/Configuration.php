@@ -1,6 +1,6 @@
 <?php
 
-namespace LogEngine;
+namespace Inspector;
 
 
 class Configuration

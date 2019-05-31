@@ -1,11 +1,11 @@
 <?php
 
-namespace LogEngine\Transport;
+namespace Inspector\Transport;
 
 
-use LogEngine\Configuration;
-use LogEngine\Contracts\TransportInterface;
-use LogEngine\Exceptions\LogEngineApmException;
+use Inspector\Configuration;
+use Inspector\Contracts\TransportInterface;
+use Inspector\Exceptions\LogEngineApmException;
 
 abstract class AbstractApiTransport implements TransportInterface
 {

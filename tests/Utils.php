@@ -1,6 +1,6 @@
 <?php
 
-namespace LogEngine\Tests;
+namespace Inspector\Tests;
 
 
 class Utils

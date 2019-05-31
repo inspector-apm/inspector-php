@@ -1,10 +1,10 @@
 <?php
 
-namespace LogEngine\Transport;
+namespace Inspector\Transport;
 
 
-use LogEngine\Configuration;
-use LogEngine\Exceptions\LogEngineApmException;
+use Inspector\Configuration;
+use Inspector\Exceptions\LogEngineApmException;
 
 /**
  * This transport collects log data until the end of processing.

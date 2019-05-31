@@ -1,10 +1,10 @@
 <?php
 
 
-namespace LogEngine\Models;
+namespace Inspector\Models;
 
 
-use LogEngine\Models\Context\ErrorContext;
+use Inspector\Models\Context\ErrorContext;
 
 class Error extends AbstractModel
 {

@@ -1,10 +1,10 @@
 <?php
 
 
-namespace LogEngine\Models;
+namespace Inspector\Models;
 
 
-use LogEngine\Models\Context\SpanContext;
+use Inspector\Models\Context\SpanContext;
 
 class Span extends AbstractModel
 {

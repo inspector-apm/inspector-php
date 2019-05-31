@@ -1,6 +1,6 @@
 <?php
 
-namespace LogEngine\Contracts;
+namespace Inspector\Contracts;
 
 
 interface TransportInterface

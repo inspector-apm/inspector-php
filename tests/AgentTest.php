@@ -1,16 +1,16 @@
 <?php
 
-namespace LogEngine\Tests;
+namespace Inspector\Tests;
 
 
-use LogEngine\ApmAgent;
-use LogEngine\Configuration;
+use Inspector\ApmAgent;
+use Inspector\Configuration;
 use PHPUnit\Framework\TestCase;
 
 class AgentTest extends TestCase
 {
     /**
-     * @throws \LogEngine\Exceptions\LogEngineApmException
+     * @throws \Inspector\Exceptions\LogEngineApmException
      */
     public function testLogEngineInstance()
     {

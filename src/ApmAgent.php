@@ -1,15 +1,15 @@
 <?php
 
 
-namespace LogEngine;
+namespace Inspector;
 
 
-use LogEngine\Contracts\TransportInterface;
-use LogEngine\Models\Error;
-use LogEngine\Models\Span;
-use LogEngine\Models\Transaction;
-use LogEngine\Transport\AsyncTransport;
-use LogEngine\Transport\CurlTransport;
+use Inspector\Contracts\TransportInterface;
+use Inspector\Models\Error;
+use Inspector\Models\Span;
+use Inspector\Models\Transaction;
+use Inspector\Transport\AsyncTransport;
+use Inspector\Transport\CurlTransport;
 
 class ApmAgent
 {
@@ -42,7 +42,7 @@ class ApmAgent
      */
     public function __construct(Configuration $configuration)
     {
-        switch (getenv('LOGENGINE_TRANSPORT')) {
+        switch (getenv('INSPECTOR_TRANSPORT')) {
             case 'async':
                 $this->transport = new AsyncTransport($configuration);
                 break;

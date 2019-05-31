@@ -1,12 +1,12 @@
 {
-    "name": "log-engine/logengine-php",
-    "description": "LOG-Engine package for PHP applications.",
-    "keywords": ["apm", "php", "logengine"],
+    "name": "inspector-apm/inspector-php",
+    "description": "Inspector for PHP applications.",
+    "keywords": ["apm", "php", "inspector"],
     "license": "MIT",
     "authors": [
         {
             "name": "Valerio Barbera",
-            "email": "support@logengine.dev"
+            "email": "support@inspector.dev"
         }
     ],
     "require": {
@@ -15,7 +15,7 @@
     },
     "autoload": {
         "psr-4": {
-            "LogEngine\\": "src/"
+            "Inspector\\": "src/"
         }
     },
     "config": {
@@ -28,7 +28,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "LogEngine\\Tests\\": "tests/"
+            "Inspector\\Tests\\": "tests/"
         }
     }
 }

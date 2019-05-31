@@ -1,11 +1,11 @@
 <?php
 
 
-namespace LogEngine\Models\Context;
+namespace Inspector\Models\Context;
 
 
-use LogEngine\Models\Context\Db;
-use LogEngine\Models\Context\Http;
+use Inspector\Models\Context\Db;
+use Inspector\Models\Context\Http;
 
 class SpanContext extends AbstractContext
 {

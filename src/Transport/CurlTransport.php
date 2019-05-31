@@ -1,10 +1,10 @@
 <?php
 
-namespace LogEngine\Transport;
+namespace Inspector\Transport;
 
 
-use LogEngine\Configuration;
-use LogEngine\Exceptions\LogEngineApmException;
+use Inspector\Configuration;
+use Inspector\Exceptions\LogEngineApmException;
 
 class CurlTransport extends AbstractApiTransport
 {

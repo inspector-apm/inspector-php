@@ -1,9 +1,9 @@
 <?php
 
-namespace LogEngine\Tests;
+namespace Inspector\Tests;
 
 
-use LogEngine\Configuration;
+use Inspector\Configuration;
 use PHPUnit\Framework\TestCase;
 
 class ConfigurationTest extends TestCase

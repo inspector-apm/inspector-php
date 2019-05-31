@@ -1,11 +1,11 @@
 <?php
 
-namespace LogEngine\Tests;
+namespace Inspector\Tests;
 
 
-use LogEngine\ApmAgent;
-use LogEngine\Configuration;
-use LogEngine\Models\Error;
+use Inspector\ApmAgent;
+use Inspector\Configuration;
+use Inspector\Models\Error;
 use PHPUnit\Framework\TestCase;
 
 class ExceptionEncoderTest extends TestCase

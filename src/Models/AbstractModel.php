@@ -1,7 +1,7 @@
 <?php
 
 
-namespace LogEngine\Models;
+namespace Inspector\Models;
 
 
 abstract class AbstractModel implements \JsonSerializable

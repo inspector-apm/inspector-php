@@ -12,7 +12,7 @@
          syntaxCheck="false">
 
     <testsuites>
-        <testsuite name="LogEngine Test Suite">
+        <testsuite name="Inspector Test Suite">
             <directory suffix="Test.php">./tests</directory>
         </testsuite>
     </testsuites>
@@ -25,6 +25,6 @@
 
     <php>
         <env name="APP_ENV" value="testing"/>
-        <env name="LOGENGINE_API_KEY" value="logengine-api-key"/>
+        <env name="INSPECTOR_API_KEY" value="inspector-api-key"/>
     </php>
 </phpunit>

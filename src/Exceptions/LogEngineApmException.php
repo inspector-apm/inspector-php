@@ -1,6 +1,6 @@
 <?php
 
-namespace LogEngine\Exceptions;
+namespace Inspector\Exceptions;
 
 use Exception;
 

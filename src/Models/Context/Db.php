@@ -1,7 +1,7 @@
 <?php
 
 
-namespace LogEngine\Models\Context;
+namespace Inspector\Models\Context;
 
 
 class Db extends AbstractContext
