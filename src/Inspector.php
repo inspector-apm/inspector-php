@@ -11,7 +11,7 @@ use Inspector\Models\Transaction;
 use Inspector\Transport\AsyncTransport;
 use Inspector\Transport\CurlTransport;
 
-class ApmAgent
+class Inspector
 {
     /**
      * Agent configuration.

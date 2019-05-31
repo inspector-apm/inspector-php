@@ -4,14 +4,14 @@
 namespace Inspector\Tests;
 
 
-use Inspector\ApmAgent;
+use Inspector\Inspector;
 use Inspector\Configuration;
 use PHPUnit\Framework\TestCase;
 
 class ModelTest extends TestCase
 {
     /**
-     * @var ApmAgent
+     * @var Inspector
      */
     public $apm;
 
@@ -25,7 +25,7 @@ class ModelTest extends TestCase
     {
         $configuration = new Configuration('example-key');
         $configuration->setEnabled(false);
-        $this->apm = new ApmAgent($configuration);
+        $this->apm = new Inspector($configuration);
         $this->apm->startTransaction('testcase');
     }
 

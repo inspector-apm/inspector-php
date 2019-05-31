@@ -4,14 +4,14 @@
 namespace Inspector\Tests;
 
 
-use Inspector\ApmAgent;
+use Inspector\Inspector;
 use Inspector\Configuration;
 use PHPUnit\Framework\TestCase;
 
 class ContextTest extends TestCase
 {
     /**
-     * @var ApmAgent
+     * @var Inspector
      */
     protected $apm;
 
@@ -23,7 +23,7 @@ class ContextTest extends TestCase
         $config = new Configuration('example-key');
         $config->setEnabled(false);
 
-        $this->apm = new ApmAgent($config);
+        $this->apm = new Inspector($config);
         $this->apm->startTransaction('testcase');
     }
 

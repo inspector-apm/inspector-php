@@ -3,7 +3,7 @@
 namespace Inspector\Tests;
 
 
-use Inspector\ApmAgent;
+use Inspector\Inspector;
 use Inspector\Configuration;
 use PHPUnit\Framework\TestCase;
 
@@ -17,6 +17,6 @@ class AgentTest extends TestCase
         $configuration = new Configuration('example-key');
         $configuration->setEnabled(false);
 
-        $this->assertInstanceOf(ApmAgent::class, new ApmAgent($configuration));
+        $this->assertInstanceOf(Inspector::class, new Inspector($configuration));
     }
 }
