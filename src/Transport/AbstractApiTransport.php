@@ -5,7 +5,7 @@ namespace Inspector\Transport;
 
 use Inspector\Configuration;
 use Inspector\Contracts\TransportInterface;
-use Inspector\Exceptions\LogEngineApmException;
+use Inspector\Exceptions\InspectorException;
 
 abstract class AbstractApiTransport implements TransportInterface
 {
@@ -39,7 +39,7 @@ abstract class AbstractApiTransport implements TransportInterface
      * AbstractApiTransport constructor.
      *
      * @param Configuration $configuration
-     * @throws LogEngineApmException
+     * @throws InspectorException
      */
     public function __construct(Configuration $configuration)
     {
@@ -51,7 +51,7 @@ abstract class AbstractApiTransport implements TransportInterface
      * Verify if given options match constraints.
      *
      * @param $options
-     * @throws LogEngineApmException
+     * @throws InspectorException
      */
     protected function verifyOptions($options)
     {
@@ -61,7 +61,7 @@ abstract class AbstractApiTransport implements TransportInterface
                 if (preg_match($regex, $value)) {
                     $this->$name = $value;
                 } else {
-                    throw new LogEngineApmException("Option '$name' has invalid value");
+                    throw new InspectorException("Option '$name' has invalid value");
                 }
             }
         }

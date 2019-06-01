@@ -4,7 +4,7 @@ namespace Inspector\Transport;
 
 
 use Inspector\Configuration;
-use Inspector\Exceptions\LogEngineApmException;
+use Inspector\Exceptions\InspectorException;
 
 class CurlTransport extends AbstractApiTransport
 {
@@ -26,13 +26,13 @@ class CurlTransport extends AbstractApiTransport
      * CurlTransport constructor.
      *
      * @param Configuration $configuration
-     * @throws LogEngineApmException
+     * @throws InspectorException
      */
     public function __construct($configuration)
     {
         // System need to have CURL available
         if (!function_exists('curl_init')) {
-            throw new LogEngineApmException('cURL PHP extension is not available');
+            throw new InspectorException('cURL PHP extension is not available');
         }
 
         parent::__construct($configuration);

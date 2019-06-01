@@ -38,7 +38,7 @@ class Inspector
      * Logger constructor.
      *
      * @param Configuration $configuration
-     * @throws Exceptions\LogEngineApmException
+     * @throws Exceptions\InspectorException
      */
     public function __construct(Configuration $configuration)
     {

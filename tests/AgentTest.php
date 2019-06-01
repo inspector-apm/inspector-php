@@ -10,7 +10,7 @@ use PHPUnit\Framework\TestCase;
 class AgentTest extends TestCase
 {
     /**
-     * @throws \Inspector\Exceptions\LogEngineApmException
+     * @throws \Inspector\Exceptions\InspectorException
      */
     public function testLogEngineInstance()
     {

@@ -16,7 +16,7 @@ class ContextTest extends TestCase
     protected $apm;
 
     /**
-     * @throws \Inspector\Exceptions\LogEngineApmException
+     * @throws \Inspector\Exceptions\InspectorException
      */
     public function setUp()
     {

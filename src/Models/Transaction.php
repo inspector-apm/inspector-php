@@ -5,7 +5,7 @@ namespace Inspector\Models;
 
 
 use Exception;
-use Inspector\Exceptions\LogEngineApmException;
+use Inspector\Exceptions\InspectorException;
 use Inspector\Models\Context\TransactionContext;
 
 class Transaction extends AbstractModel
@@ -145,7 +145,7 @@ class Transaction extends AbstractModel
             return bin2hex(openssl_random_pseudo_bytes($length));
         }
 
-        throw new LogEngineApmException('Can\'t create unique transaction hash.');
+        throw new InspectorException('Can\'t create unique transaction hash.');
     }
 
     /**

@@ -4,7 +4,7 @@ namespace Inspector\Transport;
 
 
 use Inspector\Configuration;
-use Inspector\Exceptions\LogEngineApmException;
+use Inspector\Exceptions\InspectorException;
 
 /**
  * This transport collects log data until the end of processing.
@@ -37,16 +37,16 @@ class AsyncTransport extends AbstractApiTransport
      * AsyncTransport constructor.
      *
      * @param Configuration $configuration
-     * @throws LogEngineApmException
+     * @throws InspectorException
      */
     public function __construct($configuration)
     {
         if (!function_exists('exec')) {
-            throw new LogEngineApmException("PHP function 'exec' is not available, is it disabled for security reasons?");
+            throw new InspectorException("PHP function 'exec' is not available, is it disabled for security reasons?");
         }
 
         if ('WIN' === strtoupper(substr(PHP_OS, 0, 3))) {
-            throw new LogEngineApmException('Exec transport is not supposed to work on Windows OS');
+            throw new InspectorException('Exec transport is not supposed to work on Windows OS');
         }
 
         parent::__construct($configuration);

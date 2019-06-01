@@ -21,9 +21,23 @@ class ConfigurationTest extends TestCase
         $initialApiKey = 'aaa';
 
         $configuration = new Configuration($initialApiKey);
-        $configuration->setUrl($initialUrl);
-
-        $this->assertSame($initialUrl, $configuration->getUrl());
         $this->assertSame($initialApiKey, $configuration->getApiKey());
+
+        $configuration->setUrl($initialUrl);
+        $this->assertSame($initialUrl, $configuration->getUrl());
+
+        $this->assertSame(true, $configuration->isEnabled());
+
+        $this->assertSame([], $configuration->getOptions());
+    }
+
+    public function testFluentApi()
+    {
+        $configuration = new Configuration('aaa');
+
+        $this->assertInstanceOf(Configuration::class, $configuration->setApiKey('xxx'));
+        $this->assertInstanceOf(Configuration::class, $configuration->setUrl('http://www.example.com'));
+        $this->assertInstanceOf(Configuration::class, $configuration->setOptions([]));
+        $this->assertInstanceOf(Configuration::class, $configuration->setEnabled(true));
     }
 }

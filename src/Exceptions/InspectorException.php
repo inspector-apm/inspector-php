@@ -4,7 +4,7 @@ namespace Inspector\Exceptions;
 
 use Exception;
 
-class LogEngineApmException extends Exception
+class InspectorException extends Exception
 {
 
 }
