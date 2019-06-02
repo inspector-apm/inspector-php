@@ -17,7 +17,7 @@ class Configuration
      *
      * @var string
      */
-    protected $url = 'https://app.logengine.dev/api';
+    protected $url = 'https://app.inspector.dev/api';
 
     /**
      * Authentication key.
@@ -27,16 +27,21 @@ class Configuration
     protected $apiKey;
 
     /**
+     * @var bool
+     */
+    protected $enabled = true;
+
+    /**
+     * @var string
+     */
+    protected $transport = 'sync';
+
+    /**
      * Transport options.
      *
      * @var array
      */
     protected $options = [];
-
-    /**
-     * @var bool
-     */
-    protected $enabled = true;
 
     /**
      * Environment constructor.
@@ -50,11 +55,9 @@ class Configuration
     }
 
     /**
-     * @param $value
-     * @return $this
      * @throws \InvalidArgumentException
      */
-    public function setUrl($value)
+    public function setUrl($value): Configuration
     {
         $value = trim($value);
 
@@ -65,10 +68,7 @@ class Configuration
         throw new \InvalidArgumentException('Invalid URL');
     }
 
-    /**
-     * @return string
-     */
-    public function getUrl()
+    public function getUrl(): string
     {
         return $this->url;
     }
@@ -92,7 +92,7 @@ class Configuration
         return $this;
     }
 
-    public function getApiKey()
+    public function getApiKey(): string
     {
         return $this->apiKey;
     }
@@ -122,6 +122,17 @@ class Configuration
     public function setEnabled(bool $enabled): Configuration
     {
         $this->enabled = $enabled;
+        return $this;
+    }
+
+    public function getTransport(): string
+    {
+        return $this->transport;
+    }
+
+    public function setTransport(string $transport): Configuration
+    {
+        $this->transport = $transport;
         return $this;
     }
 }

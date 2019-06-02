@@ -15,20 +15,15 @@ class ConfigurationTest extends TestCase
         new Configuration('');
     }
 
-    public function testCreateInstance()
+    public function testDefault()
     {
-        $initialUrl = 'http://www.example.com/api';
-        $initialApiKey = 'aaa';
+        $configuration = new Configuration('aaa');
+        $this->assertSame('aaa', $configuration->getApiKey());
 
-        $configuration = new Configuration($initialApiKey);
-        $this->assertSame($initialApiKey, $configuration->getApiKey());
-
-        $configuration->setUrl($initialUrl);
-        $this->assertSame($initialUrl, $configuration->getUrl());
-
-        $this->assertSame(true, $configuration->isEnabled());
-
+        $this->assertSame('https://app.inspector.dev/api', $configuration->getUrl());
         $this->assertSame([], $configuration->getOptions());
+        $this->assertSame('sync', $configuration->getTransport());
+        $this->assertSame(true, $configuration->isEnabled());
     }
 
     public function testFluentApi()
@@ -39,5 +34,6 @@ class ConfigurationTest extends TestCase
         $this->assertInstanceOf(Configuration::class, $configuration->setUrl('http://www.example.com'));
         $this->assertInstanceOf(Configuration::class, $configuration->setOptions([]));
         $this->assertInstanceOf(Configuration::class, $configuration->setEnabled(true));
+        $this->assertInstanceOf(Configuration::class, $configuration->setTransport('async'));
     }
 }

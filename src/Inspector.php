@@ -42,7 +42,7 @@ class Inspector
      */
     public function __construct(Configuration $configuration)
     {
-        switch (getenv('INSPECTOR_TRANSPORT')) {
+        switch ($configuration->getTransport()) {
             case 'async':
                 $this->transport = new AsyncTransport($configuration);
                 break;
