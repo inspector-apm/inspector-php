@@ -17,7 +17,7 @@ class Configuration
      *
      * @var string
      */
-    protected $url = 'https://www.app.logengine.dev/api';
+    protected $url = 'https://app.logengine.dev/api';
 
     /**
      * Authentication key.
