@@ -5,6 +5,7 @@ namespace Inspector;
 
 
 use Inspector\Contracts\TransportInterface;
+use Inspector\Models\AbstractModel;
 use Inspector\Models\Error;
 use Inspector\Models\Span;
 use Inspector\Models\Transaction;
@@ -121,6 +122,18 @@ class Inspector
         $error->end();
 
         return $error;
+    }
+
+    /**
+     * Add an entry to the queue.
+     *
+     * @param AbstractModel $entry
+     * @return Inspector
+     */
+    public function addEntry(AbstractModel $entry)
+    {
+        $this->transport->addEntry($entry);
+        return $this;
     }
 
     /**
