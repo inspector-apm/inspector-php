@@ -53,6 +53,11 @@ abstract class AbstractModel implements \JsonSerializable
         return $this;
     }
 
+    public function getDuration(): float
+    {
+        return $this->duration;
+    }
+
     public function start(): AbstractModel
     {
         $this->timestamp = microtime(true);
