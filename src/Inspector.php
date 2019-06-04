@@ -127,12 +127,15 @@ class Inspector
     /**
      * Add an entry to the queue.
      *
-     * @param AbstractModel $entry
+     * @param array|AbstractModel $entries
      * @return Inspector
      */
-    public function addEntry(AbstractModel $entry)
+    public function addEntry($entries)
     {
-        $this->transport->addEntry($entry);
+        $entries = is_array($entries) ? $entries : [$entries];
+        foreach ($entries as $entry){
+            $this->transport->addEntry($entry);
+        }
         return $this;
     }
 
