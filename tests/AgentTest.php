@@ -30,12 +30,12 @@ class AgentTest extends TestCase
 
         $this->assertInstanceOf(
             Inspector::class,
-            $inspector->addEntry($inspector->startSpan('span-test'))
+            $inspector->addEntries($inspector->startSpan('span-test'))
         );
 
         $this->assertInstanceOf(
             Inspector::class,
-            $inspector->addEntry([$inspector->startSpan('span-test')])
+            $inspector->addEntries([$inspector->startSpan('span-test')])
         );
     }
 }
