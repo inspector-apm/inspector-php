@@ -51,4 +51,28 @@ class ModelTest extends TestCase
             'context' => [],
         ], $span->jsonSerialize());
     }
+
+    public function testErrorModelSerialization()
+    {
+        $exception = new \Exception('test error');
+        $error = $this->apm->reportException($exception);
+
+        $error = $error->jsonSerialize();
+
+        $this->assertArrayHasKey('message', $error);
+        $this->assertArrayHasKey('stack', $error);
+        $this->assertArrayHasKey('file', $error);
+        $this->assertArrayHasKey('line', $error);
+        $this->assertArrayHasKey('code', $error);
+        $this->assertArrayHasKey('class', $error);
+        $this->assertArrayHasKey('duration', $error);
+        $this->assertArrayHasKey('timestamp', $error);
+
+        $this->assertArraySubset([
+            'model' => 'error',
+            'transaction' => $this->apm->currentTransaction()->getHash(),
+            'context' => [],
+            'group_hash' => md5(get_class($exception).$exception->getFile().$exception->getLine()),
+        ], $error);
+    }
 }

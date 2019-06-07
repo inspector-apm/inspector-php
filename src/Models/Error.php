@@ -101,7 +101,7 @@ class Error extends AbstractModel
                 'type' => $trace['type'] ?? 'function',
                 'file' => isset($trace['file']) ? basename($trace['file']) : '(unknown)',
                 'line' => $trace['line'] ?? '0',
-                'code' => $this->getCode($trace['file'], $trace['line']),
+                'code' => isset($trace['file']) ? $this->getCode($trace['file'], $trace['line'] ?? '0') : '(unknown)',
             ];
 
             $counter++;
