@@ -83,7 +83,6 @@ class Span extends AbstractModel
             'duration' => $this->duration,
             'transaction' => $this->transaction->getHash(),
             'context' => $this->context->jsonSerialize(),
-            'backtrace' => $this->backtrace,
         ];
     }
 }
