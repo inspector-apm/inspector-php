@@ -25,11 +25,11 @@ class Span extends AbstractModel
     protected $type;
 
     /**
-     * Details about span.
+     * Notes about span.
      *
      * @var string
      */
-    protected $description;
+    protected $message;
 
     /**
      * Time interval relative to transaction timestamp.
@@ -49,7 +49,7 @@ class Span extends AbstractModel
      * @param string $type
      * @param Transaction $transaction
      */
-    public function __construct($type, Transaction $transaction)
+    public function __construct(Transaction $transaction, $type = 'process')
     {
         $this->type = $type;
         $this->transaction = $transaction;
@@ -66,14 +66,14 @@ class Span extends AbstractModel
         return $this->context;
     }
 
-    public function getDescription(): string
+    public function getMessage(): string
     {
-        return $this->description;
+        return $this->message;
     }
 
-    public function setDescription($value): AbstractModel
+    public function setMessage($value): AbstractModel
     {
-        $this->description = $value;
+        $this->message = $value;
         return $this;
     }
 
@@ -96,7 +96,7 @@ class Span extends AbstractModel
         return [
             'model' => self::MODEL_NAME,
             'type' => $this->type,
-            'description' => $this->description,
+            'message' => $this->message,
             'timestamp' => $this->timestamp,
             'start' => $this->start,
             'duration' => $this->duration,

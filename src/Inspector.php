@@ -93,12 +93,12 @@ class Inspector
     /**
      * Add new span to the queue.
      *
-     * @param $type
+     * @param string $type
      * @return Span
      */
     public function startSpan($type)
     {
-        $span = new Span($type, $this->transaction);
+        $span = new Span($this->transaction, $type);
         $span->start();
         $this->transport->addEntry($span);
         return $span;

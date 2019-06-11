@@ -42,11 +42,13 @@ class ModelTest extends TestCase
 
     public function testSpanModelSerialization()
     {
-        $span = $this->apm->startSpan(__FUNCTION__);
+        $span = $this->apm->startSpan(__FUNCTION__)
+            ->setMessage('hello span!');
 
         $this->assertArraySubset([
             'model' => 'span',
             'type' => __FUNCTION__,
+            'message' => 'hello span!',
             'transaction' => $this->apm->currentTransaction()->getHash(),
             'context' => [],
         ], $span->jsonSerialize());
