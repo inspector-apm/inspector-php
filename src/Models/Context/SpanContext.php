@@ -4,9 +4,6 @@
 namespace Inspector\Models\Context;
 
 
-use Inspector\Models\Context\Db;
-use Inspector\Models\Context\Http;
-
 class SpanContext extends AbstractContext
 {
     /**
@@ -22,6 +19,11 @@ class SpanContext extends AbstractContext
      * @var Http
      */
     protected $http;
+
+    /**
+     * @var array
+     */
+    protected $custom = [];
 
     /**
      * SpanContext constructor.
@@ -40,6 +42,31 @@ class SpanContext extends AbstractContext
     public function getHttp(): Http
     {
         return $this->http;
+    }
+
+    public function getCustom($key = null)
+    {
+        if(is_null($key)){
+            return $this->custom;
+        }
+
+        if(array_key_exists($key, $this->custom)){
+            return $this->custom[$key];
+        }
+
+        return null;
+    }
+
+    public function addCustom(string $key, $value): SpanContext
+    {
+        $this->custom[$key] = $value;
+        return $this;
+    }
+
+    public function setCustom($collection): SpanContext
+    {
+        $this->custom = $collection;
+        return $this;
     }
 
     public function hasContent(): bool
