@@ -55,7 +55,12 @@ class ExceptionEncoderTest extends TestCase
 
         $originalStackTrace = $exception->getTrace();
 
-        $this->assertSame(count($originalStackTrace), count($errorSerialized['stack']));
+        // Not contains vendor folder
+        foreach ($errorSerialized['stack'] as $stack){
+            $vendor = strpos($stack['file'], 'vendor');
+            $this->assertFalse($vendor);
+        }
+
         $this->assertSame($originalStackTrace[0]['function'], $errorSerialized['stack'][0]['function']);
         $this->assertSame($originalStackTrace[0]['class'], $errorSerialized['stack'][0]['class']);
     }

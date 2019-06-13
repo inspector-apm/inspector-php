@@ -95,7 +95,7 @@ class Error extends AbstractModel
             }
 
             // Exclude vendor folder
-            if (strpos($trace['file'], '/vendor/') !== false) {
+            if (strpos($trace['file'], '\\vendor\\') !== false) {
                 continue;
             }
 
