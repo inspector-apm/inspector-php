@@ -85,6 +85,11 @@ class Error extends AbstractModel
         $counter = 0;
 
         foreach ($stackTrace as $trace) {
+            // Exclude vendor folder
+            if (strpos($trace['file'], '/vendor/') !== false) {
+                continue;
+            }
+
             // Exception object `getTrace` does not return file and line number for the first line
             // http://php.net/manual/en/exception.gettrace.php#107563
             if (isset($topFile, $topLine) && $topFile && $topLine) {
@@ -99,7 +104,7 @@ class Error extends AbstractModel
                 'function' => isset($trace['function']) ? $trace['function'] : null,
                 'args' => $this->stackTraceArgsToArray($trace),
                 'type' => $trace['type'] ?? 'function',
-                'file' => isset($trace['file']) ? basename($trace['file']) : '(unknown)',
+                'file' => isset($trace['file']) ? $trace['file'] : '(unknown)',
                 'line' => $trace['line'] ?? '0',
                 'code' => isset($trace['file']) ? $this->getCode($trace['file'], $trace['line'] ?? '0') : '(unknown)',
             ];
@@ -107,7 +112,7 @@ class Error extends AbstractModel
             $counter++;
 
             // Reporting limit
-            if ($counter >= 100) {
+            if ($counter >= 50) {
                 break;
             }
         }
@@ -162,7 +167,7 @@ class Error extends AbstractModel
      */
     public function getCode($filePath, $line, $linesAround = 5)
     {
-        if(!$filePath || !$line){
+        if (!$filePath || !$line) {
             return null;
         }
 
@@ -188,8 +193,7 @@ class Error extends AbstractModel
             }
 
             return $codeLines;
-        }
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
             return null;
         }
     }
@@ -215,7 +219,7 @@ class Error extends AbstractModel
             'line' => $this->throwable->getLine(),
             'stack' => $this->stack,
             'transaction' => $this->transaction->getHash(),
-            'group_hash' => md5($className.$this->throwable->getFile().$this->throwable->getLine()),
+            'group_hash' => md5($className . $this->throwable->getFile() . $this->throwable->getLine()),
             'context' => $this->context->jsonSerialize(),
         ];
     }
