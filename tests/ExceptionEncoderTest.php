@@ -50,20 +50,20 @@ class ExceptionEncoderTest extends TestCase
     {
         $exception = new \DomainException;
         $error = new Error($exception, $this->inspector->currentTransaction());
-        $error->start();
+        $error->start()->end();
         $errorSerialized = $error->toArray();
 
         $originalStackTrace = $exception->getTrace();
 
         // Not contains vendor folder
-        /*$vendor = false;
+        $vendor = false;
         foreach ($errorSerialized['stack'] as $stack){
-            $vendor = strpos($stack['file'], 'vendor');
-            if($vendor){
+            if(isset($stack['file']) && strpos($stack['file'], 'vendor') !== false){
+                $vendor = true;
                 break;
             }
         }
-        $this->assertFalse((bool)$vendor);*/
+        $this->assertFalse($vendor);
 
         $this->assertSame($originalStackTrace[0]['function'], $errorSerialized['stack'][0]['function']);
         $this->assertSame($originalStackTrace[0]['class'], $errorSerialized['stack'][0]['class']);
