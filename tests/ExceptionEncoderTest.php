@@ -13,7 +13,7 @@ class ExceptionEncoderTest extends TestCase
     /**
      * @var Inspector
      */
-    public $apm;
+    public $inspector;
 
     /**
      * Sets up the fixture, for example, open a network connection.
@@ -25,8 +25,8 @@ class ExceptionEncoderTest extends TestCase
     {
         $configuration = new Configuration('example-key');
         $configuration->setEnabled(false);
-        $this->apm = new Inspector($configuration);
-        $this->apm->startTransaction('testcase');
+        $this->inspector = new Inspector($configuration);
+        $this->inspector->startTransaction('testcase');
     }
 
     public function testExceptionObjectResult()
@@ -35,7 +35,7 @@ class ExceptionEncoderTest extends TestCase
         $message = 'Test Message';
         $exception = new \DomainException($message, $code);
 
-        $error = new Error($exception, $this->apm->currentTransaction());
+        $error = new Error($exception, $this->inspector->currentTransaction());
         $error->start()->end();
         $errorSerialized = $error->jsonSerialize();
 
@@ -49,7 +49,7 @@ class ExceptionEncoderTest extends TestCase
     public function testStackTraceResult()
     {
         $exception = new \DomainException;
-        $error = new Error($exception, $this->apm->currentTransaction());
+        $error = new Error($exception, $this->inspector->currentTransaction());
         $error->start();
         $errorSerialized = $error->toArray();
 
@@ -63,7 +63,7 @@ class ExceptionEncoderTest extends TestCase
     public function testEmptyExceptionMessageCase()
     {
         $exception = new \DomainException;
-        $error = new Error($exception, $this->apm->currentTransaction());
+        $error = new Error($exception, $this->inspector->currentTransaction());
         $errorSerialized = $error->jsonSerialize();
 
         $this->assertSame('DomainException', $errorSerialized['message']);
