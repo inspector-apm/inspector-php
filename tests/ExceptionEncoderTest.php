@@ -58,7 +58,7 @@ class ExceptionEncoderTest extends TestCase
         // Not contains vendor folder
         $vendor = false;
         foreach ($errorSerialized['stack'] as $stack){
-            if(isset($stack['file']) && strpos($stack['file'], 'vendor') !== false){
+            if(array_key_exists('file', $stack) && strpos($stack['file'], 'vendor') !== false){
                 $vendor = true;
                 break;
             }
