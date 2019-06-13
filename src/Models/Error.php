@@ -85,11 +85,6 @@ class Error extends AbstractModel
         $counter = 0;
 
         foreach ($stackTrace as $trace) {
-            // Exclude vendor folder
-            if (strpos($trace['file'], '/vendor/') !== false) {
-                continue;
-            }
-
             // Exception object `getTrace` does not return file and line number for the first line
             // http://php.net/manual/en/exception.gettrace.php#107563
             if (isset($topFile, $topLine) && $topFile && $topLine) {
@@ -97,6 +92,11 @@ class Error extends AbstractModel
                 $trace['line'] = $topLine;
 
                 unset($topFile, $topLine);
+            }
+
+            // Exclude vendor folder
+            if (strpos($trace['file'], '/vendor/') !== false) {
+                continue;
             }
 
             $stack[] = [
