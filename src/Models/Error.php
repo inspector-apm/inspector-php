@@ -95,9 +95,9 @@ class Error extends AbstractModel
             }
 
             // Exclude vendor folder
-            /*if (array_key_exists('file', $trace) && strpos($trace['file'], 'vendor\\') !== false) {
+            if (array_key_exists('file', $trace) && strpos($trace['file'], 'vendor') !== false) {
                 continue;
-            }*/
+            }
 
             $stack[] = [
                 'class' => isset($trace['class']) ? $trace['class'] : null,
