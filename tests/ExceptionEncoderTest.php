@@ -51,8 +51,8 @@ class ExceptionEncoderTest extends TestCase
         $exception = new \DomainException;
         $error = new Error($exception, $this->inspector->currentTransaction());
         $error->start()->end();
-        $errorSerialized = $error->toArray();
 
+        $errorSerialized = $error->toArray();
         $originalStackTrace = $exception->getTrace();
 
         // Not contains vendor folder

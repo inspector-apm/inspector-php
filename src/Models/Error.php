@@ -95,8 +95,7 @@ class Error extends AbstractModel
             }
 
             // Exclude vendor folder
-            if (array_key_exists('file', $trace) &&
-                strpos($trace['file'], 'vendor\\') !== false) {
+            if (array_key_exists('file', $trace) && strpos($trace['file'], 'vendor\\') !== false) {
                 continue;
             }
 
