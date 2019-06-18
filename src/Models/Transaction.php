@@ -76,7 +76,7 @@ class Transaction extends AbstractModel
             return $this->memoryPeak;
         }
 
-        return round((memory_get_peak_usage(true) * 1000 * 1000), 2);
+        return round((memory_get_peak_usage() * 1000 * 1000), 2);
     }
 
     public function getHash(): string
