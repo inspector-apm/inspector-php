@@ -46,6 +46,11 @@ class Transaction extends AbstractModel
     protected $context;
 
     /**
+     * @var float
+     */
+    protected $memoryPeak;
+
+    /**
      * Transaction constructor.
      *
      * @param string $name
@@ -57,6 +62,21 @@ class Transaction extends AbstractModel
         $this->type = !empty($_SERVER['REQUEST_METHOD']) ? self::TYPE_REQUEST : self::TYPE_PROCESS;
         $this->hash = $this->generateUniqueHash();
         $this->context = new TransactionContext();
+    }
+
+    public function end($duration = null): AbstractModel
+    {
+        $this->memoryPeak = $this->getMemoryPeak();
+        return parent::end($duration);
+    }
+
+    public function getMemoryPeak(): float
+    {
+        if(isset($this->memoryPeak)){
+            return $this->memoryPeak;
+        }
+
+        return round((memory_get_peak_usage(true) * 1000 * 1000), 2);
     }
 
     public function getHash(): string
@@ -163,6 +183,7 @@ class Transaction extends AbstractModel
             'timestamp' => $this->timestamp,
             'duration' => $this->duration,
             'result' => $this->result,
+            'memory_peak' => $this->memoryPeak,
             'context' => $this->context->jsonSerialize(),
         ];
     }
