@@ -58,9 +58,9 @@ class Error extends AbstractModel
         return $this;
     }
 
-    public function start(): AbstractModel
+    public function start($time = null): AbstractModel
     {
-        parent::start();
+        parent::start($time);
 
         $this->stack = $this->stackTraceToArray(
             $this->throwable->getTrace(),

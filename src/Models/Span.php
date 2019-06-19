@@ -77,13 +77,10 @@ class Span extends AbstractModel
         return $this;
     }
 
-    /**
-     * @return AbstractModel
-     */
-    public function start(): AbstractModel
+    public function start($time = null): AbstractModel
     {
         $this->start = round((microtime(true) - $this->transaction->getTimestamp())*1000, 2);
-        return parent::start();
+        return parent::start($time);
     }
 
     /**
