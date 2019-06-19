@@ -33,9 +33,9 @@ abstract class AbstractModel implements \JsonSerializable
         return $this->duration;
     }
 
-    public function start(): AbstractModel
+    public function start($time = null): AbstractModel
     {
-        $this->timestamp = microtime(true);
+        $this->timestamp = is_null($time) ? microtime(true) : $time;
         return $this;
     }
 
