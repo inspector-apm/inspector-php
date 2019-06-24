@@ -49,9 +49,13 @@ class Configuration
      * @param string $apiKey
      * @throws \InvalidArgumentException
      */
-    public function __construct($apiKey)
+    public function __construct($apiKey = null)
     {
-        $this->setApiKey($apiKey);
+        if(is_null($apiKey)){
+            $this->setEnabled(false);
+        } else if(is_string($apiKey)) {
+            $this->setApiKey($apiKey);
+        }
     }
 
     /**

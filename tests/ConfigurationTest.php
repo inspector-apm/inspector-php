@@ -26,6 +26,13 @@ class ConfigurationTest extends TestCase
         $this->assertSame(true, $configuration->isEnabled());
     }
 
+    public function testDisable()
+    {
+        $configuration = new Configuration();
+
+        $this->assertFalse($configuration->isEnabled());
+    }
+
     public function testFluentApi()
     {
         $configuration = new Configuration('aaa');
