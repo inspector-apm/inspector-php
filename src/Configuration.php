@@ -51,10 +51,10 @@ class Configuration
      */
     public function __construct($apiKey = null)
     {
-        if(is_null($apiKey)){
-            $this->setEnabled(false);
-        } else if(is_string($apiKey)) {
+        if(is_string($apiKey)) {
             $this->setApiKey($apiKey);
+        } else {
+            $this->setEnabled(false);
         }
     }
 
