@@ -18,7 +18,7 @@ with one simple and easy to use web interface, even if the application or server
 
 ## Use
 
-To connect your app with Inspector you need to provide the API KEY when create a `Configuration` instance:
+To connect your app with Inspector you need to provide the API key when create a `Configuration` instance:
 
 ```php
 <?php
@@ -38,15 +38,15 @@ All start with a `transaction`. Transaction represent an execution cycle and it 
 $inspector->startTransaction($_SERVER['PATH_INFO']);
 
 // Trace performance of code blocks
-$span = $inspector->startSpan('Process');
+$segment = $inspector->startSegment('Process');
 try {
 
     throw new UnauthorizedException("You don't have permission to access.");
 
 } catch(UnauthorizedException $exception) {
-    $apm->reportException($exception);
+    $inspector->reportException($exception);
 } fianlly {
-    $span->end();
+    $segment->end();
 }
 ```
 
