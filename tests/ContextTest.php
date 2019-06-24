@@ -40,7 +40,7 @@ class ContextTest extends TestCase
      */
     public function testSpanContextEmpty()
     {
-        $span = $this->apm->startSpan('testSpanContextEmpty');
+        $span = $this->apm->startSegment('testSpanContextEmpty');
 
         $this->assertSame(json_encode([]), json_encode($span->getContext()));
     }

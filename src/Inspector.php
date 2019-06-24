@@ -96,7 +96,7 @@ class Inspector
      * @param string $type
      * @return Segment
      */
-    public function startSpan($type)
+    public function startSegment($type)
     {
         $span = new Segment($this->transaction, $type);
         $span->start();

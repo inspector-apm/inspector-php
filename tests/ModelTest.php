@@ -42,7 +42,7 @@ class ModelTest extends TestCase
 
     public function testSpanModelSerialization()
     {
-        $span = $this->apm->startSpan(__FUNCTION__)
+        $span = $this->apm->startSegment(__FUNCTION__)
             ->setMessage('hello span!');
 
         $this->assertArraySubset([
