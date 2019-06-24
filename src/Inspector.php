@@ -7,7 +7,7 @@ namespace Inspector;
 use Inspector\Contracts\TransportInterface;
 use Inspector\Models\AbstractModel;
 use Inspector\Models\Error;
-use Inspector\Models\Span;
+use Inspector\Models\Segment;
 use Inspector\Models\Transaction;
 use Inspector\Transport\AsyncTransport;
 use Inspector\Transport\CurlTransport;
@@ -94,11 +94,11 @@ class Inspector
      * Add new span to the queue.
      *
      * @param string $type
-     * @return Span
+     * @return Segment
      */
     public function startSpan($type)
     {
-        $span = new Span($this->transaction, $type);
+        $span = new Segment($this->transaction, $type);
         $span->start();
         $this->transport->addEntry($span);
         return $span;

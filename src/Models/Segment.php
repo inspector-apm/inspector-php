@@ -6,7 +6,7 @@ namespace Inspector\Models;
 
 use Inspector\Models\Context\SpanContext;
 
-class Span extends AbstractModel
+class Segment extends AbstractModel
 {
     const MODEL_NAME = 'span';
 
