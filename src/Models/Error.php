@@ -104,9 +104,9 @@ class Error extends AbstractModel
                 'function' => isset($trace['function']) ? $trace['function'] : null,
                 'args' => $this->stackTraceArgsToArray($trace),
                 'type' => $trace['type'] ?? 'function',
-                'file' => isset($trace['file']) ? $trace['file'] : '(unknown)',
+                'file' => $trace['file'] ?? '[internal]',
                 'line' => $trace['line'] ?? '0',
-                'code' => isset($trace['file']) ? $this->getCode($trace['file'], $trace['line'] ?? '0') : '(unknown)',
+                'code' => isset($trace['file']) ? $this->getCode($trace['file'], $trace['line'] ?? '0') : [],
             ];
 
             $counter++;
