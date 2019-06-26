@@ -98,10 +98,10 @@ class Inspector
      */
     public function startSegment($type)
     {
-        $span = new Segment($this->transaction, $type);
-        $span->start();
-        $this->transport->addEntry($span);
-        return $span;
+        $segment = new Segment($this->transaction, $type);
+        $segment->start();
+        $this->transport->addEntry($segment);
+        return $segment;
     }
 
     /**
