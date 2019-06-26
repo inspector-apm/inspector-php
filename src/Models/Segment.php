@@ -8,7 +8,7 @@ use Inspector\Models\Context\SpanContext;
 
 class Segment extends AbstractModel
 {
-    const MODEL_NAME = 'span';
+    const MODEL_NAME = 'segment';
 
     /**
      * The Transaction that own the span.
