@@ -46,7 +46,7 @@ class ModelTest extends TestCase
             ->setMessage('hello span!');
 
         $this->assertArraySubset([
-            'model' => 'span',
+            'model' => 'segment',
             'type' => __FUNCTION__,
             'message' => 'hello span!',
             'transaction' => $this->apm->currentTransaction()->getHash(),
