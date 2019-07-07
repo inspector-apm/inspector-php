@@ -66,6 +66,12 @@ class Segment extends AbstractModel
         return $this->context;
     }
 
+    public function addContext($key, $value): Segment
+    {
+        $this->context->addCustom($key, $value);
+        return $this;
+    }
+
     public function getMessage(): string
     {
         return $this->message;

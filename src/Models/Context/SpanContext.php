@@ -85,6 +85,6 @@ class SpanContext extends AbstractContext
         return [
             'db' => $this->db->toArray(),
             'http' => $this->http->toArray(),
-        ];
+        ] + $this->custom;
     }
 }

@@ -76,14 +76,18 @@ class TransactionContext extends AbstractContext
         return $this;
     }
 
-    public function hasCustom()
+    public function hasCustom($key = null)
     {
+        if(is_null($key)){
+            return array_key_exists($key, $this->custom);
+        }
+
         return !empty($this->custom);
     }
 
     public function hasContent(): bool
     {
-        return !empty($this->custom) ||
+        return $this->hasCustom() ||
             $this->user->hasContent() ||
             $this->request->hasContent() ||
             $this->response->hasContent();
@@ -100,7 +104,6 @@ class TransactionContext extends AbstractContext
             'request' => $this->request->toArray(),
             'response' => $this->response->toArray(),
             'user' => $this->user->toArray(),
-            'custom' => $this->custom,
-        ];
+        ] + $this->custom;
     }
 }

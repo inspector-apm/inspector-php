@@ -138,7 +138,7 @@ class Transaction extends AbstractModel
         return $this;
     }
 
-    public function addCustomContext($key, $value): Transaction
+    public function addContext($key, $value): Transaction
     {
         $this->context->addCustom($key, $value);
         return $this;
