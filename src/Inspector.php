@@ -73,7 +73,7 @@ class Inspector
     /**
      * Get current transaction instance.
      *
-     * @return Transaction
+     * @return null|Transaction
      */
     public function currentTransaction()
     {
@@ -81,13 +81,23 @@ class Inspector
     }
 
     /**
-     * Check if a transaction was just started.
+     * Check if a transaction was started.
      *
      * @return bool
      */
     public function hasTransaction(): bool
     {
         return isset($this->transaction);
+    }
+
+    /**
+     * Check if a transaction was started.
+     *
+     * @return bool
+     */
+    public function isRecording(): bool
+    {
+        return $this->hasTransaction();
     }
 
     /**
@@ -146,14 +156,12 @@ class Inspector
      */
     public function flush()
     {
-        if (!$this->configuration->isEnabled()) {
+        if (!$this->configuration->isEnabled() || !$this->isRecording()) {
             return;
         }
 
-        if (isset($this->transaction)) {
-            $this->transaction->end();
-            $this->transport->flush();
-            unset($this->transaction);
-        }
+        $this->transaction->end();
+        $this->transport->flush();
+        unset($this->transaction);
     }
 }
