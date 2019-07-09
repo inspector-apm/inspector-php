@@ -40,7 +40,7 @@ try {
 
 } catch(UnauthorizedException $exception) {
     $inspector->reportException($exception);
-} fianlly {
+} finally {
     $segment->end();
 }
 ```
