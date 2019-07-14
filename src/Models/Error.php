@@ -54,6 +54,18 @@ class Error extends AbstractModel
         return $this;
     }
 
+    public function handled(): Error
+    {
+        $this->handled = true;
+        return $this;
+    }
+
+    public function unhandled(): Error
+    {
+        $this->handled = false;
+        return $this;
+    }
+
     public function getContext(): ErrorContext
     {
         return $this->context;
