@@ -21,6 +21,11 @@ class Error extends AbstractModel
     protected $throwable;
 
     /**
+     * @var bool
+     */
+    protected $handled;
+
+    /**
      * @var array
      */
     protected $stack;
@@ -41,6 +46,12 @@ class Error extends AbstractModel
         $this->throwable = $throwable;
         $this->transaction = $transaction;
         $this->context = new ErrorContext();
+    }
+
+    public function setHandled($value): Error
+    {
+        $this->handled = $value;
+        return $this;
     }
 
     public function getContext(): ErrorContext
@@ -211,6 +222,7 @@ class Error extends AbstractModel
         return [
             'model' => self::MODEL_NAME,
             'message' => $message,
+            'handled' => $this->handled,
             'timestamp' => $this->timestamp,
             'duration' => $this->duration,
             'file' => $this->throwable->getFile(),

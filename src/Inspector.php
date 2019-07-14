@@ -104,12 +104,11 @@ class Inspector
      * Add new span to the queue.
      *
      * @param string $type
-     * @return Segment
+     * @return AbstractModel
      */
     public function startSegment($type)
     {
-        $segment = new Segment($this->transaction, $type);
-        $segment->start();
+        $segment = (new Segment($this->transaction, $type))->start();
         $this->transport->addEntry($segment);
         return $segment;
     }
@@ -118,18 +117,24 @@ class Inspector
      * Error reporting.
      *
      * @param \Throwable $exception
-     * @return Error
+     * @param bool $handled
+     * @return mixed
      */
-    public function reportException(\Throwable $exception)
+    public function reportException(\Throwable $exception, $handled = true)
     {
         if (!$exception instanceof \Exception && !$exception instanceof \Throwable) {
             throw new \InvalidArgumentException('$exception need to be an instance of Exception or Throwable.');
         }
 
-        $error = new Error($exception, $this->transaction);
-        $error->start();
+        $error = (new Error($exception, $this->transaction))
+            ->setHandled($handled)
+            ->start();
         $this->transport->addEntry($error);
         $error->end();
+
+        $this->startSegment('exception')
+            ->addContext('error', $error)
+            ->end($error->getDuration());
 
         return $error;
     }
