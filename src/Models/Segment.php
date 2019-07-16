@@ -104,6 +104,7 @@ class Segment extends AbstractModel
             'start' => $this->start,
             'duration' => $this->duration,
             'transaction' => $this->transaction->getHash(),
+            'transaction_name' => $this->transaction->getName(),
             'context' => $this->context->jsonSerialize(),
         ];
     }
