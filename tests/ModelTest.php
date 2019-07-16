@@ -40,7 +40,7 @@ class ModelTest extends TestCase
         ], $this->apm->currentTransaction()->jsonSerialize());
     }
 
-    public function testSpanModelSerialization()
+    public function testSegmentModelSerialization()
     {
         $span = $this->apm->startSegment(__FUNCTION__)
             ->setMessage('hello span!');
@@ -50,6 +50,7 @@ class ModelTest extends TestCase
             'type' => __FUNCTION__,
             'message' => 'hello span!',
             'transaction' => $this->apm->currentTransaction()->getHash(),
+            'transaction_name' => $this->apm->currentTransaction()->getName(),
             'context' => [],
         ], $span->jsonSerialize());
     }
