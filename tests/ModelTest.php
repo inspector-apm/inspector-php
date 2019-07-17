@@ -42,13 +42,12 @@ class ModelTest extends TestCase
 
     public function testSegmentModelSerialization()
     {
-        $span = $this->apm->startSegment(__FUNCTION__)
-            ->setMessage('hello span!');
+        $span = $this->apm->startSegment(__FUNCTION__, 'hello segment!');
 
         $this->assertArraySubset([
             'model' => 'segment',
             'type' => __FUNCTION__,
-            'message' => 'hello span!',
+            'label' => 'hello segment!',
             'transaction' => $this->apm->currentTransaction()->getHash(),
             'transaction_name' => $this->apm->currentTransaction()->getName(),
             'context' => [],

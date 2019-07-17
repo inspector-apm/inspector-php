@@ -104,11 +104,16 @@ class Inspector
      * Add new span to the queue.
      *
      * @param string $type
+     * @param null|string $label
      * @return AbstractModel
      */
-    public function startSegment($type)
+    public function startSegment($type, $label = null)
     {
         $segment = (new Segment($this->transaction, $type))->start();
+        if($label !== null){
+            $segment->setLabel($label);
+        }
+
         $this->transport->addEntry($segment);
         return $segment;
     }

@@ -29,7 +29,7 @@ class Segment extends AbstractModel
      *
      * @var string
      */
-    protected $message;
+    protected $label;
 
     /**
      * Time interval relative to transaction timestamp.
@@ -72,14 +72,14 @@ class Segment extends AbstractModel
         return $this;
     }
 
-    public function getMessage(): string
+    public function getLabel(): string
     {
-        return $this->message;
+        return $this->label;
     }
 
-    public function setMessage($value): AbstractModel
+    public function setLabel($value): AbstractModel
     {
-        $this->message = $value;
+        $this->label = $value;
         return $this;
     }
 
@@ -99,7 +99,8 @@ class Segment extends AbstractModel
         return [
             'model' => self::MODEL_NAME,
             'type' => $this->type,
-            'message' => $this->message,
+            'label' => $this->label,
+            'message' => $this->label,
             'timestamp' => $this->timestamp,
             'start' => $this->start,
             'duration' => $this->duration,
