@@ -38,4 +38,13 @@ class AgentTest extends TestCase
             $inspector->addEntries([$inspector->startSegment('span-test')])
         );
     }
+
+    public function testTransport()
+    {
+        $configuration = new Configuration('example-key');
+        $configuration->setEnabled(false)
+        ->setTransport('async');
+
+        $this->assertEquals('async', $configuration->getTransport());
+    }
 }
