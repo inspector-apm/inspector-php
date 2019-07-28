@@ -15,7 +15,7 @@ class Transaction extends AbstractModel
     const TYPE_PROCESS = 'process';
 
     /**
-     * Keyword of specific relevance in the service's domain (eg:  'request', 'backgroundjob').
+     * Keyword of specific relevance in the service's domain (eg:  'request', 'process').
      *
      * @var string
      */
@@ -178,6 +178,7 @@ class Transaction extends AbstractModel
         return [
             'model' => self::MODEL_NAME,
             'type' => $this->type,
+            'hostname' => gethostname(),
             'name' => $this->name,
             'hash' => $this->hash,
             'timestamp' => $this->timestamp,

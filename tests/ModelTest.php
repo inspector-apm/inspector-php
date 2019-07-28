@@ -34,6 +34,7 @@ class ModelTest extends TestCase
         $this->assertArraySubset([
             'model' => 'transaction',
             'type' => $this->apm->currentTransaction()::TYPE_PROCESS,
+            'hostname' => gethostname(),
             'name' => 'testcase',
             'result' => null,
             'context' => [],
