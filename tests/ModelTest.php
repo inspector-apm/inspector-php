@@ -48,6 +48,7 @@ class ModelTest extends TestCase
         $this->assertArraySubset([
             'model' => 'segment',
             'type' => __FUNCTION__,
+            'hostname' => gethostname(),
             'label' => 'hello segment!',
             'transaction' => $this->apm->currentTransaction()->getHash(),
             'transaction_name' => $this->apm->currentTransaction()->getName(),

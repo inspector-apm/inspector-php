@@ -99,6 +99,7 @@ class Segment extends AbstractModel
         return [
             'model' => self::MODEL_NAME,
             'type' => $this->type,
+            'hostname' => gethostname(),
             'label' => $this->label,
             'message' => $this->label,
             'timestamp' => $this->timestamp,
