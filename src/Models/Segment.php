@@ -94,6 +94,7 @@ class Segment extends AbstractModel
     public function start($time = null): AbstractModel
     {
         $initial = is_null($time) ? microtime(true) : $time;
+
         $this->start = round(($initial - $this->transaction->getTimestamp())*1000, 2);
         return parent::start($time);
     }
