@@ -4,7 +4,7 @@
 namespace Inspector\Models;
 
 
-use Inspector\Models\Context\SpanContext;
+use Inspector\Models\Context\SegmentContext;
 
 class Segment extends AbstractModel
 {
@@ -39,7 +39,7 @@ class Segment extends AbstractModel
     protected $start;
 
     /**
-     * @var SpanContext
+     * @var SegmentContext
      */
     protected $context;
 
@@ -53,7 +53,7 @@ class Segment extends AbstractModel
     {
         $this->type = $type;
         $this->transaction = $transaction;
-        $this->context = new SpanContext();
+        $this->context = new SegmentContext();
     }
 
     public function getType(): string
@@ -61,7 +61,7 @@ class Segment extends AbstractModel
         return $this->type;
     }
 
-    public function getContext(): SpanContext
+    public function getContext(): SegmentContext
     {
         return $this->context;
     }
@@ -69,6 +69,14 @@ class Segment extends AbstractModel
     public function addContext($key, $value): Segment
     {
         $this->context->addCustom($key, $value);
+        return $this;
+    }
+
+    public function setContext(array $data): Segment
+    {
+        foreach ($data as $key => $value) {
+            $this->context->addCustom($key, $value);
+        }
         return $this;
     }
 

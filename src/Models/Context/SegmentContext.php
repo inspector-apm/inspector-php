@@ -4,7 +4,7 @@
 namespace Inspector\Models\Context;
 
 
-class SpanContext extends AbstractContext
+class SegmentContext extends AbstractContext
 {
     /**
      * Database interaction details
@@ -57,13 +57,13 @@ class SpanContext extends AbstractContext
         return null;
     }
 
-    public function addCustom(string $key, $value): SpanContext
+    public function addCustom(string $key, $value): SegmentContext
     {
         $this->custom[$key] = $value;
         return $this;
     }
 
-    public function setCustom($collection): SpanContext
+    public function setCustom($collection): SegmentContext
     {
         $this->custom = $collection;
         return $this;
