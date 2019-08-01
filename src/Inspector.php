@@ -137,7 +137,7 @@ class Inspector
         $this->transport->addEntry($error);
         $error->end();
 
-        $this->startSegment('exception')
+        $this->startSegment('exception', substr($exception->getMessage(), 0, 50))
             ->addContext('error', $error)
             ->end($error->getDuration());
 
