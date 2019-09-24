@@ -16,6 +16,11 @@ abstract class AbstractApiTransport implements TransportInterface
     const ERROR_LENGTH = 'Batch is too long: %s';
 
     /**
+     * @var string
+     */
+    const MAX_QUEUE_LENGTH = 100;
+
+    /**
      * Key to authenticate remote calls.
      *
      * @var Configuration
@@ -76,7 +81,9 @@ abstract class AbstractApiTransport implements TransportInterface
      */
     public function addEntry($item): TransportInterface
     {
-        $this->queue[] = $item;
+        if(count($this->queue) <= self::MAX_QUEUE_LENGTH) {
+            $this->queue[] = $item;
+        }
         return $this;
     }
 
@@ -154,6 +161,7 @@ abstract class AbstractApiTransport implements TransportInterface
             'Content-Type' => 'application/json',
             'Accept' => 'application/json',
             'X-Inspector-Key' => $this->config->getApiKey(),
+            'X-Inspector-Version' => $this->config->getVersion(),
         ];
     }
 }
