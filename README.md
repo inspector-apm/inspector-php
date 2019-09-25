@@ -47,7 +47,7 @@ try {
 
 Inspector will collect many useful information to produce performance chart in your dashboard.
 
-**[See official documentation](https://app.inspector.dev/docs/2.0/platforms/php)**
+**[See official documentation](https://app.inspector.dev/docs)**
 
 ## LICENSE
 
