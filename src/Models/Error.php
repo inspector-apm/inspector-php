@@ -243,7 +243,6 @@ class Error extends AbstractModel
             'line' => $this->throwable->getLine(),
             'stack' => $this->stack,
             'transaction' => $this->transaction->getHash(),
-            'group_hash' => md5($className . $this->throwable->getFile() . $this->throwable->getLine()),
             'context' => $this->context->jsonSerialize(),
         ];
     }

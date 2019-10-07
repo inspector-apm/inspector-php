@@ -76,7 +76,6 @@ class ModelTest extends TestCase
             'model' => 'error',
             'transaction' => $this->apm->currentTransaction()->getHash(),
             'context' => [],
-            'group_hash' => md5(get_class($exception).$exception->getFile().$exception->getLine()),
         ], $error);
     }
 }
