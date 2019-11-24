@@ -47,4 +47,19 @@ class AgentTest extends TestCase
 
         $this->assertEquals('async', $configuration->getTransport());
     }
+
+    public function testCallbackThrow()
+    {
+        $configuration = new Configuration('example-key');
+        $configuration->setEnabled(false);
+
+        $inspector = new Inspector($configuration);
+        $inspector->startTransaction('ttransaction-test');
+
+        $this->expectException(\Exception::class);
+
+        $inspector->addSegment(function () {
+            throw new \Exception();
+        }, 'callback', 'test callback', true);
+    }
 }

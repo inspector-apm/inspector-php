@@ -119,6 +119,31 @@ class Inspector
     }
 
     /**
+     * Monitor the execution of the callback.
+     *
+     * @param $callback
+     * @param string $type
+     * @param null|string $label
+     * @param bool $throw
+     * @throws \Throwable
+     */
+    public function addSegment($callback, $type, $label = null, $throw = false)
+    {
+        $segment = $this->startSegment($type, $label);
+
+        try {
+            $callback();
+        } catch (\Throwable $exception) {
+            $this->reportException($exception);
+            if($throw) {
+                throw $exception;
+            }
+        } finally {
+            $segment->end();
+        }
+    }
+
+    /**
      * Error reporting.
      *
      * @param \Throwable $exception
