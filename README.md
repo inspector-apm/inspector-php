@@ -45,7 +45,16 @@ try {
 }
 ```
 
-Inspector will collect many useful information to produce performance chart in your dashboard.
+Or directly use add segment that accomplish try/catch inside:
+
+```php
+$inspector->addSegment(function () {
+    // Write here the code block to monitor
+    $text = 'Hello Workd!';
+}, 'my-process');
+```
+
+Inspector will collect information to produce performance chart in your dashboard.
 
 **[See official documentation](https://app.inspector.dev/docs)**
 
