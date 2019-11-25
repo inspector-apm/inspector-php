@@ -110,7 +110,7 @@ class Inspector
     public function startSegment($type, $label = null)
     {
         $segment = (new Segment($this->transaction, $type))->start();
-        if($label !== null){
+        if ($label !== null) {
             $segment->setLabel($label);
         }
 
@@ -134,10 +134,10 @@ class Inspector
         try {
             $callback();
         } catch (\Throwable $exception) {
-            $this->reportException($exception);
-            if($throw) {
+            if ($throw) {
                 throw $exception;
             }
+            $this->reportException($exception);
         } finally {
             $segment->end();
         }
@@ -178,7 +178,7 @@ class Inspector
     public function addEntries($entries)
     {
         $entries = is_array($entries) ? $entries : [$entries];
-        foreach ($entries as $entry){
+        foreach ($entries as $entry) {
             $this->transport->addEntry($entry);
         }
         return $this;
