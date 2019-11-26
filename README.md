@@ -45,10 +45,10 @@ try {
 }
 ```
 
-Or directly use add segment that accomplish try/catch inside:
+Or directly use add segment that implement this strategy for you, and put the new segment in the callback so you can add context information if you need:
 
 ```php
-$result = $inspector->addSegment(function () {
+$result = $inspector->addSegment(function ($segment) {
     // Write here the code block to monitor
     $text = 'Hello Workd!';
 

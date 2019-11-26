@@ -133,7 +133,7 @@ class Inspector
         $segment = $this->startSegment($type, $label);
 
         try {
-            return $callback();
+            return $callback($segment);
         } catch (\Throwable $exception) {
             if ($throw) {
                 throw $exception;
