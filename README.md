@@ -48,10 +48,14 @@ try {
 Or directly use add segment that accomplish try/catch inside:
 
 ```php
-$inspector->addSegment(function () {
+$result = $inspector->addSegment(function () {
     // Write here the code block to monitor
     $text = 'Hello Workd!';
+
+    return $text;
 }, 'my-process');
+
+echo $result; // this will print "Hello World!"
 ```
 
 Inspector will collect information to produce performance chart in your dashboard.
