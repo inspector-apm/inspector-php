@@ -58,8 +58,25 @@ class AgentTest extends TestCase
 
         $this->expectException(\Exception::class);
 
-        $inspector->addSegment(function () {
+        $return = $inspector->addSegment(function () {
             throw new \Exception();
         }, 'callback', 'test callback', true);
+
+        $this->assertEmpty($return);
+    }
+
+    public function testCallbackReturn()
+    {
+        $configuration = new Configuration('example-key');
+        $configuration->setEnabled(false);
+
+        $inspector = new Inspector($configuration);
+        $inspector->startTransaction('ttransaction-test');
+
+        $return = $inspector->addSegment(function () {
+            return 'Hello!';
+        }, 'callback', 'test callback', true);
+
+        $this->assertSame('Hello!', $return);
     }
 }
