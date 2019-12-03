@@ -4,16 +4,11 @@
 namespace Inspector\Models;
 
 
-use Inspector\Models\Context\ErrorContext;
+use Inspector\Models\Partials\User;
 
 class Error extends AbstractModel
 {
     const MODEL_NAME = 'error';
-
-    /**
-     * @var Transaction
-     */
-    protected $transaction;
 
     /**
      * @var \Throwable
@@ -21,67 +16,61 @@ class Error extends AbstractModel
     protected $throwable;
 
     /**
-     * @var bool
-     */
-    protected $handled;
-
-    /**
-     * @var array
-     */
-    protected $stack;
-
-    /**
-     * @var ErrorContext
-     */
-    protected $context;
-
-    /**
      * Error constructor.
      *
-     * @param $throwable
-     * @param $transaction
+     * @param \Throwable $throwable
+     * @param Transaction $transaction
      */
-    public function __construct($throwable, $transaction)
+    public function __construct(\Throwable $throwable, Transaction $transaction)
     {
+        $this->model = self::MODEL_NAME;
         $this->throwable = $throwable;
-        $this->transaction = $transaction;
-        $this->context = new ErrorContext();
+        $this->transaction = $transaction->only(['hash']);
+
+        $this->message = $this->throwable->getMessage()
+            ? $this->throwable->getMessage()
+            : get_class($this->throwable);
+
+
+        $this->class = get_class($this->throwable);
+        $this->file = $this->throwable->getFile();
+        $this->code = $this->throwable->getCode();
+        $this->line = $this->throwable->getLine();
     }
 
-    public function setHandled($value): Error
+    /**
+     * Determine if the exception is handled/unhandled.
+     *
+     * @param bool $value
+     * @return $this
+     */
+    public function setHandled(bool $value)
     {
         $this->handled = $value;
         return $this;
     }
 
-    public function handled(): Error
+    /**
+     * Attcach user information.
+     *
+     * @param integer|string $id
+     * @param null|string $name
+     * @param null|string $email
+     * @return $this
+     */
+    public function withUser($id, $name = null, $email = null)
     {
-        $this->handled = true;
+        $this->user = new User($id, $name, $email);
         return $this;
     }
 
-    public function unhandled(): Error
-    {
-        $this->handled = false;
-        return $this;
-    }
-
-    public function getContext(): ErrorContext
-    {
-        return $this->context;
-    }
-
-    public function withUser($id, $username = null, $email = null): Error
-    {
-        $this->getContext()->getUser()
-            ->setId($id)
-            ->setUsername($username)
-            ->setEmail($email);
-
-        return $this;
-    }
-
-    public function start($time = null): AbstractModel
+    /**
+     * Start the timer.
+     *
+     * @param null|float $time
+     * @return $this
+     */
+    public function start($time = null)
     {
         parent::start($time);
 
@@ -219,31 +208,5 @@ class Error extends AbstractModel
         } catch (\Exception $e) {
             return null;
         }
-    }
-
-    /**
-     * Array representation.
-     *
-     * @return array
-     */
-    public function toArray(): array
-    {
-        $className = get_class($this->throwable);
-        $message = $this->throwable->getMessage() ? $this->throwable->getMessage() : $className;
-
-        return [
-            'model' => self::MODEL_NAME,
-            'message' => $message,
-            'handled' => $this->handled,
-            'timestamp' => $this->timestamp,
-            'duration' => $this->duration,
-            'file' => $this->throwable->getFile(),
-            'class' => $className,
-            'code' => $this->throwable->getCode(),
-            'line' => $this->throwable->getLine(),
-            'stack' => $this->stack,
-            'transaction' => $this->transaction->getHash(),
-            'context' => $this->context->jsonSerialize(),
-        ];
     }
 }

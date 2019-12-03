@@ -37,13 +37,12 @@ class ExceptionEncoderTest extends TestCase
 
         $error = new Error($exception, $this->inspector->currentTransaction());
         $error->start()->end();
-        $errorSerialized = $error->jsonSerialize();
 
-        $this->assertSame($message, $errorSerialized['message']);
-        $this->assertSame('DomainException', $errorSerialized['class']);
-        $this->assertSame($code, $errorSerialized['code']);
-        $this->assertSame(__FILE__, $errorSerialized['file']);
-        $this->assertNotEmpty($errorSerialized['line']);
+        $this->assertSame($message, $error['message']);
+        $this->assertSame('DomainException', $error['class']);
+        $this->assertSame($code, $error['code']);
+        $this->assertSame(__FILE__, $error['file']);
+        $this->assertNotEmpty($error['line']);
     }
 
     public function testStackTraceResult()
@@ -51,13 +50,13 @@ class ExceptionEncoderTest extends TestCase
         $exception = new \DomainException;
         $error = new Error($exception, $this->inspector->currentTransaction());
         $error->start()->end();
-
-        $errorSerialized = $error->toArray();
         $originalStackTrace = $exception->getTrace();
+
+        $this->assertTrue(is_array($error['stack']));
 
         // Not contains vendor folder
         $vendor = false;
-        foreach ($errorSerialized['stack'] as $stack){
+        foreach ($error['stack'] as $stack){
             if(array_key_exists('file', $stack) && strpos($stack['file'], 'vendor') !== false){
                 $vendor = true;
                 break;
@@ -65,16 +64,15 @@ class ExceptionEncoderTest extends TestCase
         }
         $this->assertFalse($vendor);
 
-        $this->assertSame($originalStackTrace[0]['function'], $errorSerialized['stack'][0]['function']);
-        $this->assertSame($originalStackTrace[0]['class'], $errorSerialized['stack'][0]['class']);
+        $this->assertSame($originalStackTrace[0]['function'], $error['stack'][0]['function']);
+        $this->assertSame($originalStackTrace[0]['class'], $error['stack'][0]['class']);
     }
 
     public function testEmptyExceptionMessageCase()
     {
         $exception = new \DomainException;
         $error = new Error($exception, $this->inspector->currentTransaction());
-        $errorSerialized = $error->jsonSerialize();
 
-        $this->assertSame('DomainException', $errorSerialized['message']);
+        $this->assertSame('DomainException', $error['message']);
     }
 }

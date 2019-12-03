@@ -20,20 +20,6 @@ class AsyncTransport extends AbstractApiTransport
     protected $curlPath = 'curl';
 
     /**
-     * String template for curl error message.
-     *
-     * @var string
-     */
-    const ERROR_CURL = 'Command returned an error. [Command: "%s"] [Return code: %d] [Message: "%s"]';
-
-    /**
-     * String template for curl success message.
-     *
-     * @var string
-     */
-    const SUCCESS_CURL = 'Command sent. [Command: "%s"]';
-
-    /**
      * AsyncTransport constructor.
      *
      * @param Configuration $configuration

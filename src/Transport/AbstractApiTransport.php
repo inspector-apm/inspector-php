@@ -13,11 +13,6 @@ abstract class AbstractApiTransport implements TransportInterface
     /**
      * @var string
      */
-    const ERROR_LENGTH = 'Batch is too long: %s';
-
-    /**
-     * @var string
-     */
     const MAX_QUEUE_LENGTH = 100;
 
     /**
@@ -100,19 +95,19 @@ abstract class AbstractApiTransport implements TransportInterface
 
         $this->send($this->queue);
 
-        $this->queue = array();
+        $this->queue = [];
     }
 
     /**
      * Send data chunks based on MAX_POST_LENGTH.
      *
-     * @param array $logs
+     * @param array $items
      */
-    public function send($logs)
+    public function send($items)
     {
-        $json = json_encode($logs);
+        $json = json_encode($items);
         $jsonLength = strlen($json);
-        $count = count($logs);
+        $count = count($items);
 
         if ($jsonLength > $this->config::MAX_POST_LENGTH) {
             if ($count === 1) {
@@ -120,7 +115,7 @@ abstract class AbstractApiTransport implements TransportInterface
                 return;
             }
             $maxCount = floor($count / ceil($jsonLength / $this->config::MAX_POST_LENGTH));
-            $chunks = array_chunk($logs, $maxCount);
+            $chunks = array_chunk($items, $maxCount);
             foreach ($chunks as $chunk) {
                 $this->send($chunk);
             }

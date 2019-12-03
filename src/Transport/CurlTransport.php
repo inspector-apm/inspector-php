@@ -9,20 +9,6 @@ use Inspector\Exceptions\InspectorException;
 class CurlTransport extends AbstractApiTransport
 {
     /**
-     * String template for curl error message.
-     *
-     * @var string
-     */
-    const ERROR_CURL = 'Curl returned an error. [Error no: %d] [HTTP code: %d] [Message: "%s"] [Response: "%s"]';
-
-    /**
-     * String template for curl success message.
-     *
-     * @var string
-     */
-    const SUCCESS_CURL = 'Curl sent data successfully. [HTTP code: %d] [Response: "%s"]';
-
-    /**
      * CurlTransport constructor.
      *
      * @param Configuration $configuration

@@ -109,10 +109,8 @@ class Inspector
      */
     public function startSegment($type, $label = null)
     {
-        $segment = (new Segment($this->transaction, $type))->start();
-        if ($label !== null) {
-            $segment->setLabel($label);
-        }
+        $segment = new Segment($this->transaction, $type, $label);
+        $segment->start();
 
         $this->transport->addEntry($segment);
         return $segment;
@@ -149,7 +147,7 @@ class Inspector
      *
      * @param \Throwable $exception
      * @param bool $handled
-     * @return mixed
+     * @return Error
      */
     public function reportException(\Throwable $exception, $handled = true)
     {
@@ -165,7 +163,7 @@ class Inspector
 
         $this->startSegment('exception', substr($exception->getMessage(), 0, 50))
             ->addContext('error', $error)
-            ->end($error->getDuration());
+            ->end($error->duration);
 
         return $error;
     }
@@ -173,7 +171,7 @@ class Inspector
     /**
      * Add an entry to the queue.
      *
-     * @param array|AbstractModel $entries
+     * @param AbstractModel[]|AbstractModel $entries
      * @return Inspector
      */
     public function addEntries($entries)

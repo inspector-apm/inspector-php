@@ -6,49 +6,15 @@ namespace Inspector\Models;
 
 use Exception;
 use Inspector\Exceptions\InspectorException;
-use Inspector\Models\Context\TransactionContext;
+use Inspector\Models\Partials\Host;
+use Inspector\Models\Partials\Http;
+use Inspector\Models\Partials\User;
 
 class Transaction extends AbstractModel
 {
     const MODEL_NAME = 'transaction';
     const TYPE_REQUEST = 'request';
     const TYPE_PROCESS = 'process';
-
-    /**
-     * Keyword of specific relevance in the service's domain (eg:  'request', 'process').
-     *
-     * @var string
-     */
-    protected $type;
-
-    /**
-     * Name reference for grouping transactions.
-     *
-     * @var string
-     */
-    protected $name;
-
-    /**
-     * Unique identifier.
-     *
-     * @var string
-     */
-    protected $hash;
-
-    /**
-     * @var string
-     */
-    protected $result;
-
-    /**
-     * @var TransactionContext
-     */
-    protected $context;
-
-    /**
-     * @var float
-     */
-    protected $memoryPeak;
 
     /**
      * Transaction constructor.
@@ -58,10 +24,41 @@ class Transaction extends AbstractModel
      */
     public function __construct($name)
     {
+        $this->model = self::MODEL_NAME;
         $this->name = $name;
         $this->type = !empty($_SERVER['REQUEST_METHOD']) ? self::TYPE_REQUEST : self::TYPE_PROCESS;
         $this->hash = $this->generateUniqueHash();
-        $this->context = new TransactionContext();
+        $this->host = new Host();
+
+        if ($this->type === self::TYPE_REQUEST) {
+            $this->http = new Http;
+        }
+    }
+
+    /**
+     * Attcach user information.
+     *
+     * @param integer|string $id
+     * @param null|string $name
+     * @param null|string $email
+     * @return $this
+     */
+    public function withUser($id, $name = null, $email = null)
+    {
+        $this->user = new User($id, $name, $email);
+        return $this;
+    }
+
+    /**
+     * Set a string representation of a transaction result (e.g. 'error', 'success', 'ok', '200', etc...).
+     *
+     * @param string $result
+     * @return Transaction
+     */
+    public function setResult(string $result): Transaction
+    {
+        $this->result = $result;
+        return $this;
     }
 
     public function end($duration = null): AbstractModel
@@ -77,71 +74,6 @@ class Transaction extends AbstractModel
         }
 
         return round((memory_get_peak_usage()/1024/1024), 2); // MB
-    }
-
-    public function getHash(): string
-    {
-        return $this->hash;
-    }
-
-    public function getType()
-    {
-        return $this->type;
-    }
-
-    public function setType($type): Transaction
-    {
-        $this->type = $type;
-        return $this;
-    }
-
-    public function getName(): string
-    {
-        return $this->name;
-    }
-
-    public function setName(string $name): Transaction
-    {
-        $this->name = $name;
-        return $this;
-    }
-
-    public function getContext(): TransactionContext
-    {
-        return $this->context;
-    }
-
-    public function withUser($id, $username = null, $email = null): Transaction
-    {
-        $this->getContext()->getUser()
-            ->setId($id)
-            ->setUsername($username)
-            ->setEmail($email);
-
-        return $this;
-    }
-
-    public function getResult(): string
-    {
-        return $this->result;
-    }
-
-    /**
-     * HTTP status code for HTTP-related transactions.
-     *
-     * @param string $result
-     * @return Transaction
-     */
-    public function setResult(string $result): Transaction
-    {
-        $this->result = $result;
-        return $this;
-    }
-
-    public function addContext($key, $value): Transaction
-    {
-        $this->context->addCustom($key, $value);
-        return $this;
     }
 
     /**
@@ -166,26 +98,5 @@ class Transaction extends AbstractModel
         }
 
         throw new InspectorException('Can\'t create unique transaction hash.');
-    }
-
-    /**
-     * Array representation.
-     *
-     * @return array
-     */
-    public function toArray(): array
-    {
-        return [
-            'model' => self::MODEL_NAME,
-            'type' => $this->type,
-            'hostname' => gethostname(),
-            'name' => $this->name,
-            'hash' => $this->hash,
-            'timestamp' => $this->timestamp,
-            'duration' => $this->duration,
-            'result' => $this->result,
-            'memory_peak' => $this->memoryPeak,
-            'context' => $this->context->jsonSerialize(),
-        ];
     }
 }

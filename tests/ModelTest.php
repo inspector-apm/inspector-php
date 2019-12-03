@@ -23,45 +23,39 @@ class ModelTest extends TestCase
      */
     public function setUp()
     {
-        $configuration = new Configuration('example-key');
+        $configuration = new Configuration('example-api-key');
         $configuration->setEnabled(false);
+
         $this->apm = new Inspector($configuration);
         $this->apm->startTransaction('testcase');
     }
 
-    public function testTransactionModelSerialization()
+    public function testTransactionData()
     {
         $this->assertArraySubset([
             'model' => 'transaction',
             'type' => $this->apm->currentTransaction()::TYPE_PROCESS,
-            'hostname' => gethostname(),
             'name' => 'testcase',
-            'result' => null,
-            'context' => [],
-        ], $this->apm->currentTransaction()->jsonSerialize());
+        ], $this->apm->currentTransaction()->toArray(), true);
     }
 
-    public function testSegmentModelSerialization()
+    public function testSegmentData()
     {
-        $span = $this->apm->startSegment(__FUNCTION__, 'hello segment!');
+        $segment = $this->apm->startSegment(__FUNCTION__, 'hello segment!');
 
         $this->assertArraySubset([
             'model' => 'segment',
             'type' => __FUNCTION__,
-            'hostname' => gethostname(),
             'label' => 'hello segment!',
-            'transaction' => $this->apm->currentTransaction()->getHash(),
-            'transaction_name' => $this->apm->currentTransaction()->getName(),
-            'context' => [],
-        ], $span->jsonSerialize());
+            'transaction' => $this->apm->currentTransaction()->only(['hash', 'timestamp']),
+        ], $segment->toArray());
     }
 
-    public function testErrorModelSerialization()
+    public function testErrorData()
     {
-        $exception = new \Exception('test error');
-        $error = $this->apm->reportException($exception);
-
-        $error = $error->jsonSerialize();
+        $error = $this->apm->reportException(
+            new \Exception('test error')
+        )->toArray();
 
         $this->assertArrayHasKey('message', $error);
         $this->assertArrayHasKey('stack', $error);
@@ -74,8 +68,31 @@ class ModelTest extends TestCase
 
         $this->assertArraySubset([
             'model' => 'error',
-            'transaction' => $this->apm->currentTransaction()->getHash(),
-            'context' => [],
+            'transaction' => $this->apm->currentTransaction()->only(['hash']),
         ], $error);
+    }
+
+    public function testSetContext()
+    {
+        $this->apm->currentTransaction()->addContext('test', ['foo' => 'bar']);
+
+        $this->assertEquals(['test' => ['foo' => 'bar']], $this->apm->currentTransaction()->context);
+    }
+
+    public function testEncoding()
+    {
+        $this->assertContains(trim(json_encode([
+            'model' => 'transaction',
+        ]), '{}'), json_encode($this->apm->currentTransaction()));
+
+        $this->assertContains(trim(json_encode([
+            'model' => 'segment',
+            'type' => 'test',
+        ]), '{}'), json_encode($this->apm->startSegment('test')));
+
+        $error = $this->apm->reportException(new \DomainException('test error'));
+        $this->assertContains(trim(json_encode([
+            'model' => 'error'
+        ]), '{}'), json_encode($error));
     }
 }
