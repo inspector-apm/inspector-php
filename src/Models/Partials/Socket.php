@@ -6,6 +6,15 @@ namespace Inspector\Models\Partials;
 
 use Inspector\Models\Arrayable;
 
+/**
+ * Class Socket
+ * @package Inspector\Models\Partials
+ *
+ * {
+ *  remote_address: string,
+ *  encrypted: boolean
+ * }
+ */
 class Socket extends Arrayable
 {
     /**

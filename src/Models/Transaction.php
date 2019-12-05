@@ -63,16 +63,13 @@ class Transaction extends AbstractModel
 
     public function end($duration = null): AbstractModel
     {
-        $this->memoryPeak = $this->getMemoryPeak();
+        // Sample memory peak at the end of execution.
+        $this->memory_peak = $this->getMemoryPeak();
         return parent::end($duration);
     }
 
     public function getMemoryPeak(): float
     {
-        if(isset($this->memoryPeak)){
-            return $this->memoryPeak;
-        }
-
         return round((memory_get_peak_usage()/1024/1024), 2); // MB
     }
 

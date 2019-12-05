@@ -6,6 +6,16 @@ namespace Inspector\Models\Partials;
 
 use Inspector\Models\Arrayable;
 
+/**
+ * Class Http
+ * @package Inspector\Models\Partials
+ *
+ * {
+ *  request: object,
+ *  response: object,
+ *  url: object
+ * }
+ */
 class Http extends Arrayable
 {
     /**

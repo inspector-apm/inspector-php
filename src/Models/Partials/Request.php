@@ -6,6 +6,18 @@ namespace Inspector\Models\Partials;
 
 use Inspector\Models\Arrayable;
 
+/**
+ * Class Request
+ * @package Inspector\Models\Partials
+ *
+ * {
+ *  method: string,
+ *  version: string,
+ *  socket: object,
+ *  cookies: array,
+ *  headers: array
+ * }
+ */
 class Request extends Arrayable
 {
     /**
