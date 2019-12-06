@@ -28,17 +28,22 @@ class Host extends Arrayable
      */
     public function getHostMemoryUsage()
     {
-        $free = shell_exec('free');
+        try {
+            $free = shell_exec('free');
 
-        if($free === null) {
+            if($free === null) {
+                return 0;
+            }
+
+            $free_arr = explode("\n", (string)trim($free));
+            $mem = explode(" ", $free_arr[1]);
+            $mem = array_merge(array_filter($mem));
+            // used - buffers - cached
+            return round((($mem[2]-$mem[5]-$mem[6]) / $mem[1]) * 100, 2);
+
+        } catch (\Throwable $exception) {
             return 0;
         }
-
-        $free_arr = explode("\n", (string)trim($free));
-        $mem = explode(" ", $free_arr[1]);
-        $mem = array_merge(array_filter($mem));
-        // used - buffers - cached
-        return round((($mem[2]-$mem[5]-$mem[6]) / $mem[1]) * 100, 2);
     }
 
     /**

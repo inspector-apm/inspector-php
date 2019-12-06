@@ -61,7 +61,7 @@ class Transaction extends PerformanceModel
         return $this;
     }
 
-    public function end($duration = null): PerformanceModel
+    public function end($duration = null)
     {
         // Sample memory peak at the end of execution.
         $this->memory_peak = $this->getMemoryPeak();

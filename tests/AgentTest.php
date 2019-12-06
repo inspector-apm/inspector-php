@@ -51,19 +51,19 @@ class AgentTest extends TestCase
 
     public function testCallbackThrow()
     {
-        $configuration = new Configuration('example-key');
-        $configuration->setEnabled(false);
+        $inspector = new Inspector(
+            (new Configuration('example-key'))->setEnabled(false)
+        );
 
-        $inspector = new Inspector($configuration);
-        $inspector->startTransaction('ttransaction-test');
+        $inspector->startTransaction('transaction-test');
 
         $this->expectException(\Exception::class);
 
-        $return = $inspector->addSegment(function () {
+        $segment = $inspector->addSegment(function () {
             throw new \Exception();
         }, 'callback', 'test callback', true);
 
-        $this->assertEmpty($return);
+        $this->assertInstanceOf(Segment::class, $segment);
     }
 
     public function testCallbackReturn()
@@ -76,7 +76,7 @@ class AgentTest extends TestCase
 
         $return = $inspector->addSegment(function () {
             return 'Hello!';
-        }, 'callback', 'test callback', true);
+        }, 'callback', 'test callback');
 
         $this->assertSame('Hello!', $return);
     }

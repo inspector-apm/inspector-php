@@ -123,7 +123,7 @@ class Inspector
      * @param string $type
      * @param null|string $label
      * @param bool $throw
-     * @return mixed
+     * @return mixed|void
      * @throws \Throwable
      */
     public function addSegment($callback, $type, $label = null, $throw = false)
@@ -133,13 +133,14 @@ class Inspector
         try {
             return $callback($segment);
         } catch (\Throwable $exception) {
-            if ($throw) {
+            if ($throw === true) {
                 throw $exception;
-            } else {
-                $this->reportException($exception);
             }
+
+            // else
+            $this->reportException($exception);
         } finally {
-            return $segment->end();
+            $segment->end();
         }
     }
 

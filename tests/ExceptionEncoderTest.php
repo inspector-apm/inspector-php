@@ -36,7 +36,6 @@ class ExceptionEncoderTest extends TestCase
         $exception = new \DomainException($message, $code);
 
         $error = new Error($exception, $this->inspector->currentTransaction());
-        $error->start()->end();
 
         $this->assertSame($message, $error['message']);
         $this->assertSame('DomainException', $error['class']);
@@ -49,7 +48,6 @@ class ExceptionEncoderTest extends TestCase
     {
         $exception = new \DomainException;
         $error = new Error($exception, $this->inspector->currentTransaction());
-        $error->start()->end();
         $originalStackTrace = $exception->getTrace();
 
         $this->assertTrue(is_array($error['stack']));

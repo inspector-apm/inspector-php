@@ -27,8 +27,8 @@ class Error extends Arrayable
         $this->timestamp = microtime(true);
 
         $this->message = $throwable->getMessage()
-            ? $this->throwable->getMessage()
-            : get_class($this->throwable);
+            ? $throwable->getMessage()
+            : get_class($throwable);
 
         $this->class = get_class($throwable);
         $this->file = $throwable->getFile();

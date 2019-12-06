@@ -63,7 +63,6 @@ class ModelTest extends TestCase
         $this->assertArrayHasKey('line', $error);
         $this->assertArrayHasKey('code', $error);
         $this->assertArrayHasKey('class', $error);
-        $this->assertArrayHasKey('duration', $error);
         $this->assertArrayHasKey('timestamp', $error);
 
         $this->assertArraySubset([

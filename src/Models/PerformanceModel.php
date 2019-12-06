@@ -14,7 +14,7 @@ abstract class PerformanceModel extends Arrayable
      * @param null|float $time
      * @return $this
      */
-    public function start($time = null): PerformanceModel
+    public function start($time = null)
     {
         $this->timestamp = is_null($time) ? microtime(true) : $time;
         return $this;
@@ -26,7 +26,7 @@ abstract class PerformanceModel extends Arrayable
      * @param null $duration
      * @return PerformanceModel
      */
-    public function end($duration = null): PerformanceModel
+    public function end($duration = null)
     {
         $this->duration = $duration ?? round((microtime(true) - $this->timestamp)*1000, 2); // milliseconds
         return $this;
