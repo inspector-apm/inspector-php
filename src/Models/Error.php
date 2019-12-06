@@ -1,10 +1,7 @@
 <?php
 
-
 namespace Inspector\Models;
 
-
-use Inspector\Models\Partials\User;
 
 class Error extends Arrayable
 {
@@ -53,20 +50,6 @@ class Error extends Arrayable
     public function setHandled(bool $value)
     {
         $this->handled = $value;
-        return $this;
-    }
-
-    /**
-     * Attcach user information.
-     *
-     * @param integer|string $id
-     * @param null|string $name
-     * @param null|string $email
-     * @return $this
-     */
-    public function withUser($id, $name = null, $email = null)
-    {
-        $this->user = new User($id, $name, $email);
         return $this;
     }
 
