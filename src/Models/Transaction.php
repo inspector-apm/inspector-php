@@ -10,7 +10,7 @@ use Inspector\Models\Partials\Host;
 use Inspector\Models\Partials\Http;
 use Inspector\Models\Partials\User;
 
-class Transaction extends AbstractModel
+class Transaction extends PerformanceModel
 {
     const MODEL_NAME = 'transaction';
     const TYPE_REQUEST = 'request';
@@ -61,7 +61,7 @@ class Transaction extends AbstractModel
         return $this;
     }
 
-    public function end($duration = null): AbstractModel
+    public function end($duration = null): PerformanceModel
     {
         // Sample memory peak at the end of execution.
         $this->memory_peak = $this->getMemoryPeak();

@@ -6,14 +6,14 @@ namespace Inspector\Models;
 
 use Inspector\Models\Partials\User;
 
-class Error extends AbstractModel
+class Error extends Arrayable
 {
-    const MODEL_NAME = 'error';
+    use HasContext;
 
     /**
-     * @var \Throwable
+     * name of the model.
      */
-    protected $throwable;
+    const MODEL_NAME = 'error';
 
     /**
      * Error constructor.
@@ -24,18 +24,24 @@ class Error extends AbstractModel
     public function __construct(\Throwable $throwable, Transaction $transaction)
     {
         $this->model = self::MODEL_NAME;
-        $this->throwable = $throwable;
-        $this->transaction = $transaction->only(['hash']);
+        $this->timestamp = microtime(true);
 
-        $this->message = $this->throwable->getMessage()
+        $this->message = $throwable->getMessage()
             ? $this->throwable->getMessage()
             : get_class($this->throwable);
 
+        $this->class = get_class($throwable);
+        $this->file = $throwable->getFile();
+        $this->line = $throwable->getLine();
+        $this->code = $throwable->getCode();
 
-        $this->class = get_class($this->throwable);
-        $this->file = $this->throwable->getFile();
-        $this->code = $this->throwable->getCode();
-        $this->line = $this->throwable->getLine();
+        $this->stack = $this->stackTraceToArray(
+            $throwable->getTrace(),
+            $throwable->getFile(),
+            $throwable->getLine()
+        );
+
+        $this->transaction = $transaction->only(['hash']);
     }
 
     /**
@@ -61,25 +67,6 @@ class Error extends AbstractModel
     public function withUser($id, $name = null, $email = null)
     {
         $this->user = new User($id, $name, $email);
-        return $this;
-    }
-
-    /**
-     * Start the timer.
-     *
-     * @param null|float $time
-     * @return $this
-     */
-    public function start($time = null)
-    {
-        parent::start($time);
-
-        $this->stack = $this->stackTraceToArray(
-            $this->throwable->getTrace(),
-            $this->throwable->getFile(),
-            $this->throwable->getLine()
-        );
-
         return $this;
     }
 

@@ -3,7 +3,7 @@
 namespace Inspector\Models;
 
 
-class Segment extends AbstractModel
+class Segment extends PerformanceModel
 {
     const MODEL_NAME = 'segment';
 

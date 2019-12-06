@@ -6,7 +6,8 @@ namespace Inspector\Transport;
 use Inspector\Configuration;
 use Inspector\Contracts\TransportInterface;
 use Inspector\Exceptions\InspectorException;
-use Inspector\Models\AbstractModel;
+use Inspector\Models\PerformanceModel;
+use Inspector\Models\Arrayable;
 
 abstract class AbstractApiTransport implements TransportInterface
 {
@@ -71,7 +72,7 @@ abstract class AbstractApiTransport implements TransportInterface
     /**
      * Add a message to the queue.
      *
-     * @param AbstractModel $item
+     * @param Arrayable $item
      * @return TransportInterface
      */
     public function addEntry($item): TransportInterface

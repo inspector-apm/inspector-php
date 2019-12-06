@@ -5,7 +5,7 @@ namespace Inspector;
 
 
 use Inspector\Contracts\TransportInterface;
-use Inspector\Models\AbstractModel;
+use Inspector\Models\PerformanceModel;
 use Inspector\Models\Error;
 use Inspector\Models\Segment;
 use Inspector\Models\Transaction;
@@ -105,7 +105,7 @@ class Inspector
      *
      * @param string $type
      * @param null|string $label
-     * @return AbstractModel
+     * @return PerformanceModel
      */
     public function startSegment($type, $label = null)
     {
@@ -135,10 +135,11 @@ class Inspector
         } catch (\Throwable $exception) {
             if ($throw) {
                 throw $exception;
+            } else {
+                $this->reportException($exception);
             }
-            $this->reportException($exception);
         } finally {
-            $segment->end();
+            return $segment->end();
         }
     }
 
@@ -155,15 +156,14 @@ class Inspector
             throw new \InvalidArgumentException('$exception need to be an instance of Exception or Throwable.');
         }
 
-        $error = (new Error($exception, $this->transaction))
-            ->setHandled($handled)
-            ->start();
-        $this->transport->addEntry($error);
-        $error->end();
+        $segment = $this->startSegment('exception', substr($exception->getMessage(), 0, 50));
 
-        $this->startSegment('exception', substr($exception->getMessage(), 0, 50))
-            ->addContext('error', $error)
-            ->end($error->duration);
+        $error = (new Error($exception, $this->transaction))
+            ->setHandled($handled);
+
+        $this->transport->addEntry($error);
+
+        $segment->addContext('error', $error)->end();
 
         return $error;
     }
@@ -171,7 +171,7 @@ class Inspector
     /**
      * Add an entry to the queue.
      *
-     * @param AbstractModel[]|AbstractModel $entries
+     * @param PerformanceModel[]|PerformanceModel $entries
      * @return Inspector
      */
     public function addEntries($entries)
