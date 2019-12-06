@@ -6,16 +6,6 @@ namespace Inspector\Models\Partials;
 
 use Inspector\Models\Arrayable;
 
-/**
- * Class User
- * @package Inspector\Models\Partials
- *
- * {
- *  id: string,
- *  name: string,
- *  email: string
- * }
- */
 class User extends Arrayable
 {
     /**

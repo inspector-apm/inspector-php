@@ -6,18 +6,6 @@ namespace Inspector\Models\Partials;
 
 use Inspector\Models\Arrayable;
 
-/**
- * Class Url
- * @package Inspector\Models\Partials
- *
- * {
- *  protocol: string,
- *  port: integer,
- *  path: string,
- *  search: string,
- *  full: string
- * }
- */
 class Url extends Arrayable
 {
     /**

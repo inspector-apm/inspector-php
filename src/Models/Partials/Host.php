@@ -6,18 +6,6 @@ namespace Inspector\Models\Partials;
 
 use Inspector\Models\Arrayable;
 
-/**
- * Class Host
- * @package Inspector\Models\Partials
- *
- * {
- *  hostname: string,
- *  ip: string,
- *  cpu_usage: float,
- *  memory_usage: float,
- *  disk_usage: float
- * }
- */
 class Host extends Arrayable
 {
     /**
