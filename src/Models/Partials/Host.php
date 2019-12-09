@@ -16,9 +16,9 @@ class Host extends Arrayable
         $this->hostname = gethostname();
         $this->ip = gethostbyname(gethostname());
 
-        $this->cpu_usage = $this->getHostCpuUsage();
         $this->memory_usage = $this->getHostMemoryUsage();
         $this->disk_usage = $this->getHostDiskUsage();
+        $this->cpu_usage = $this->getHostCpuUsage();
     }
 
     /**
