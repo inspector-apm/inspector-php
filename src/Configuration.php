@@ -142,6 +142,6 @@ class Configuration
 
     public function getVersion(): string
     {
-        return '2.4.9';
+        return '3.0.0';
     }
 }
