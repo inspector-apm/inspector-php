@@ -66,7 +66,9 @@ class Host extends Arrayable
         if (function_exists('sys_getloadavg')) {
             $load = sys_getloadavg()[0];
             $proc = exec('nproc');
-            return round($load * 100 / $proc, 2);
+            return is_numeric($load) && is_numeric($proc)
+                ? round($load * 100 / $proc, 2)
+                : 0;
         }
 
         return 0;
