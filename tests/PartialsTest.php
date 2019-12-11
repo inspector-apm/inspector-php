@@ -15,6 +15,11 @@ class PartialsTest extends TestCase
         $host = new Host();
         $this->assertEquals(gethostname(), $host->hostname);
         $this->assertEquals(gethostbyname(gethostname()), $host->ip);
+
+        if (PHP_OS !== 'Linux') {
+            $this->assertEquals(0, $host->cpu_usage);
+            $this->assertEquals(0, $host->memory_usage);
+        }
     }
 
     public function testUser()
