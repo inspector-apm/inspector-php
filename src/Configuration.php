@@ -17,7 +17,7 @@ class Configuration
      *
      * @var string
      */
-    protected $url = 'https://app.inspector.dev/api';
+    protected $url = 'https://ingest.inspector.dev';
 
     /**
      * Authentication key.
@@ -142,6 +142,6 @@ class Configuration
 
     public function getVersion(): string
     {
-        return '3.0.0';
+        return '3.0.3';
     }
 }
