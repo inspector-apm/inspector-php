@@ -59,17 +59,21 @@ class Configuration
     }
 
     /**
-     * @throws \InvalidArgumentException
+     * Set ingestion url.
+     *
+     * @param string $value
+     * @return Configuration
      */
     public function setUrl($value): Configuration
     {
         $value = trim($value);
 
-        if (filter_var($value, FILTER_VALIDATE_URL)) {
-            $this->url = $value;
-            return $this;
+        if (empty($value)) {
+            throw new \InvalidArgumentException('Invalid URL');
         }
-        throw new \InvalidArgumentException('Invalid URL');
+
+        $this->url = $value;
+        return $this;
     }
 
     public function getUrl(): string
@@ -86,13 +90,13 @@ class Configuration
      */
     public function setApiKey($value)
     {
-        $apiKey = trim($value);
+        $value = trim($value);
 
-        if (empty($apiKey)) {
+        if (empty($value)) {
             throw new \InvalidArgumentException('API key cannot be empty');
         }
 
-        $this->apiKey = $apiKey;
+        $this->apiKey = $value;
         return $this;
     }
 
