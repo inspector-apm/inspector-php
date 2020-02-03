@@ -37,6 +37,11 @@ class Configuration
     protected $transport = 'sync';
 
     /**
+     * @var string
+     */
+    protected $version = '3.0.5';
+
+    /**
      * Transport options.
      *
      * @var array
@@ -146,6 +151,11 @@ class Configuration
 
     public function getVersion(): string
     {
-        return '3.0.3';
+        return $this->version;
+    }
+
+    public function setVersion($value)
+    {
+        $this->version = $value;
     }
 }
