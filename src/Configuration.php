@@ -39,7 +39,7 @@ class Configuration
     /**
      * @var string
      */
-    protected $version = '3.0.5';
+    protected $version = '3.0.6';
 
     /**
      * Transport options.
@@ -157,5 +157,6 @@ class Configuration
     public function setVersion($value)
     {
         $this->version = $value;
+        return $this;
     }
 }
