@@ -129,7 +129,7 @@ class Configuration
 
     public function isEnabled(): bool
     {
-        return $this->enabled;
+        return isset($this->apiKey) && is_string($this->apiKey) && $this->enabled;
     }
 
     public function setEnabled(bool $enabled): Configuration

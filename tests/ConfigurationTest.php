@@ -20,7 +20,7 @@ class ConfigurationTest extends TestCase
         $configuration = new Configuration('aaa');
         $this->assertSame('aaa', $configuration->getApiKey());
 
-        $this->assertSame('https://app.inspector.dev/api', $configuration->getUrl());
+        $this->assertSame('https://ingest.inspector.dev', $configuration->getUrl());
         $this->assertSame([], $configuration->getOptions());
         $this->assertSame('sync', $configuration->getTransport());
         $this->assertSame(true, $configuration->isEnabled());
