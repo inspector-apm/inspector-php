@@ -81,7 +81,12 @@ class Configuration
         return $this;
     }
 
-    public function getUrl(): string
+    /**
+     * Get ingestion endpoint.
+     *
+     * @return string
+     */
+    public function getUrl()
     {
         return $this->url;
     }
@@ -105,55 +110,111 @@ class Configuration
         return $this;
     }
 
-    public function getApiKey(): string
+    /**
+     * Get current API key.
+     *
+     * @return string
+     */
+    public function getApiKey()
     {
         return $this->apiKey;
     }
 
-    public function getOptions(): array
+    /**
+     * Transport options.
+     *
+     * @return array
+     */
+    public function getOptions()
     {
         return $this->options;
     }
 
+    /**
+     * Add a new entry in the options list.
+     *
+     * @param string $key
+     * @param $value
+     * @return Configuration
+     */
     public function addOption($key, $value): Configuration
     {
         $this->options[$key] = $value;
         return $this;
     }
 
+    /**
+     * Override the transport options.
+     *
+     * @param array $options
+     * @return $this
+     */
     public function setOptions(array $options)
     {
         $this->options = $options;
         return $this;
     }
 
-    public function isEnabled(): bool
+    /**
+     * Check if data transfer is enabled.
+     *
+     * @return bool
+     */
+    public function isEnabled()
     {
         return isset($this->apiKey) && is_string($this->apiKey) && $this->enabled;
     }
 
-    public function setEnabled(bool $enabled): Configuration
+    /**
+     * Able/Disable data transfer.
+     *
+     * @param bool $enabled
+     * @return $this
+     */
+    public function setEnabled(bool $enabled)
     {
         $this->enabled = $enabled;
         return $this;
     }
 
-    public function getTransport(): string
+    /**
+     * Get current transport method.
+     *
+     * @return string
+     */
+    public function getTransport()
     {
         return $this->transport;
     }
 
-    public function setTransport(string $transport): Configuration
+    /**
+     * Set the preferred transport method.
+     *
+     * @param string $transport
+     * @return $this
+     */
+    public function setTransport(string $transport)
     {
         $this->transport = $transport;
         return $this;
     }
 
-    public function getVersion(): string
+    /**
+     * Get the package version.
+     *
+     * @return string
+     */
+    public function getVersion()
     {
         return $this->version;
     }
 
+    /**
+     * Set the package version.
+     *
+     * @param string $value
+     * @return $this
+     */
     public function setVersion($value)
     {
         $this->version = $value;
