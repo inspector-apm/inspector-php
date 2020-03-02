@@ -57,7 +57,7 @@ class Host extends Arrayable
     {
         return @is_readable('/') 
             ? round(100 - ((disk_free_space('/') / disk_total_space('/')) * 100), 2) 
-            : false;
+            : 0;
     }
 
     /**
