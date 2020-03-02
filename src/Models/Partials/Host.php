@@ -55,7 +55,7 @@ class Host extends Arrayable
      */
     public function getHostDiskUsage()
     {
-        return round(100 - ((disk_free_space('/') / disk_total_space('/')) * 100), 2);
+        return round(100 - ((disk_free_space(base_path()) / disk_total_space(base_path())) * 100), 2);
     }
 
     /**
