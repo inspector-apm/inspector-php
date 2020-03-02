@@ -31,7 +31,7 @@ class CurlTransport extends AbstractApiTransport
      */
     public function sendChunk($data)
     {
-        $headers = array();
+        $headers = [];
 
         foreach ($this->getApiHeaders() as $name => $value) {
             $headers[] = "$name: $value";
