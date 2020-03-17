@@ -60,7 +60,7 @@ class CurlTransport extends AbstractApiTransport
         $error = curl_error($handle);
 
         if (0 !== $errorNo || 200 !== $code) {
-            error_log(date('Y-m-d H:i:s') . " - [Error] [" . get_class($this) . "] $error - $code $errorNo");
+            error_log(date('Y-m-d H:i:s') . " - [Warning] [" . get_class($this) . "] $error - $code $errorNo");
         }
 
         curl_close($handle);

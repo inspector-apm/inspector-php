@@ -81,7 +81,7 @@ class AsyncTransport extends AbstractApiTransport
 
         if ($result !== 0) {
             // curl returned some error
-            error_log(date('Y-m-d H:i:s')." - [Error] [".get_class($this)."] $result ");
+            error_log(date('Y-m-d H:i:s')." - [Warning] [".get_class($this)."] $result ");
         }
     }
 
