@@ -55,9 +55,13 @@ class Host extends Arrayable
      */
     public function getHostDiskUsage()
     {
-        return @is_readable('/') 
-            ? round(100 - ((disk_free_space('/') / disk_total_space('/')) * 100), 2) 
-            : 0;
+        try {
+            return @is_readable('/')
+                ? round(100 - ((disk_free_space('/') / disk_total_space('/')) * 100), 2)
+                : 0;
+        } catch (\Throwable $exception) {
+            return 0;
+        }
     }
 
     /**
@@ -67,14 +71,14 @@ class Host extends Arrayable
      */
     public function getHostCpuUsage()
     {
-        if (function_exists('sys_getloadavg')) {
+        try {
             $load = sys_getloadavg()[0];
             $proc = exec('nproc');
             return is_numeric($load) && is_numeric($proc)
                 ? round($load * 100 / $proc, 2)
                 : 0;
+        } catch (\Throwable $exception) {
+            return 0;
         }
-
-        return 0;
     }
 }
