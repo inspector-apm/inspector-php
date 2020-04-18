@@ -59,11 +59,9 @@ class AgentTest extends TestCase
 
         $this->expectException(\Exception::class);
 
-        $segment = $inspector->addSegment(function () {
+        $inspector->addSegment(function () {
             throw new \Exception();
         }, 'callback', 'test callback', true);
-
-        $this->assertInstanceOf(Segment::class, $segment);
     }
 
     public function testCallbackReturn()
@@ -92,5 +90,20 @@ class AgentTest extends TestCase
         $inspector->addSegment(function ($segment) {
             $this->assertInstanceOf(Segment::class, $segment);
         }, 'callback', 'test callback', true);
+    }
+
+    public function testAddSegmentWithInputContext()
+    {
+        $configuration = new Configuration('example-key');
+        $configuration->setEnabled(false);
+
+        $inspector = new Inspector($configuration);
+        $inspector->startTransaction('ttransaction-test');
+
+        $segment = $inspector->addSegment(function ($segment) {
+            return $segment->setContext(['foo' => 'bar']);
+        }, 'callback', 'test callback', true);
+
+        $this->assertEquals(['foo' => 'bar'], $segment->context);
     }
 }

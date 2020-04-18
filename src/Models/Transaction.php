@@ -74,7 +74,7 @@ class Transaction extends PerformanceModel
     }
 
     /**
-     * Generate unique ID for grouping events.
+     * Generate a unique transaction hash.
      *
      * http://www.php.net/manual/en/function.uniqid.php
      *
