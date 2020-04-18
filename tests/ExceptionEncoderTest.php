@@ -21,12 +21,12 @@ class ExceptionEncoderTest extends TestCase
      *
      * @throws \Exception
      */
-    public function setUp()
+    public function setUp(): void
     {
         $configuration = new Configuration('example-key');
         $configuration->setEnabled(false);
         $this->inspector = new Inspector($configuration);
-        $this->inspector->startTransaction('testcase');
+        $this->inspector->startTransaction('transaction-test');
     }
 
     public function testExceptionObjectResult()

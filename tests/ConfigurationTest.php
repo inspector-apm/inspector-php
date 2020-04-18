@@ -38,9 +38,18 @@ class ConfigurationTest extends TestCase
         $configuration = new Configuration('aaa');
 
         $this->assertInstanceOf(Configuration::class, $configuration->setApiKey('xxx'));
+        $this->assertSame('xxx', $configuration->getApiKey());
+
         $this->assertInstanceOf(Configuration::class, $configuration->setUrl('http://www.example.com'));
+        $this->assertSame('http://www.example.com', $configuration->getUrl());
+
         $this->assertInstanceOf(Configuration::class, $configuration->setOptions([]));
+        $this->assertSame([], $configuration->getOptions());
+
         $this->assertInstanceOf(Configuration::class, $configuration->setEnabled(true));
+        $this->assertSame(true, $configuration->isEnabled());
+
         $this->assertInstanceOf(Configuration::class, $configuration->setTransport('async'));
+        $this->assertSame('async', $configuration->getTransport());
     }
 }

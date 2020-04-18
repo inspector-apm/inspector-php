@@ -16,7 +16,7 @@ class PartialsTest extends TestCase
         $this->assertEquals(gethostname(), $host->hostname);
         $this->assertEquals(gethostbyname(gethostname()), $host->ip);
 
-        if (PHP_OS !== 'Linux') {
+        if (PHP_OS_FAMILY !== 'Linux') {
             $this->assertEquals(0, $host->cpu_usage);
             $this->assertEquals(0, $host->memory_usage);
         }

@@ -11,68 +11,58 @@ use PHPUnit\Framework\TestCase;
 class AgentTest extends TestCase
 {
     /**
+     * @var Inspector
+     */
+    public $inspector;
+
+    /**
+     * Sets up the fixture, for example, open a network connection.
+     * This method is called before a test is executed.
+     *
+     * @throws \Exception
+     */
+    public function setUp(): void
+    {
+        $configuration = new Configuration('example-api-key');
+        $configuration->setEnabled(false);
+
+        $this->inspector = new Inspector($configuration);
+        $this->inspector->startTransaction('transaction-test');
+    }
+
+    /**
      * @throws \Inspector\Exceptions\InspectorException
      */
     public function testInspectorInstance()
     {
-        $configuration = new Configuration('example-key');
-        $configuration->setEnabled(false);
-
-        $this->assertInstanceOf(Inspector::class, new Inspector($configuration));
+        $this->assertInstanceOf(Inspector::class, $this->inspector);
     }
 
     public function testAddEntry()
     {
-        $configuration = new Configuration('example-key');
-        $configuration->setEnabled(false);
-
-        $inspector = new Inspector($configuration);
-        $inspector->startTransaction('ttransaction-test');
-
         $this->assertInstanceOf(
             Inspector::class,
-            $inspector->addEntries($inspector->startSegment('span-test'))
+            $this->inspector->addEntries($this->inspector->startSegment('segment-test'))
         );
 
         $this->assertInstanceOf(
             Inspector::class,
-            $inspector->addEntries([$inspector->startSegment('span-test')])
+            $this->inspector->addEntries([$this->inspector->startSegment('segment-test')])
         );
-    }
-
-    public function testTransport()
-    {
-        $configuration = new Configuration('example-key');
-        $configuration->setEnabled(false)
-        ->setTransport('async');
-
-        $this->assertEquals('async', $configuration->getTransport());
     }
 
     public function testCallbackThrow()
     {
-        $inspector = new Inspector(
-            (new Configuration('example-key'))->setEnabled(false)
-        );
-
-        $inspector->startTransaction('transaction-test');
-
         $this->expectException(\Exception::class);
 
-        $inspector->addSegment(function () {
+        $this->inspector->addSegment(function () {
             throw new \Exception();
         }, 'callback', 'test callback', true);
     }
 
     public function testCallbackReturn()
     {
-        $configuration = new Configuration('example-key');
-        $configuration->setEnabled(false);
-
-        $inspector = new Inspector($configuration);
-        $inspector->startTransaction('ttransaction-test');
-
-        $return = $inspector->addSegment(function () {
+        $return = $this->inspector->addSegment(function () {
             return 'Hello!';
         }, 'callback', 'test callback');
 
@@ -81,26 +71,14 @@ class AgentTest extends TestCase
 
     public function testAddSegmentWithInput()
     {
-        $configuration = new Configuration('example-key');
-        $configuration->setEnabled(false);
-
-        $inspector = new Inspector($configuration);
-        $inspector->startTransaction('ttransaction-test');
-
-        $inspector->addSegment(function ($segment) {
+        $this->inspector->addSegment(function ($segment) {
             $this->assertInstanceOf(Segment::class, $segment);
         }, 'callback', 'test callback', true);
     }
 
     public function testAddSegmentWithInputContext()
     {
-        $configuration = new Configuration('example-key');
-        $configuration->setEnabled(false);
-
-        $inspector = new Inspector($configuration);
-        $inspector->startTransaction('ttransaction-test');
-
-        $segment = $inspector->addSegment(function ($segment) {
+        $segment = $this->inspector->addSegment(function ($segment) {
             return $segment->setContext(['foo' => 'bar']);
         }, 'callback', 'test callback', true);
 

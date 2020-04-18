@@ -13,7 +13,7 @@ class ModelTest extends TestCase
     /**
      * @var Inspector
      */
-    public $apm;
+    public $inspector;
 
     /**
      * Sets up the fixture, for example, open a network connection.
@@ -21,76 +21,70 @@ class ModelTest extends TestCase
      *
      * @throws \Exception
      */
-    public function setUp()
+    public function setUp(): void
     {
         $configuration = new Configuration('example-api-key');
         $configuration->setEnabled(false);
 
-        $this->apm = new Inspector($configuration);
-        $this->apm->startTransaction('testcase');
+        $this->inspector = new Inspector($configuration);
+        $this->inspector->startTransaction('testcase');
     }
 
     public function testTransactionData()
     {
-        $this->assertArraySubset([
-            'model' => 'transaction',
-            'type' => $this->apm->currentTransaction()::TYPE_PROCESS,
-            'name' => 'testcase',
-        ], $this->apm->currentTransaction()->toArray(), true);
+        $this->assertSame($this->inspector->currentTransaction()::MODEL_NAME, $this->inspector->currentTransaction()->model);
+        $this->assertSame($this->inspector->currentTransaction()::TYPE_PROCESS, $this->inspector->currentTransaction()->type);
+        $this->assertSame('testcase', $this->inspector->currentTransaction()->name);
     }
 
     public function testSegmentData()
     {
-        $segment = $this->apm->startSegment(__FUNCTION__, 'hello segment!');
+        $segment = $this->inspector->startSegment(__FUNCTION__, 'hello segment!');
 
-        $this->assertArraySubset([
-            'model' => 'segment',
-            'type' => __FUNCTION__,
-            'label' => 'hello segment!',
-            'transaction' => $this->apm->currentTransaction()->only(['hash', 'timestamp']),
-        ], $segment->toArray());
+        $this->assertIsArray($segment->toArray());
+        $this->assertSame($segment::MODEL_NAME, $segment->model);
+        $this->assertSame(__FUNCTION__, $segment->type);
+        $this->assertSame('hello segment!', $segment->label);
+        $this->assertSame($this->inspector->currentTransaction()->only(['hash', 'timestamp']), $segment->transaction);
     }
 
     public function testErrorData()
     {
-        $error = $this->apm->reportException(
-            new \Exception('test error')
-        )->toArray();
+        $error = $this->inspector->reportException(new \Exception('test error'));
+        $error_arr = $error->toArray();
 
-        $this->assertArrayHasKey('message', $error);
-        $this->assertArrayHasKey('stack', $error);
-        $this->assertArrayHasKey('file', $error);
-        $this->assertArrayHasKey('line', $error);
-        $this->assertArrayHasKey('code', $error);
-        $this->assertArrayHasKey('class', $error);
-        $this->assertArrayHasKey('timestamp', $error);
+        $this->assertArrayHasKey('message', $error_arr);
+        $this->assertArrayHasKey('stack', $error_arr);
+        $this->assertArrayHasKey('file', $error_arr);
+        $this->assertArrayHasKey('line', $error_arr);
+        $this->assertArrayHasKey('code', $error_arr);
+        $this->assertArrayHasKey('class', $error_arr);
+        $this->assertArrayHasKey('timestamp', $error_arr);
 
-        $this->assertArraySubset([
-            'model' => 'error',
-            'transaction' => $this->apm->currentTransaction()->only(['hash']),
-        ], $error);
+        $this->assertSame($error::MODEL_NAME, $error->model);
+        $this->assertSame($this->inspector->currentTransaction()->only(['hash']), $error->transaction);
     }
 
     public function testSetContext()
     {
-        $this->apm->currentTransaction()->addContext('test', ['foo' => 'bar']);
+        $this->inspector->currentTransaction()->addContext('test', ['foo' => 'bar']);
 
-        $this->assertEquals(['test' => ['foo' => 'bar']], $this->apm->currentTransaction()->context);
+        $this->assertEquals(['test' => ['foo' => 'bar']], $this->inspector->currentTransaction()->context);
     }
 
     public function testEncoding()
     {
-        $this->assertContains(trim(json_encode([
+        $this->assertStringContainsString(trim(json_encode([
             'model' => 'transaction',
-        ]), '{}'), json_encode($this->apm->currentTransaction()));
+        ]), '{}'), json_encode($this->inspector->currentTransaction()));
 
-        $this->assertContains(trim(json_encode([
+        $this->assertStringContainsString(trim(json_encode([
             'model' => 'segment',
             'type' => 'test',
-        ]), '{}'), json_encode($this->apm->startSegment('test')));
+        ]), '{}'), json_encode($this->inspector->startSegment('test')));
 
-        $error = $this->apm->reportException(new \DomainException('test error'));
-        $this->assertContains(trim(json_encode([
+        $error = $this->inspector->reportException(new \DomainException('test error'));
+        $this->assertStringContainsString(trim(json_encode([
             'model' => 'error'
         ]), '{}'), json_encode($error));
     }
