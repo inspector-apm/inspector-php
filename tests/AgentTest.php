@@ -56,8 +56,8 @@ class AgentTest extends TestCase
         $this->expectException(\Exception::class);
 
         $this->inspector->addSegment(function () {
-            throw new \Exception();
-        }, 'callback', 'test callback', true);
+            throw new \Exception('Error in segment');
+        }, 'callback', 'test exception throw', true);
     }
 
     public function testCallbackReturn()

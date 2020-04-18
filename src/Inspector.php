@@ -117,7 +117,7 @@ class Inspector
     }
 
     /**
-     * Monitor the execution of the callback.
+     * Monitor the execution of a code block.
      *
      * @param $callback
      * @param string $type
@@ -137,7 +137,6 @@ class Inspector
                 throw $exception;
             }
 
-            // else
             $this->reportException($exception);
         } finally {
             $segment->end();
