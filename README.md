@@ -1,10 +1,15 @@
-# Inspector
+# Inspector | Real-Time monitoring
 
 [![Build Status](https://travis-ci.org/inspector-apm/inspector-php.svg?branch=master)](https://travis-ci.org/inspector-apm/inspector-php)
 [![Latest Stable Version](https://poser.pugx.org/inspector-apm/inspector-php/v/stable)](https://packagist.org/packages/inspector-apm/inspector-php)
 
-Inspector is a composer package to add Real-Time performance and error alerting in your Laravel applications.
+Inspector is a composer package to add Real-Time monitoring in your PHP applications.
 
+## Requirements
+
+- PHP >= 7.2.0
+
+## Install
 Install the latest version by:
 
 ```shell
@@ -45,14 +50,17 @@ try {
 }
 ```
 
-Or directly use add segment that implement this strategy for you, and put the new segment in the callback so you can add context information if you need:
+Or directly use `addSegment` method that implement this strategy for you,
+and put the new segment in the callback so you can add context information if you need:
 
 ```php
 $result = $inspector->addSegment(function ($segment) {
     // Write here the code block to monitor
-    $text = 'Hello Workd!';
 
+    $text = 'Do something!';
+    $segment->setContext(['foo' => 'bar']);
     return $text;
+
 }, 'my-process');
 
 echo $result; // this will print "Hello World!"
@@ -60,8 +68,8 @@ echo $result; // this will print "Hello World!"
 
 Inspector will collect information to produce performance chart in your dashboard.
 
-**[See official documentation](https://app.inspector.dev/docs)**
+**[See official documentation](https://docs.inspector.dev)**
 
 ## LICENSE
 
-This package are licensed under the [MIT](LICENSE) license.
+This package is licensed under the [MIT](LICENSE) license.
