@@ -70,7 +70,7 @@ class Transaction extends PerformanceModel
 
     public function isEnded()
     {
-        return isset($this->duration);
+        return isset($this->duration) && $this->duration > 0;
     }
 
     public function getMemoryPeak(): float
