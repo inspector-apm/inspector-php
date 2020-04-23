@@ -194,7 +194,10 @@ class Inspector
             return;
         }
 
-        $this->transaction->end();
+        if (!$this->transaction->isEnded()) {
+            $this->transaction->end();
+        }
+
         $this->transport->flush();
         unset($this->transaction);
     }

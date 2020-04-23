@@ -68,6 +68,11 @@ class Transaction extends PerformanceModel
         return parent::end($duration);
     }
 
+    public function isEnded()
+    {
+        return isset($this->duration);
+    }
+
     public function getMemoryPeak(): float
     {
         return round((memory_get_peak_usage()/1024/1024), 2); // MB
