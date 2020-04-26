@@ -49,6 +49,8 @@ class CurlTransport extends AbstractApiTransport
         curl_setopt($handle, CURLOPT_HTTPHEADER, $headers);
         curl_setopt($handle, CURLOPT_POSTFIELDS, $data);
         curl_setopt($handle, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($handle, CURLOPT_SSL_VERIFYHOST, false);
+        curl_setopt($handle, CURLOPT_SSL_VERIFYPEER, true);
         if ($this->proxy) {
             curl_setopt($handle, CURLOPT_PROXY, $this->proxy);
         }
