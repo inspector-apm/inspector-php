@@ -16,11 +16,11 @@ class Host extends Arrayable
         $this->hostname = gethostname();
         $this->ip = gethostbyname(gethostname());
 
-        if (PHP_OS_FAMILY === 'Linux') {
+        /*if (PHP_OS_FAMILY === 'Linux') {
             $this->memory_usage = $this->getHostMemoryUsage();
             $this->disk_usage = $this->getHostDiskUsage();
             $this->cpu_usage = $this->getHostCpuUsage();
-        }
+        }*/
     }
 
     /**
