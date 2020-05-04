@@ -4,7 +4,7 @@
 namespace Inspector;
 
 
-use Inspector\Contracts\TransportInterface;
+use Inspector\Transports\TransportInterface;
 use Inspector\Models\PerformanceModel;
 use Inspector\Models\Error;
 use Inspector\Models\Segment;

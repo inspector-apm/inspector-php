@@ -4,7 +4,6 @@ namespace Inspector\Transports;
 
 
 use Inspector\Configuration;
-use Inspector\Contracts\TransportInterface;
 use Inspector\Exceptions\InspectorException;
 use Inspector\Models\Arrayable;
 
