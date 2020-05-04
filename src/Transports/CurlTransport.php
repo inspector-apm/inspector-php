@@ -1,6 +1,6 @@
 <?php
 
-namespace Inspector\Transport;
+namespace Inspector\Transports;
 
 
 use Inspector\Configuration;

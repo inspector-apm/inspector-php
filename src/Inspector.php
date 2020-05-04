@@ -9,8 +9,8 @@ use Inspector\Models\PerformanceModel;
 use Inspector\Models\Error;
 use Inspector\Models\Segment;
 use Inspector\Models\Transaction;
-use Inspector\Transport\AsyncTransport;
-use Inspector\Transport\CurlTransport;
+use Inspector\Transports\AsyncTransport;
+use Inspector\Transports\CurlTransport;
 
 class Inspector
 {

@@ -1,12 +1,11 @@
 <?php
 
-namespace Inspector\Transport;
+namespace Inspector\Transports;
 
 
 use Inspector\Configuration;
 use Inspector\Contracts\TransportInterface;
 use Inspector\Exceptions\InspectorException;
-use Inspector\Models\PerformanceModel;
 use Inspector\Models\Arrayable;
 
 abstract class AbstractApiTransport implements TransportInterface
