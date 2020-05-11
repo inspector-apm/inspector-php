@@ -14,8 +14,6 @@ use Inspector\Transports\CurlTransport;
 
 class Inspector
 {
-    use MethodMonitoring;
-
     /**
      * Agent configuration.
      *
