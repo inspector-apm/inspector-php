@@ -59,7 +59,9 @@ class CurlTransport extends AbstractApiTransport
         $code = curl_getinfo($handle, CURLINFO_HTTP_CODE);
         $error = curl_error($handle);
 
-        if (0 !== $errorNo || 200 !== $code) {
+        // 200 OK
+        // 403 Account has reached no. transactions limit
+        if (0 !== $errorNo || 200 !== $code || 403 !== $code) {
             error_log(date('Y-m-d H:i:s') . " - [Warning] [" . get_class($this) . "] $error - $code $errorNo");
         }
 
