@@ -17,7 +17,7 @@ class Http extends Arrayable
             return;
         }
 
-        $this->request = new Request;
-        $this->url = new Url;
+        $this->request = new Request();
+        $this->url = new Url();
     }
 }
