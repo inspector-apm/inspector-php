@@ -85,19 +85,9 @@ class Inspector
      *
      * @return bool
      */
-    public function hasTransaction(): bool
-    {
-        return isset($this->transaction);
-    }
-
-    /**
-     * Check if a transaction was started.
-     *
-     * @return bool
-     */
     public function isRecording(): bool
     {
-        return $this->hasTransaction();
+        return isset($this->transaction);
     }
 
     /**
