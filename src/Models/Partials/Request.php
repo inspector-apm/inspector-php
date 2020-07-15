@@ -21,7 +21,7 @@ class Request extends Arrayable
 
         $this->cookies = $_COOKIE;
 
-        $this->body = $_POST;
+        $this->body = json_decode(file_get_contents("php://input"), true);
 
         if (function_exists('apache_request_headers')) {
             $this->headers = apache_request_headers();
