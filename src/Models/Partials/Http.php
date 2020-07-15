@@ -13,9 +13,9 @@ class Http extends Arrayable
      */
     public function __construct()
     {
-        if (PHP_SAPI === 'cli') {
+        /*if (PHP_SAPI === 'cli') {
             return;
-        }
+        }*/
 
         $this->request = new Request();
         $this->url = new Url();

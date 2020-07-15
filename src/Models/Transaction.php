@@ -20,13 +20,14 @@ class Transaction extends PerformanceModel
      * Transaction constructor.
      *
      * @param string $name
+     * @param null|string $type
      * @throws Exception
      */
-    public function __construct($name)
+    public function __construct($name, $type = null)
     {
         $this->model = self::MODEL_NAME;
         $this->name = $name;
-        $this->type = !empty($_SERVER['REQUEST_METHOD']) ? self::TYPE_REQUEST : self::TYPE_PROCESS;
+        $this->type = $type ?? !empty($_SERVER['REQUEST_METHOD']) ? self::TYPE_REQUEST : self::TYPE_PROCESS;
         $this->hash = $this->generateUniqueHash();
         $this->host = new Host();
 
