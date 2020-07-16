@@ -39,7 +39,7 @@ class Configuration
     /**
      * @var string
      */
-    protected $version = '3.2.12';
+    protected $version = '3.2.13';
 
     /**
      * Transport options.
