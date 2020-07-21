@@ -139,11 +139,16 @@ class Inspector
      * @param \Throwable $exception
      * @param bool $handled
      * @return Error
+     * @throws \Exception
      */
     public function reportException(\Throwable $exception, $handled = true)
     {
         if (!$exception instanceof \Exception && !$exception instanceof \Throwable) {
             throw new \InvalidArgumentException('$exception need to be an instance of Exception or Throwable.');
+        }
+
+        if (!$this->isRecording()) {
+            $this->startTransaction($exception->getMessage());
         }
 
         $segment = $this->startSegment('exception', substr($exception->getMessage(), 0, 50));
@@ -153,7 +158,7 @@ class Inspector
 
         $this->transport->addEntry($error);
 
-        $segment->addContext('error', $error)->end();
+        $segment->addContext('Error', $error)->end();
 
         return $error;
     }
