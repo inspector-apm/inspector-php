@@ -75,7 +75,7 @@ abstract class AbstractApiTransport implements TransportInterface
      */
     public function addEntry($item): TransportInterface
     {
-        if(count($this->queue) <= self::MAX_QUEUE_LENGTH) {
+        if(count($this->queue) <= $this->config->getMaxItems()) {
             $this->queue[] = $item;
         }
         return $this;

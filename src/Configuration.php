@@ -32,6 +32,13 @@ class Configuration
     protected $enabled = true;
 
     /**
+     * Max numbers of items to collect in a single session.
+     *
+     * @var int
+     */
+    protected $maxItems = 100;
+
+    /**
      * @var string
      */
     protected $transport = 'sync';
@@ -39,7 +46,7 @@ class Configuration
     /**
      * @var string
      */
-    protected $version = '3.2.14';
+    protected $version = '3.2.15';
 
     /**
      * Transport options.
@@ -118,6 +125,22 @@ class Configuration
     public function getApiKey()
     {
         return $this->apiKey;
+    }
+
+    /**
+     * @return int
+     */
+    public function getMaxItems(): int
+    {
+        return $this->maxItems;
+    }
+
+    /**
+     * @param int $maxItems
+     */
+    public function setMaxItems(int $maxItems): void
+    {
+        $this->maxItems = $maxItems;
     }
 
     /**
