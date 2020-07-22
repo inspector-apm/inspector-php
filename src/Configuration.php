@@ -46,7 +46,7 @@ class Configuration
     /**
      * @var string
      */
-    protected $version = '3.2.15';
+    protected $version = '3.2.16';
 
     /**
      * Transport options.
@@ -137,10 +137,12 @@ class Configuration
 
     /**
      * @param int $maxItems
+     * @return Configuration
      */
-    public function setMaxItems(int $maxItems): void
+    public function setMaxItems(int $maxItems): Configuration
     {
         $this->maxItems = $maxItems;
+        return $this;
     }
 
     /**
