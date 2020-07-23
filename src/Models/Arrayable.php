@@ -160,7 +160,10 @@ abstract class Arrayable implements \ArrayAccess, \JsonSerializable
      */
     public function jsonSerialize()
     {
-        return array_filter($this->toArray());
+        return array_filter($this->toArray(), function ($value) {
+            // remove NULL, FALSE and Empty Strings and Arrays, but leave values of 0 (zero)
+            return is_array($value) ? empty($value) : strlen($value);
+        });
     }
 
     /**
