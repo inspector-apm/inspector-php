@@ -10,11 +10,6 @@ use Inspector\Models\Arrayable;
 abstract class AbstractApiTransport implements TransportInterface
 {
     /**
-     * @var string
-     */
-    const MAX_QUEUE_LENGTH = 100;
-
-    /**
      * Key to authenticate remote calls.
      *
      * @var Configuration
@@ -68,9 +63,19 @@ abstract class AbstractApiTransport implements TransportInterface
     }
 
     /**
+     * Get the current queue.
+     *
+     * @return array
+     */
+    public function getQueue(): array
+    {
+        return $this->queue;
+    }
+
+    /**
      * Add a message to the queue.
      *
-     * @param Arrayable $item
+     * @param array|Arrayable $item
      * @return TransportInterface
      */
     public function addEntry($item): TransportInterface
