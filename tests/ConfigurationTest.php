@@ -24,6 +24,7 @@ class ConfigurationTest extends TestCase
         $this->assertSame([], $configuration->getOptions());
         $this->assertSame('sync', $configuration->getTransport());
         $this->assertSame(true, $configuration->isEnabled());
+        $this->assertSame(100, $configuration->getMaxItems());
     }
 
     public function testDisable()
@@ -51,5 +52,8 @@ class ConfigurationTest extends TestCase
 
         $this->assertInstanceOf(Configuration::class, $configuration->setTransport('async'));
         $this->assertSame('async', $configuration->getTransport());
+
+        $this->assertInstanceOf(Configuration::class, $configuration->setMaxItems(150));
+        $this->assertSame(150, $configuration->getMaxItems());
     }
 }
