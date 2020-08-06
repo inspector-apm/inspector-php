@@ -17,7 +17,7 @@ class CurlTransport extends AbstractApiTransport
     public function __construct($configuration)
     {
         // System need to have CURL available
-        if (!function_exists('curl_init')) {
+        if (!function_exists('curl_init') || !function_exists('curl_multi_init')) {
             throw new InspectorException('cURL PHP extension is not available');
         }
 
@@ -54,17 +54,34 @@ class CurlTransport extends AbstractApiTransport
         if ($this->proxy) {
             curl_setopt($handle, CURLOPT_PROXY, $this->proxy);
         }
-        $response = curl_exec($handle);
-        $errorNo = curl_errno($handle);
-        $code = curl_getinfo($handle, CURLINFO_HTTP_CODE);
-        $error = curl_error($handle);
 
-        // 200 OK
-        // 403 Account has reached no. transactions limit
-        if (0 !== $errorNo || (200 !== $code && 201 !== $code && 403 !== $code)) {
-            error_log(date('Y-m-d H:i:s') . " - [Warning] [" . get_class($this) . "] $error - $code $errorNo");
+        $this->executeAsync($handle);
+    }
+
+    /**
+     * @param resource|false $handle a cURL handle on success, false on errors.
+     */
+    protected function executeAsync($handle)
+    {
+        if ($handle === false) {
+            error_log(date('Y-m-d H:i:s') . " - [Warning] [" . get_class($this) . "] CURL initialization failed.");
         }
 
-        curl_close($handle);
+        //create the multiple cURL handle
+        $mh = curl_multi_init();
+
+        //add the handle
+        curl_multi_add_handle($mh, $handle);
+
+        // Execute the request
+        $status = curl_multi_exec($mh, $active);
+
+        if (!$active) {
+            error_log(date('Y-m-d H:i:s') . " - [Warning] [" . get_class($this) . "] CURL status: {$status}");
+        }
+
+        //close the handles
+        curl_multi_remove_handle($mh, $handle);
+        curl_multi_close($mh);
     }
 }

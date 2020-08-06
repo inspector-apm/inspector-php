@@ -34,33 +34,16 @@ $inspector = new Inspector($configuration);
 All start with a `transaction`. Transaction represent an execution cycle and it can contains one or hundred of segments:
 
 ```php
-// Start execution cycle with a transaction
+// Start an execution cycle with a transaction
 $inspector->startTransaction($_SERVER['PATH_INFO']);
-
-// Trace performance of code blocks
-$segment = $inspector->startSegment('my-process');
-try {
-
-    throw new UnauthorizedException("You don't have permission to access.");
-
-} catch(UnauthorizedException $exception) {
-    $inspector->reportException($exception);
-} finally {
-    $segment->end();
-}
 ```
 
-Or directly use `addSegment` method that implement this strategy for you,
-and put the new segment in the callback so you can add context information if you need:
+Use `addSegment` method to monitor a code block in your transaction:
 
 ```php
 $result = $inspector->addSegment(function ($segment) {
-    // Write here the code block to monitor
-
-    $text = 'Do something!';
-    $segment->setContext(['foo' => 'bar']);
-    return $text;
-
+    // Do something here...
+	return true;
 }, 'my-process');
 
 echo $result; // this will print "Hello World!"

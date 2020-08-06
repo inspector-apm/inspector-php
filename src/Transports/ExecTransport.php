@@ -10,7 +10,7 @@ use Inspector\Exceptions\InspectorException;
  * This transport collects log data until the end of processing.
  * It sends data executing shell curl and sending it to background (Asynchronous mode).
  */
-class AsyncTransport extends AbstractApiTransport
+class ExecTransport extends AbstractApiTransport
 {
     /**
      * CURL command path.

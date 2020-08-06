@@ -41,7 +41,7 @@ class Configuration
     /**
      * @var string
      */
-    protected $transport = 'sync';
+    protected $transport = 'curl';
 
     /**
      * @var string

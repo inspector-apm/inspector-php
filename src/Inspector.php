@@ -9,7 +9,7 @@ use Inspector\Models\PerformanceModel;
 use Inspector\Models\Error;
 use Inspector\Models\Segment;
 use Inspector\Models\Transaction;
-use Inspector\Transports\AsyncTransport;
+use Inspector\Transports\ExecTransport;
 use Inspector\Transports\CurlTransport;
 
 class Inspector
@@ -45,7 +45,8 @@ class Inspector
     {
         switch ($configuration->getTransport()) {
             case 'async':
-                $this->transport = new AsyncTransport($configuration);
+            case 'exec':
+                $this->transport = new ExecTransport($configuration);
                 break;
             default:
                 $this->transport = new CurlTransport($configuration);
