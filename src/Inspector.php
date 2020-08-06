@@ -4,7 +4,7 @@
 namespace Inspector;
 
 
-use Inspector\Transports\ProcOpenTransport;
+use Inspector\Transports\AsyncTransport;
 use Inspector\Transports\TransportInterface;
 use Inspector\Models\PerformanceModel;
 use Inspector\Models\Error;
@@ -45,12 +45,11 @@ class Inspector
     public function __construct(Configuration $configuration)
     {
         switch ($configuration->getTransport()) {
-            case 'async':
             case 'exec':
                 $this->transport = new ExecTransport($configuration);
                 break;
-            case 'proc_open':
-                $this->transport = new ProcOpenTransport($configuration);
+            case 'async':
+                $this->transport = new AsyncTransport($configuration);
                 break;
             default:
                 $this->transport = new CurlTransport($configuration);

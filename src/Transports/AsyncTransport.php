@@ -7,7 +7,7 @@ namespace Inspector\Transports;
 use Inspector\Configuration;
 use Inspector\Exceptions\InspectorException;
 
-class ProcOpenTransport extends AbstractApiTransport
+class AsyncTransport extends AbstractApiTransport
 {
     /**
      * CURL command path.
@@ -73,9 +73,7 @@ class ProcOpenTransport extends AbstractApiTransport
         // return immediately while curl will run in the background
         $cmd .= ' > /dev/null 2>&1 &';
 
-        if (!proc_close(proc_open($cmd, [], $pipes))) {
-            error_log(date('Y-m-d H:i:s')." - [Warning] [".get_class($this)."] Something goes wrong starting data transfer process.");
-        }
+        proc_close(proc_open($cmd, [], $pipes));
     }
 
     /**
