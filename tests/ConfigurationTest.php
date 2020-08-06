@@ -22,7 +22,7 @@ class ConfigurationTest extends TestCase
 
         $this->assertSame('https://ingest.inspector.dev', $configuration->getUrl());
         $this->assertSame([], $configuration->getOptions());
-        $this->assertSame('curl', $configuration->getTransport());
+        $this->assertSame('sync', $configuration->getTransport());
         $this->assertSame(true, $configuration->isEnabled());
         $this->assertSame(100, $configuration->getMaxItems());
     }
