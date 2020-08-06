@@ -1,16 +1,13 @@
 <?php
 
+
 namespace Inspector\Transports;
 
 
 use Inspector\Configuration;
 use Inspector\Exceptions\InspectorException;
 
-/**
- * This transport collects log data until the end of processing.
- * It sends data executing shell curl and sending it to background (Asynchronous mode).
- */
-class ExecTransport extends AbstractApiTransport
+class ProcOpenTransport extends AbstractApiTransport
 {
     /**
      * CURL command path.
@@ -27,8 +24,8 @@ class ExecTransport extends AbstractApiTransport
      */
     public function __construct($configuration)
     {
-        if (!function_exists('exec')) {
-            throw new InspectorException("PHP function 'exec' is not available, is it disabled for security reasons?");
+        if (!function_exists('proc_open')) {
+            throw new InspectorException("PHP function 'proc_open' is not available, is it disabled for security reasons?");
         }
 
         if ('WIN' === strtoupper(substr(PHP_OS, 0, 3))) {
@@ -77,12 +74,14 @@ class ExecTransport extends AbstractApiTransport
         $cmd .= ' > /dev/null 2>&1 &';
 
         $output = [];
-        $process = exec($cmd, $output, $result);
+        $process = proc_open($cmd, $output, $result);
 
         if ($result !== 0) {
             // curl returned some error
             error_log(date('Y-m-d H:i:s')." - [Warning] [".get_class($this)."] $result ");
         }
+
+        proc_close($process);
     }
 
     /**
