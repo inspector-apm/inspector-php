@@ -53,7 +53,7 @@ class ProcOpenTransport extends AbstractApiTransport
      * Send a portion of the load to the remote service.
      *
      * @param string $data
-     * @return mixed
+     * @return void|mixed
      */
     public function sendChunk($data)
     {
@@ -73,15 +73,9 @@ class ProcOpenTransport extends AbstractApiTransport
         // return immediately while curl will run in the background
         $cmd .= ' > /dev/null 2>&1 &';
 
-        $output = [];
-        $process = proc_open($cmd, $output, $result);
-
-        if ($result !== 0) {
-            // curl returned some error
-            error_log(date('Y-m-d H:i:s')." - [Warning] [".get_class($this)."] $result ");
+        if (!proc_close(proc_open($cmd, [], $pipes))) {
+            error_log(date('Y-m-d H:i:s')." - [Warning] [".get_class($this)."] Something goes wrong starting data transfer process.");
         }
-
-        proc_close($process);
     }
 
     /**
