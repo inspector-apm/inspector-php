@@ -28,10 +28,6 @@ class AsyncTransport extends AbstractApiTransport
             throw new InspectorException("PHP function 'proc_open' is not available, is it disabled for security reasons?");
         }
 
-        if ('WIN' === strtoupper(substr(PHP_OS, 0, 3))) {
-            throw new InspectorException('Exec transport is not supposed to work on Windows OS');
-        }
-
         parent::__construct($configuration);
     }
 
