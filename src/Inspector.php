@@ -10,7 +10,6 @@ use Inspector\Models\PerformanceModel;
 use Inspector\Models\Error;
 use Inspector\Models\Segment;
 use Inspector\Models\Transaction;
-use Inspector\Transports\ExecTransport;
 use Inspector\Transports\CurlTransport;
 
 class Inspector
