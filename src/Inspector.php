@@ -45,9 +45,6 @@ class Inspector
     public function __construct(Configuration $configuration)
     {
         switch ($configuration->getTransport()) {
-            case 'exec':
-                $this->transport = new ExecTransport($configuration);
-                break;
             case 'async':
                 $this->transport = new AsyncTransport($configuration);
                 break;

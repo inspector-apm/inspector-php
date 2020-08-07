@@ -57,7 +57,7 @@ class AsyncTransport extends AbstractApiTransport
      */
     public function sendChunk($data)
     {
-        $cmd = "$this->curlPath -X POST";
+        $cmd = "{$this->curlPath} -X POST";
 
         foreach ($this->getApiHeaders() as $name => $value) {
             $cmd .= " --header \"$name: $value\"";
@@ -65,13 +65,18 @@ class AsyncTransport extends AbstractApiTransport
 
         $escapedData = $this->escapeArg($data);
 
-        $cmd .= " --data '$escapedData' '".$this->config->getUrl()."' --max-time 5";
+        $cmd .= " --data '{$escapedData}' '{$this->config->getUrl()}' --max-time 5";
+
         if ($this->proxy) {
-            $cmd .= " --proxy '$this->proxy'";
+            $cmd .= " --proxy '{$this->proxy}'";
         }
 
         // return immediately while curl will run in the background
-        $cmd .= ' > /dev/null 2>&1 &';
+        if ('WIN' === strtoupper(substr(PHP_OS, 0, 3))) {
+            $cmd = "start /B  {$cmd} > NUL";
+        } else {
+            $cmd .= " > /dev/null 2>&1 &";
+        }
 
         proc_close(proc_open($cmd, [], $pipes));
     }

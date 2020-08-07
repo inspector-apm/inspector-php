@@ -41,12 +41,12 @@ class Configuration
     /**
      * @var string
      */
-    protected $transport = 'sync';
+    protected $transport = 'async';
 
     /**
      * @var string
      */
-    protected $version = '3.2.18';
+    protected $version = '3.2.19';
 
     /**
      * Transport options.
