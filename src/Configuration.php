@@ -193,10 +193,10 @@ class Configuration
     /**
      * Able/Disable data transfer.
      *
-     * @param bool $enabled
+     * @param null|bool $enabled
      * @return $this
      */
-    public function setEnabled(bool $enabled)
+    public function setEnabled(?bool $enabled)
     {
         $this->enabled = $enabled;
         return $this;
