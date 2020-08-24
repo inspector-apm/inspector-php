@@ -21,9 +21,6 @@ composer require inspector-apm/inspector-php
 To start sending data to Inspector you need an API key to create a configuration instance. You can obtain `INSPECTOR_API_KEY` creating a new project in your [Inspector](https://www.inspector.dev) dashboard.
 
 ```php
-<?php
-require __DIR__ . '/../vendor/autoload.php';
-
 use Inspector\Inspector;
 use Inspector\Configuration;
 
