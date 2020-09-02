@@ -55,13 +55,13 @@ class AsyncTransport extends AbstractApiTransport
     public function sendChunk($data)
     {
         error_log($data);
-        $cmd = "\"{$this->curlPath}\" -X POST";
+        $cmd = "{$this->curlPath} -X POST";
 
         foreach ($this->getApiHeaders() as $name => $value) {
             $cmd .= " --header \"$name: $value\"";
         }
 
-        $cmd .= " --data '{$this->escapeArg($data)}' '{$this->config->getUrl()}' --max-time 5";
+        $cmd .= " --data \"{$this->escapeArg($data)}\" \"{$this->config->getUrl()}\" --max-time 5";
 
         if ($this->proxy) {
             $cmd .= " --proxy '{$this->proxy}'";
