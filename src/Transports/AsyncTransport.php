@@ -54,22 +54,24 @@ class AsyncTransport extends AbstractApiTransport
      */
     public function sendChunk($data)
     {
-        error_log($data);
         $cmd = "{$this->curlPath} -X POST";
 
         foreach ($this->getApiHeaders() as $name => $value) {
             $cmd .= " --header \"$name: $value\"";
         }
 
-        $cmd .= " --data \"{$this->escapeArg($data)}\" \"{$this->config->getUrl()}\" --max-time 5";
+        $cmd .= " --data {$this->getPayload($data)} {$this->config->getUrl()} --max-time 5";
 
         if ($this->proxy) {
-            $cmd .= " --proxy '{$this->proxy}'";
+            $cmd .= " --proxy \"{$this->proxy}\"";
         }
 
-        // return immediately while curl will run in the background
+        // Curl will run in the background
         if (OS::isWin()) {
-            $cmd = "start /B  {$cmd} > NUL";
+            $cmd = "start /B {$cmd} > NUL";
+            if (substr($data, 0, 1) === '@') {
+                $cmd .= ' & timeout 2 & del /f ' . str_replace('@', '', $data);
+            }
         } else {
             $cmd .= " > /dev/null 2>&1 &";
         }
@@ -80,12 +82,17 @@ class AsyncTransport extends AbstractApiTransport
     /**
      * Escape character to use in the CLI.
      *
+     * Compatible to send data via file path: @../file/path.dat
+     *
      * @param $string
      * @return mixed
      */
-    protected function escapeArg($string)
+    protected function getPayload($string)
     {
-        // http://stackoverflow.com/a/1250279/871861
-        return str_replace("'", "'\"'\"'", $string);
+        return OS::isWin()
+            // https://stackoverflow.com/a/30224062/5161588
+            ? '"' . str_replace('"', '""', $string) . '"'
+            // http://stackoverflow.com/a/1250279/871861
+            : "'" . str_replace("'", "'\"'\"'", $string) . "'";
     }
 }

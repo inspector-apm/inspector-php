@@ -106,6 +106,7 @@ abstract class AbstractApiTransport implements TransportInterface
      * Send data chunks based on MAX_POST_LENGTH.
      *
      * @param array $items
+     * @return void
      */
     public function send($items)
     {
@@ -115,17 +116,30 @@ abstract class AbstractApiTransport implements TransportInterface
 
         if ($jsonLength > $this->config->getMaxPostSize()) {
             if ($count === 1) {
-                // It makes no sense to divide into chunks, just fail silently
-                return;
+                // It makes no sense to divide into chunks, just try to send via file
+                return $this->sendViaFile($json);
             }
-            $maxCount = floor($count / ceil($jsonLength / $this->config->getMaxPostSize()));
-            $chunks = array_chunk($items, $maxCount);
+
+            $chunkSize = floor($count / ceil($jsonLength / $this->config->getMaxPostSize()));
+            $chunks = array_chunk($items, $chunkSize);
+
             foreach ($chunks as $chunk) {
                 $this->send($chunk);
             }
         } else {
             $this->sendChunk($json);
         }
+    }
+
+    /**
+     * @param $json
+     * @return void
+     */
+    protected function sendViaFile($json)
+    {
+        $filepath = __DIR__.DIRECTORY_SEPARATOR.uniqid().'.dat';
+        file_put_contents($filepath, $json, LOCK_EX);
+        $this->sendChunk('@'.$filepath);
     }
 
     /**

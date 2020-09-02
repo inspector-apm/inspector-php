@@ -39,7 +39,7 @@ class Configuration
     /**
      * @var string
      */
-    protected $version = '3.3.5';
+    protected $version = '3.3.6';
 
     /**
      * Transport options.
@@ -51,7 +51,7 @@ class Configuration
     /**
      * Environment constructor.
      *
-     * @param string $apiKey
+     * @param null|string $apiKey
      * @throws \InvalidArgumentException
      */
     public function __construct($apiKey = null)
