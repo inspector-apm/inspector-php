@@ -6,6 +6,7 @@ namespace Inspector\Transports;
 
 use Inspector\Configuration;
 use Inspector\Exceptions\InspectorException;
+use Inspector\OS;
 
 class AsyncTransport extends AbstractApiTransport
 {
@@ -68,7 +69,7 @@ class AsyncTransport extends AbstractApiTransport
         }
 
         // return immediately while curl will run in the background
-        if ('WIN' === strtoupper(substr(PHP_OS, 0, 3))) {
+        if (OS::isWin()) {
             $cmd = "start /B  {$cmd} > NUL";
         } else {
             $cmd .= " > /dev/null 2>&1 &";

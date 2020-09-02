@@ -113,12 +113,12 @@ abstract class AbstractApiTransport implements TransportInterface
         $jsonLength = strlen($json);
         $count = count($items);
 
-        if ($jsonLength > $this->config::MAX_POST_LENGTH) {
+        if ($jsonLength > $this->config->getMaxPostSize()) {
             if ($count === 1) {
                 // It makes no sense to divide into chunks, just fail silently
                 return;
             }
-            $maxCount = floor($count / ceil($jsonLength / $this->config::MAX_POST_LENGTH));
+            $maxCount = floor($count / ceil($jsonLength / $this->config->getMaxPostSize()));
             $chunks = array_chunk($items, $maxCount);
             foreach ($chunks as $chunk) {
                 $this->send($chunk);

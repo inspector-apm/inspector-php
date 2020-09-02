@@ -6,13 +6,6 @@ namespace Inspector;
 class Configuration
 {
     /**
-     * Max size of a POST request content.
-     *
-     * @var integer
-     */
-    const MAX_POST_LENGTH = 65536;
-
-    /**
      * Remote endpoint to send data.
      *
      * @var string
@@ -68,6 +61,16 @@ class Configuration
         } else {
             $this->setEnabled(false);
         }
+    }
+
+    /**
+     * Max size of a POST request content.
+     *
+     * @return  integer
+     */
+    public function getMaxPostSize()
+    {
+        return OS::isWin() ? 8000 : 65536;
     }
 
     /**
