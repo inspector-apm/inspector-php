@@ -61,10 +61,10 @@ class AsyncTransport extends AbstractApiTransport
 
         $escapedData = $this->escapeArg($data);
 
-        $cmd .= " --data '{$escapedData}' '{$this->config->getUrl()}' --max-time 5";
+        $cmd .= " --data \"{$escapedData}\" \"{$this->config->getUrl()}\" --max-time 5";
 
         if ($this->proxy) {
-            $cmd .= " --proxy '{$this->proxy}'";
+            $cmd .= " --proxy \"{$this->proxy}\"";
         }
 
         // return immediately while curl will run in the background
