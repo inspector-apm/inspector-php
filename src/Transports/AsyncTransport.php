@@ -70,7 +70,7 @@ class AsyncTransport extends AbstractApiTransport
         if (OS::isWin()) {
             $cmd = "start /B {$cmd} > NUL";
             if (substr($data, 0, 1) === '@') {
-                $cmd .= ' & timeout 2 & del /f ' . str_replace('@', '', $data);
+                $cmd .= ' & timeout 1 > NUL & del /f ' . str_replace('@', '', $data);
             }
         } else {
             $cmd .= " > /dev/null 2>&1 &";
