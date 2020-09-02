@@ -52,7 +52,7 @@ class ExceptionEncoderTest extends TestCase
 
         $this->assertTrue(is_array($error['stack']));
 
-        // Not contains vendor folder
+        // Contains vendor folder
         $vendor = false;
         foreach ($error['stack'] as $stack){
             if(array_key_exists('file', $stack) && strpos($stack['file'], 'vendor') !== false){
@@ -60,7 +60,7 @@ class ExceptionEncoderTest extends TestCase
                 break;
             }
         }
-        $this->assertFalse($vendor);
+        $this->assertTrue($vendor);
 
         $this->assertSame($originalStackTrace[0]['function'], $error['stack'][0]['function']);
         $this->assertSame($originalStackTrace[0]['class'], $error['stack'][0]['class']);
