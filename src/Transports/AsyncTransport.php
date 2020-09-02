@@ -41,9 +41,9 @@ class AsyncTransport extends AbstractApiTransport
      */
     protected function getAllowedOptions()
     {
-        return array_merge(parent::getAllowedOptions(), array(
+        return array_merge(parent::getAllowedOptions(), [
             'curlPath' => '/.+/',
-        ));
+        ]);
     }
 
     /**
@@ -54,15 +54,14 @@ class AsyncTransport extends AbstractApiTransport
      */
     public function sendChunk($data)
     {
+        error_log($data);
         $cmd = "{$this->curlPath} -X POST";
 
         foreach ($this->getApiHeaders() as $name => $value) {
             $cmd .= " --header \"$name: $value\"";
         }
 
-        $escapedData = $this->escapeArg($data);
-
-        $cmd .= " --data \"{$escapedData}\" \"{$this->config->getUrl()}\" --max-time 5";
+        $cmd .= " --data \"{$this->escapeArg($data)}\" \"{$this->config->getUrl()}\" --max-time 5";
 
         if ($this->proxy) {
             $cmd .= " --proxy \"{$this->proxy}\"";
