@@ -24,7 +24,7 @@ To start sending data to Inspector you need an API key to create a configuration
 use Inspector\Inspector;
 use Inspector\Configuration;
 
-$configuration = new Configuration('YOUR_API_KEY');
+$configuration = new Configuration('YOUR_INGESTION_KEY');
 $inspector = new Inspector($configuration);
 ```
 

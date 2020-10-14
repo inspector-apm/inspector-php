@@ -17,7 +17,7 @@ class Configuration
      *
      * @var string
      */
-    protected $apiKey;
+    protected $ingestionKey;
 
     /**
      * @var bool
@@ -51,13 +51,13 @@ class Configuration
     /**
      * Environment constructor.
      *
-     * @param null|string $apiKey
+     * @param null|string $ingestionKey
      * @throws \InvalidArgumentException
      */
-    public function __construct($apiKey = null)
+    public function __construct($ingestionKey = null)
     {
-        if(is_string($apiKey)) {
-            $this->setApiKey($apiKey);
+        if(is_string($ingestionKey)) {
+            $this->setIngestionKey($ingestionKey);
         } else {
             $this->setEnabled(false);
         }
@@ -108,7 +108,7 @@ class Configuration
      * @return $this
      * @throws \InvalidArgumentException
      */
-    public function setApiKey($value)
+    public function setIngestionKey($value)
     {
         $value = trim($value);
 
@@ -116,7 +116,7 @@ class Configuration
             throw new \InvalidArgumentException('API key cannot be empty');
         }
 
-        $this->apiKey = $value;
+        $this->ingestionKey = $value;
         return $this;
     }
 
@@ -125,9 +125,9 @@ class Configuration
      *
      * @return string
      */
-    public function getApiKey()
+    public function getIngestionKey()
     {
-        return $this->apiKey;
+        return $this->ingestionKey;
     }
 
     /**
@@ -190,7 +190,7 @@ class Configuration
      */
     public function isEnabled()
     {
-        return isset($this->apiKey) && is_string($this->apiKey) && $this->enabled;
+        return isset($this->ingestionKey) && is_string($this->ingestionKey) && $this->enabled;
     }
 
     /**

@@ -173,7 +173,7 @@ abstract class AbstractApiTransport implements TransportInterface
         return [
             'Content-Type' => 'application/json',
             'Accept' => 'application/json',
-            'X-Inspector-Key' => $this->config->getApiKey(),
+            'X-Inspector-Key' => $this->config->getIngestionKey(),
             'X-Inspector-Version' => $this->config->getVersion(),
         ];
     }

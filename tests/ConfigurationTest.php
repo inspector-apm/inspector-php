@@ -18,7 +18,7 @@ class ConfigurationTest extends TestCase
     public function testDefault()
     {
         $configuration = new Configuration('aaa');
-        $this->assertSame('aaa', $configuration->getApiKey());
+        $this->assertSame('aaa', $configuration->getIngestionKey());
 
         $this->assertSame('https://ingest.inspector.dev', $configuration->getUrl());
         $this->assertSame([], $configuration->getOptions());
@@ -38,8 +38,8 @@ class ConfigurationTest extends TestCase
     {
         $configuration = new Configuration('aaa');
 
-        $this->assertInstanceOf(Configuration::class, $configuration->setApiKey('xxx'));
-        $this->assertSame('xxx', $configuration->getApiKey());
+        $this->assertInstanceOf(Configuration::class, $configuration->setIngestionKey('xxx'));
+        $this->assertSame('xxx', $configuration->getIngestionKey());
 
         $this->assertInstanceOf(Configuration::class, $configuration->setUrl('http://www.example.com'));
         $this->assertSame('http://www.example.com', $configuration->getUrl());
