@@ -38,7 +38,7 @@ class Error extends Arrayable
             $throwable->getLine()
         );
 
-        $this->transaction = $transaction->only(['hash']);
+        $this->transaction = $transaction->only(['name', 'hash']);
     }
 
     /**
