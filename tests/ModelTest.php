@@ -62,7 +62,7 @@ class ModelTest extends TestCase
         $this->assertArrayHasKey('timestamp', $error_arr);
 
         $this->assertSame($error::MODEL_NAME, $error->model);
-        $this->assertSame($this->inspector->currentTransaction()->only(['hash']), $error->transaction);
+        $this->assertSame($this->inspector->currentTransaction()->only(['name', 'hash']), $error->transaction);
     }
 
     public function testSetContext()
