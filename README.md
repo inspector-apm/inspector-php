@@ -1,9 +1,9 @@
-# Inspector | Real-Time monitoring
+# Inspector | Code Execution Monitoring Tool
 
 [![Build Status](https://travis-ci.org/inspector-apm/inspector-php.svg?branch=master)](https://travis-ci.org/inspector-apm/inspector-php)
 [![Latest Stable Version](https://poser.pugx.org/inspector-apm/inspector-php/v/stable)](https://packagist.org/packages/inspector-apm/inspector-php)
 
-Inspector is a composer package to add Real-Time monitoring in your PHP applications.
+Inspector is a composer package to monitor your PHP code execution in real-time.
 
 ## Requirements
 
