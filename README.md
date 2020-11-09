@@ -18,7 +18,8 @@ composer require inspector-apm/inspector-php
 
 ## Use
 
-To start sending data to Inspector you need an API key to create a configuration instance. You can obtain `INSPECTOR_API_KEY` creating a new project in your [Inspector](https://www.inspector.dev) dashboard.
+To start sending data to Inspector you need an Ingestion Key to create an instance of the `Configuration` class.
+You can obtain `INSPECTOR_API_KEY` creating a new project in your [Inspector](https://www.inspector.dev) dashboard.
 
 ```php
 use Inspector\Inspector;
@@ -46,9 +47,9 @@ $result = $inspector->addSegment(function ($segment) {
 echo $result; // this will print "Hello World!"
 ```
 
-Inspector will collect information to produce performance chart in your dashboard.
+Inspector will monitor your code execution in real time alerting you if something goes wrong.
 
-**[See official documentation](https://docs.inspector.dev)**
+**[See official documentation](https://docs.inspector.dev/platforms/php)**
 
 ## LICENSE
 
