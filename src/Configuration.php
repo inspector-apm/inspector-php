@@ -39,7 +39,7 @@ class Configuration
     /**
      * @var string
      */
-    protected $version = '3.4.1';
+    protected $version = '3.4.2';
 
     /**
      * Transport options.
@@ -56,10 +56,8 @@ class Configuration
      */
     public function __construct($ingestionKey = null)
     {
-        if(is_string($ingestionKey)) {
+        if(!is_null($ingestionKey)) {
             $this->setIngestionKey($ingestionKey);
-        } else {
-            $this->setEnabled(false);
         }
     }
 
@@ -113,7 +111,7 @@ class Configuration
         $value = trim($value);
 
         if (empty($value)) {
-            throw new \InvalidArgumentException('API key cannot be empty');
+            throw new \InvalidArgumentException('Ingestion kKy cannot be empty');
         }
 
         $this->ingestionKey = $value;
