@@ -60,6 +60,8 @@ class CustomTransport implements \Inspector\Transports\TransportInterface
 {
     protected $configuration;
 
+    protected $queue = [];
+
     public function __constructor($configuration)
     {
         $this->configuration = $configuration;
@@ -68,11 +70,22 @@ class CustomTransport implements \Inspector\Transports\TransportInterface
     public function addEntry(\Inspector\Models\Arrayable $entry)
     {
         // Add an \Inspector\Models\Arrayable entry in the queue.
+        $this->queue[] = $entry;
     }
 
     public function flush()
     {
         // Performs data transfer.
+        $handle = curl_init('https://ingest.inspector.dev');
+        curl_setopt($handle, CURLOPT_POST, 1);
+        curl_setopt($handle, CURLOPT_HTTPHEADER, [
+            'X-Inspector-Key: xxxxxxxxxxxx',
+            'Content-Type: application/json',
+            'Accept: application/json',
+        ]);
+        curl_setopt($handle, CURLOPT_POSTFIELDS, json_encode($this->queue));
+        curl_exec($handle);
+        curl_close($handle);
     }
 }
 ```
