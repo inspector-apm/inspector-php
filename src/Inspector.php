@@ -4,6 +4,7 @@
 namespace Inspector;
 
 
+use Inspector\Models\Arrayable;
 use Inspector\Transports\AsyncTransport;
 use Inspector\Transports\TransportInterface;
 use Inspector\Models\PerformanceModel;
@@ -56,6 +57,18 @@ class Inspector
     }
 
     /**
+     * Set custom transport.
+     *
+     * @param TransportInterface $transport
+     * @return $this
+     */
+    public function setTransport(TransportInterface $transport)
+    {
+        $this->transport = $transport;
+        return $this;
+    }
+
+    /**
      * Create and start new Transaction.
      *
      * @param string $name
@@ -66,7 +79,7 @@ class Inspector
     {
         $this->transaction = new Transaction($name);
         $this->transaction->start();
-        $this->transport->addEntry($this->transaction);
+        $this->addEntries($this->transaction);
         return $this->transaction;
     }
 
@@ -102,7 +115,7 @@ class Inspector
         $segment = new Segment($this->transaction, $type, $label);
         $segment->start();
 
-        $this->transport->addEntry($segment);
+        $this->addEntries($segment);
         return $segment;
     }
 
@@ -156,7 +169,7 @@ class Inspector
         $error = (new Error($exception, $this->transaction))
             ->setHandled($handled);
 
-        $this->transport->addEntry($error);
+        $this->addEntries($error);
 
         $segment->addContext('Error', $error)->end();
 
@@ -166,7 +179,7 @@ class Inspector
     /**
      * Add an entry to the queue.
      *
-     * @param PerformanceModel[]|PerformanceModel $entries
+     * @param Arrayable[]|Arrayable $entries
      * @return Inspector
      */
     public function addEntries($entries)
