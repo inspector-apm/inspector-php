@@ -49,6 +49,40 @@ echo $result; // this will print "Hello World!"
 
 Inspector will monitor your code execution in real time alerting you if something goes wrong.
 
+## Custom Transport
+You can also set up custom transport class to transfer monitoring data from your server to Inspector
+in a personalized way.
+
+The transport class needs to implement `\Inspector\Transports\TransportInterface`:
+
+```php
+class CustomTransport implements \Inspector\Transports\TransportInterface
+{
+    protected $configuration;
+
+    public function __constructor($configuration)
+    {
+        $this->configuration = $configuration;
+    }
+
+    public function addEntry(\Inspector\Models\Arrayable $entry)
+    {
+        // Add an \Inspector\Models\Arrayable entry in the queue.
+    }
+
+    public function flush()
+    {
+        // Performs data transfer.
+    }
+}
+```
+
+Then you can set the new transport in the current `Inspector` instance.
+
+```php
+$inspector->setTransport(new CustomTransport($configuration));
+```
+
 **[See official documentation](https://docs.inspector.dev/platforms/php)**
 
 ## LICENSE
