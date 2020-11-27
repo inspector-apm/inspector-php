@@ -4,6 +4,7 @@
 namespace Inspector;
 
 
+use Inspector\Exceptions\InspectorException;
 use Inspector\Models\Arrayable;
 use Inspector\Transports\AsyncTransport;
 use Inspector\Transports\TransportInterface;
@@ -59,12 +60,20 @@ class Inspector
     /**
      * Set custom transport.
      *
-     * @param TransportInterface $transport
+     * @param TransportInterface|callable $transport
      * @return $this
+     * @throws InspectorException
      */
-    public function setTransport(TransportInterface $transport)
+    public function setTransport($resolver)
     {
-        $this->transport = $transport;
+        if (is_callable($resolver)) {
+            $this->transport = $resolver($this->configuration);
+        } elseif ($resolver instanceof TransportInterface) {
+            $this->transport = $resolver;
+        } else {
+            throw new InspectorException('Invalid transport resolver');
+        }
+
         return $this;
     }
 

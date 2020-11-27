@@ -90,10 +90,13 @@ class CustomTransport implements \Inspector\Transports\TransportInterface
 }
 ```
 
-Then you can set the new transport in the current `Inspector` instance.
+Then you can set the new transport in the `Inspector` instance
+using a callback the will receive the current configuration state as parameter.
 
 ```php
-$inspector->setTransport(new CustomTransport($configuration));
+$inspector->setTransport(function ($configuration) {
+    return new CustomTransport($configuration);
+});
 ```
 
 **[See official documentation](https://docs.inspector.dev/platforms/php)**
