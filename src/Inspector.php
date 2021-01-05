@@ -86,7 +86,7 @@ class Inspector
      */
     public function startTransaction($name)
     {
-        $this->transaction = new Transaction(trim($name, '\\'));
+        $this->transaction = new Transaction(addslashes($name));
         $this->transaction->start();
         $this->addEntries($this->transaction);
         return $this->transaction;
@@ -121,7 +121,7 @@ class Inspector
      */
     public function startSegment($type, $label = null)
     {
-        $segment = new Segment($this->transaction, trim($type, '\\'), $label);
+        $segment = new Segment($this->transaction, addslashes($type), $label);
         $segment->start();
 
         $this->addEntries($segment);
