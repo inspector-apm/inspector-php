@@ -86,7 +86,7 @@ class Inspector
      */
     public function startTransaction($name)
     {
-        $this->transaction = new Transaction($name);
+        $this->transaction = new Transaction(trim($name, '\\'));
         $this->transaction->start();
         $this->addEntries($this->transaction);
         return $this->transaction;
@@ -121,7 +121,7 @@ class Inspector
      */
     public function startSegment($type, $label = null)
     {
-        $segment = new Segment($this->transaction, $type, $label);
+        $segment = new Segment($this->transaction, trim($type, '\\'), $label);
         $segment->start();
 
         $this->addEntries($segment);
@@ -173,7 +173,7 @@ class Inspector
             $this->startTransaction($exception->getMessage());
         }
 
-        $segment = $this->startSegment('exception', trim(substr($exception->getMessage(), 0, 50), "\\"));
+        $segment = $this->startSegment('exception', substr($exception->getMessage(), 0, 50));
 
         $error = (new Error($exception, $this->transaction))
             ->setHandled($handled);
