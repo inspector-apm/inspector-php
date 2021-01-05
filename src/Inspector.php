@@ -71,7 +71,7 @@ class Inspector
         } elseif ($resolver instanceof TransportInterface) {
             $this->transport = $resolver;
         } else {
-            throw new InspectorException('Invalid transport resolver');
+            throw new InspectorException('Invalid transport resolver.');
         }
 
         return $this;
