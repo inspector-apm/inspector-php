@@ -22,7 +22,9 @@ class Request extends Arrayable
         $this->cookies = $_COOKIE;
 
         if (function_exists('apache_request_headers')) {
-            $this->headers = apache_request_headers();
+            $this->headers = array_map(function ($value) {
+                return addslashes($value);
+            }, apache_request_headers());
         }
     }
 }
