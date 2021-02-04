@@ -86,7 +86,7 @@ class Inspector
      */
     public function startTransaction($name)
     {
-        $this->transaction = new Transaction(addslashes($name));
+        $this->transaction = new Transaction($name);
         $this->transaction->start();
         $this->addEntries($this->transaction);
         return $this->transaction;
