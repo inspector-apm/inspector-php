@@ -64,6 +64,7 @@ class AsyncTransport extends AbstractApiTransport
         // Curl will run in the background
         if (OS::isWin()) {
             $cmd = "start /B {$curl} > NUL";
+
             if ($isFile($data)) {
                 $cmd .= ' & timeout 1 > NUL & del /f ' . str_replace('@', '', $data);
             }
