@@ -54,29 +54,53 @@ class AsyncTransport extends AbstractApiTransport
      */
     public function sendChunk($data)
     {
-        $cmd = "{$this->curlPath} -X POST";
+        $curl = $this->buildCurlCommand($data);
 
-        foreach ($this->getApiHeaders() as $name => $value) {
-            $cmd .= " --header \"$name: $value\"";
-        }
-
-        $cmd .= " --data {$this->getPayload($data)} {$this->config->getUrl()} --max-time 5";
-
-        if ($this->proxy) {
-            $cmd .= " --proxy \"{$this->proxy}\"";
-        }
+        // Determine if the payload is a file.
+        $isFile = function ($payload) {
+            return substr($payload, 0, 1) === '@';
+        };
 
         // Curl will run in the background
         if (OS::isWin()) {
-            $cmd = "start /B {$cmd} > NUL";
-            if (substr($data, 0, 1) === '@') {
+            $cmd = "start /B {$curl} > NUL";
+            if ($isFile($data)) {
                 $cmd .= ' & timeout 1 > NUL & del /f ' . str_replace('@', '', $data);
             }
         } else {
-            $cmd .= " > /dev/null 2>&1 &";
+            $cmd = "({$curl} > /dev/null 2>&1";
+
+            if ($isFile($data)) {
+                $cmd.= '; rm ' . str_replace('@', '', $data);
+            }
+
+            $cmd.= ')&';
         }
 
         proc_close(proc_open($cmd, [], $pipes));
+    }
+
+    /**
+     * Carl command is agnostic between Win and Unix.
+     *
+     * @param $data
+     * @return string
+     */
+    protected function buildCurlCommand($data): string
+    {
+        $curl = "{$this->curlPath} -X POST";
+
+        foreach ($this->getApiHeaders() as $name => $value) {
+            $curl .= " --header \"$name: $value\"";
+        }
+
+        $curl .= " --data {$this->getPayload($data)} {$this->config->getUrl()} --max-time 5";
+
+        if ($this->proxy) {
+            $curl .= " --proxy \"{$this->proxy}\"";
+        }
+
+        return $curl;
     }
 
     /**
