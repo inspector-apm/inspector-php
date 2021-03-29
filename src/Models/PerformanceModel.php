@@ -11,19 +11,19 @@ abstract class PerformanceModel extends Arrayable
     /**
      * Start the timer.
      *
-     * @param null|float $time
+     * @param null|float $timestamp
      * @return $this
      */
-    public function start($time = null)
+    public function start($timestamp = null)
     {
-        $this->timestamp = is_null($time) ? microtime(true) : $time;
+        $this->timestamp = is_null($timestamp) ? microtime(true) : $timestamp;
         return $this;
     }
 
     /**
      * Stop the timer and calculate duration.
      *
-     * @param null $duration
+     * @param null $duration milliseconds
      * @return PerformanceModel
      */
     public function end($duration = null)
