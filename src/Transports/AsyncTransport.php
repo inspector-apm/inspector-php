@@ -89,7 +89,7 @@ class AsyncTransport extends AbstractApiTransport
      */
     protected function buildCurlCommand($data): string
     {
-        $curl = "{$this->curlPath} -X POST";
+        $curl = "{$this->curlPath} -X POST --ipv4";
 
         foreach ($this->getApiHeaders() as $name => $value) {
             $curl .= " --header \"$name: $value\"";
