@@ -41,7 +41,7 @@ Use `addSegment` method to monitor a code block in your transaction:
 ```php
 $result = $inspector->addSegment(function ($segment) {
     // Do something here...
-	return true;
+	return "Hello World!";
 }, 'my-process');
 
 echo $result; // this will print "Hello World!"
