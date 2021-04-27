@@ -15,6 +15,7 @@ class Host extends Arrayable
     {
         $this->hostname = gethostname();
         $this->ip = gethostbyname(gethostname());
+        $this->os = PHP_OS_FAMILY;
 
         /*if (PHP_OS_FAMILY === 'Linux') {
             $this->memory_usage = $this->getHostMemoryUsage();

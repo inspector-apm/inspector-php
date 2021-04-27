@@ -3,6 +3,8 @@
 namespace Inspector\Models;
 
 
+use Inspector\Models\Partials\Host;
+
 class Segment extends PerformanceModel
 {
     const MODEL_NAME = 'segment';
@@ -18,6 +20,7 @@ class Segment extends PerformanceModel
         $this->model = self::MODEL_NAME;
         $this->type = $type;
         $this->label = $label;
+        $this->host = new Host();
         $this->transaction = $transaction->only(['hash', 'timestamp']);
     }
 

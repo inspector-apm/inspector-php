@@ -3,6 +3,8 @@
 namespace Inspector\Models;
 
 
+use Inspector\Models\Partials\Host;
+
 class Error extends Arrayable
 {
     use HasContext;
@@ -22,6 +24,8 @@ class Error extends Arrayable
     {
         $this->model = self::MODEL_NAME;
         $this->timestamp = microtime(true);
+
+        $this->host = new Host();
 
         $this->message = $throwable->getMessage()
             ? $throwable->getMessage()
