@@ -46,6 +46,7 @@ class ModelTest extends TestCase
         $this->assertSame(__FUNCTION__, $segment->type);
         $this->assertSame('hello segment!', $segment->label);
         $this->assertSame($this->inspector->currentTransaction()->only(['hash', 'timestamp']), $segment->transaction);
+        $this->assertArrayHasKey('host', $segment);
     }
 
     public function testErrorData()
@@ -60,6 +61,7 @@ class ModelTest extends TestCase
         $this->assertArrayHasKey('code', $error_arr);
         $this->assertArrayHasKey('class', $error_arr);
         $this->assertArrayHasKey('timestamp', $error_arr);
+        $this->assertArrayHasKey('host', $error_arr);
 
         $this->assertSame($error::MODEL_NAME, $error->model);
         $this->assertSame($this->inspector->currentTransaction()->only(['name', 'hash']), $error->transaction);
@@ -70,22 +72,5 @@ class ModelTest extends TestCase
         $this->inspector->currentTransaction()->addContext('test', ['foo' => 'bar']);
 
         $this->assertEquals(['test' => ['foo' => 'bar']], $this->inspector->currentTransaction()->context);
-    }
-
-    public function testEncoding()
-    {
-        $this->assertStringContainsString(trim(json_encode([
-            'model' => 'transaction',
-        ]), '{}'), json_encode($this->inspector->currentTransaction()));
-
-        $this->assertStringContainsString(trim(json_encode([
-            'model' => 'segment',
-            'type' => 'test',
-        ]), '{}'), json_encode($this->inspector->startSegment('test')));
-
-        $error = $this->inspector->reportException(new \DomainException('test error'));
-        $this->assertStringContainsString(trim(json_encode([
-            'model' => 'error'
-        ]), '{}'), json_encode($error));
     }
 }
