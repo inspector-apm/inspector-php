@@ -21,7 +21,7 @@ class Segment extends PerformanceModel
         $this->type = $type;
         $this->label = $label;
         $this->host = new Host();
-        $this->transaction = $transaction->only(['hash', 'timestamp']);
+        $this->transaction = $transaction->only(['name', 'hash', 'timestamp']);
     }
 
     /**
