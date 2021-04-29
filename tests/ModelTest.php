@@ -45,7 +45,7 @@ class ModelTest extends TestCase
         $this->assertSame($segment::MODEL_NAME, $segment->model);
         $this->assertSame(__FUNCTION__, $segment->type);
         $this->assertSame('hello segment!', $segment->label);
-        $this->assertSame($this->inspector->currentTransaction()->only(['hash', 'timestamp']), $segment->transaction);
+        $this->assertSame($this->inspector->currentTransaction()->only(['name', 'hash', 'timestamp']), $segment->transaction);
         $this->assertArrayHasKey('host', $segment);
     }
 
