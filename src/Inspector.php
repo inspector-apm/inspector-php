@@ -109,7 +109,7 @@ class Inspector
      */
     public function isRecording(): bool
     {
-        return $this->configuration->isEnabled();
+        return $this->configuration->isEnabled() && isset($this->transaction);
     }
 
     /**
@@ -225,7 +225,7 @@ class Inspector
      */
     public function flush()
     {
-        if (!$this->isRecording() || !isset($this->transaction)) {
+        if (!$this->isRecording()) {
             return;
         }
 
