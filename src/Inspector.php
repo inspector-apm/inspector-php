@@ -119,7 +119,7 @@ class Inspector
      */
     public function needTransaction(): bool
     {
-        return $this->isRecording() && !isset($this->transaction);
+        return $this->isRecording() && !$this->hasTransaction();
     }
 
     /**
