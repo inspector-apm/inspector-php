@@ -255,7 +255,7 @@ class Inspector
      */
     public function flush()
     {
-        if (!$this->isRecording()) {
+        if (!$this->isRecording() || !$this->hasTransaction()) {
             return;
         }
 
