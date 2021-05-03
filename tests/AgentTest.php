@@ -84,4 +84,15 @@ class AgentTest extends TestCase
 
         $this->assertEquals(['foo' => 'bar'], $segment->context);
     }
+
+    public function testStatusChecks()
+    {
+        $this->assertFalse($this->inspector->isRecording());
+        $this->assertFalse($this->inspector->needTransaction());
+        $this->assertFalse($this->inspector->canAddSegments());
+
+        $this->assertInstanceOf(Inspector::class, $this->inspector->startRecording());
+        $this->assertTrue($this->inspector->isRecording());
+        $this->assertTrue($this->inspector->canAddSegments());
+    }
 }

@@ -103,13 +103,43 @@ class Inspector
     }
 
     /**
+     * Determine if an active transaction exists.
+     *
+     * @return bool
+     */
+    public function hasTransaction(): bool
+    {
+        return $this->transaction instanceof Transaction;
+    }
+
+    /**
+     * Determine if the current cycle has started its transaction yet.
+     *
+     * @return bool
+     */
+    public function needTransaction(): bool
+    {
+        return $this->isRecording() && !isset($this->transaction);
+    }
+
+    /**
+     * Determine if a new segment can be added.
+     *
+     * @return bool
+     */
+    public function canAddSegments(): bool
+    {
+        return $this->isRecording() && $this->hasTransaction();
+    }
+
+    /**
      * Check if a transaction was started.
      *
      * @return bool
      */
     public function isRecording(): bool
     {
-        return $this->configuration->isEnabled() && isset($this->transaction);
+        return $this->configuration->isEnabled();
     }
 
     /**
@@ -187,7 +217,7 @@ class Inspector
             throw new \InvalidArgumentException('$exception need to be an instance of Exception or Throwable.');
         }
 
-        if (!$this->isRecording()) {
+        if ($this->needTransaction()) {
             $this->startTransaction($exception->getMessage());
         }
 
