@@ -4,6 +4,7 @@
 namespace Inspector\Models\Partials;
 
 
+use Inspector\Exceptions\InspectorException;
 use Inspector\Models\Arrayable;
 use Inspector\OS;
 
@@ -36,7 +37,7 @@ class Host extends Arrayable
                 $this->ram = $status[1];
                 $this->hdd = $status[2];
             } catch (\Throwable $exception) {
-                // do nothing
+                throw new InspectorException('Error Server Metrics');
             }
         }
 
