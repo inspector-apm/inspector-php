@@ -32,7 +32,9 @@ class Host extends Arrayable
                 $status = str_replace('%', '', $status);
                 $status = str_replace("\n", '', $status);
 
-                $status = explode(';', $status);
+                $status = array_map(function ($item) {
+                    return floatval($item);
+                }, explode(';', $status));
 
                 $this->cpu = $status[0];
                 $this->ram = $status[1];
