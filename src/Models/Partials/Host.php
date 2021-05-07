@@ -33,11 +33,13 @@ class Host extends Arrayable
                 $status = str_replace('%', '', $status);
                 $status = str_replace("\n", '', $status);
 
+                $status = explode(';', $status);
+
                 $this->cpu = $status[0];
                 $this->ram = $status[1];
                 $this->hdd = $status[2];
             } catch (\Throwable $exception) {
-                throw new InspectorException('Error Server Metrics');
+                // do nothing
             }
         }
 
