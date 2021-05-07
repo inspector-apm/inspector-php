@@ -28,7 +28,8 @@ class Host extends Arrayable
     {
         if (OS::isLinux() && function_exists('shell_exec')) {
             try {
-                $status = shell_exec('`LC_ALL=C top -bn1 | grep "Cpu(s)" | sed "s/.*, *\([0-9.]*\)* id.*/\1/" | awk \'{print 100 - $1}\'`;`free -m | awk \'/Mem:/ { printf("%3.1f%%", $3/$2*100) }\'`;`df -h / | awk \'/\// {print $(NF-1)}\'`');
+                $status = shell_exec('`LC_ALL=C top -bn1 | grep "Cpu(s)" | sed "s/.*, *\([0-9.]*\)* id.*/\1/" | awk \'{print 100 - $1}\'`;`free -m | awk \'/Mem:/ { printf("%3.1f%", $3/$2*100) }\'`;`df -h / | awk \'/\// {print $(NF-1)}\'`');
+                var_dump($status);
                 $status = str_replace('%', '', $status);
                 $status = str_replace("\n", '', $status);
 
