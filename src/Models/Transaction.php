@@ -32,7 +32,7 @@ class Transaction extends PerformanceModel
         $this->host = new Host();
 
         if ($this->type === self::TYPE_REQUEST) {
-            $this->http = new Http;
+            $this->http = new Http();
         }
     }
 

@@ -6,6 +6,7 @@ namespace Inspector;
 
 use Inspector\Exceptions\InspectorException;
 use Inspector\Models\Arrayable;
+use Inspector\Models\Partials\Host;
 use Inspector\Transports\AsyncTransport;
 use Inspector\Transports\TransportInterface;
 use Inspector\Models\PerformanceModel;
@@ -257,6 +258,10 @@ class Inspector
     {
         if (!$this->isRecording() || !$this->hasTransaction()) {
             return;
+        }
+
+        if ($this->configuration->withServerStatus() && $this->transaction->host instanceof Host) {
+            $this->transaction->host->withServerStatus();
         }
 
         if (!$this->transaction->isEnded()) {

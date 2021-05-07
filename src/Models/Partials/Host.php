@@ -5,6 +5,7 @@ namespace Inspector\Models\Partials;
 
 
 use Inspector\Models\Arrayable;
+use Inspector\OS;
 
 class Host extends Arrayable
 {
@@ -16,70 +17,31 @@ class Host extends Arrayable
         $this->hostname = gethostname();
         $this->ip = gethostbyname(gethostname());
         $this->os = PHP_OS_FAMILY;
-
-        /*if (PHP_OS_FAMILY === 'Linux') {
-            $this->memory_usage = $this->getHostMemoryUsage();
-            $this->disk_usage = $this->getHostDiskUsage();
-            $this->cpu_usage = $this->getHostCpuUsage();
-        }*/
     }
 
     /**
-     * Sample host memory usage (%).
+     * Retrieve the server status information.
      *
-     * @return false|float|int
+     * @return $this|void
      */
-    public function getHostMemoryUsage()
+    public function withServerStatus()
     {
-        try {
-            $free = shell_exec('free');
+        if (OS::isLinux() && function_exists('shell_exec')) {
+            try {
+                $status = shell_exec('`LC_ALL=C top -bn1 | grep "Cpu(s)" | sed "s/.*, *\([0-9.]*\)%* id.*/\1/" | awk \'{print 100 - $1}\'`%;`free -m | awk \'/Mem:/ { printf("%3.1f%%", $3/$2*100) }\'`;`df -h / | awk \'/\// {print $(NF-1)}\'`');
+                $status = str_replace('%', '', $status);
+                $status = str_replace("\n", '', $status);
 
-            if($free === null) {
-                return 0;
+                $status = explode(';', $status);
+
+                $this->cpu = $status[0];
+                $this->ram = $status[1];
+                $this->hdd = $status[2];
+            } catch (\Throwable $exception) {
+                // do nothing
             }
-
-            $free_arr = explode("\n", (string)trim($free));
-            $mem = explode(" ", $free_arr[1]);
-            $mem = array_merge(array_filter($mem));
-            // used - buffers - cached
-            return round((($mem[2]-$mem[5]-$mem[6]) / $mem[1]) * 100, 2);
-
-        } catch (\Throwable $exception) {
-            return 0;
         }
-    }
 
-    /**
-     * Sample host disk usage (%).
-     *
-     * @return false|float
-     */
-    public function getHostDiskUsage()
-    {
-        try {
-            return @is_readable('/')
-                ? round(100 - ((disk_free_space('/') / disk_total_space('/')) * 100), 2)
-                : 0;
-        } catch (\Throwable $exception) {
-            return 0;
-        }
-    }
-
-    /**
-     * Sample host cpu usage (%).
-     *
-     * @return false|float|int
-     */
-    public function getHostCpuUsage()
-    {
-        try {
-            $load = sys_getloadavg()[0];
-            $proc = exec('nproc');
-            return is_numeric($load) && is_numeric($proc)
-                ? round($load * 100 / $proc, 2)
-                : 0;
-        } catch (\Throwable $exception) {
-            return 0;
-        }
+        return $this;
     }
 }

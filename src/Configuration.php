@@ -37,6 +37,11 @@ class Configuration
     protected $transport = 'async';
 
     /**
+     * @var bool
+     */
+    protected $withServerStatus = false;
+
+    /**
      * @var string
      */
     protected $version = '3.5.17';
@@ -143,6 +148,20 @@ class Configuration
     public function setMaxItems(int $maxItems): Configuration
     {
         $this->maxItems = $maxItems;
+        return $this;
+    }
+
+    /**
+     * @param bool|null $flag
+     * @return $this|bool
+     */
+    public function withServerStatus($flag = null)
+    {
+        if (!is_null($flag)) {
+            return $this->withServerStatus;
+        }
+
+        $this->withServerStatus = $flag;
         return $this;
     }
 
