@@ -157,7 +157,7 @@ class Configuration
      */
     public function withServerStatus($flag = null)
     {
-        if (!is_null($flag)) {
+        if (is_null($flag)) {
             return $this->withServerStatus;
         }
 
