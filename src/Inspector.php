@@ -89,6 +89,11 @@ class Inspector
     {
         $this->transaction = new Transaction($name);
         $this->transaction->start();
+
+        if ($this->configuration->withServerStatus()) {
+            $this->transaction->withServerStatus();
+        }
+
         $this->addEntries($this->transaction);
         return $this->transaction;
     }
@@ -258,10 +263,6 @@ class Inspector
     {
         if (!$this->isRecording() || !$this->hasTransaction()) {
             return;
-        }
-
-        if ($this->configuration->withServerStatus() && $this->transaction->host instanceof Host) {
-            $this->transaction->host->withServerStatus();
         }
 
         if (!$this->transaction->isEnded()) {

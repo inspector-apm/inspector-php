@@ -13,6 +13,7 @@ use Inspector\Models\Partials\User;
 class Transaction extends PerformanceModel
 {
     const MODEL_NAME = 'transaction';
+
     const TYPE_REQUEST = 'request';
     const TYPE_PROCESS = 'process';
 
@@ -34,6 +35,14 @@ class Transaction extends PerformanceModel
         if ($this->type === self::TYPE_REQUEST) {
             $this->http = new Http();
         }
+    }
+
+    /**
+     * Collect server status information.
+     */
+    public function withServerStatus()
+    {
+        $this->host->withServerStatus();
     }
 
     /**

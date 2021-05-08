@@ -4,7 +4,6 @@
 namespace Inspector\Models\Partials;
 
 
-use Inspector\Exceptions\InspectorException;
 use Inspector\Models\Arrayable;
 use Inspector\OS;
 
@@ -12,18 +11,24 @@ class Host extends Arrayable
 {
     /**
      * Host constructor.
+     *
+     * @param bool $withServerStatus
      */
-    public function __construct()
+    public function __construct(bool $withServerStatus = false)
     {
         $this->hostname = gethostname();
         $this->ip = gethostbyname(gethostname());
         $this->os = PHP_OS_FAMILY;
+
+        if ($withServerStatus) {
+            $this->withServerStatus();
+        }
     }
 
     /**
-     * Retrieve the server status information.
+     * Collect server status information.
      *
-     * @return $this|void
+     * @return $this
      */
     public function withServerStatus()
     {
