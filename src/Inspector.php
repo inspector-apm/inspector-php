@@ -90,9 +90,10 @@ class Inspector
         $this->transaction = new Transaction($name);
         $this->transaction->start();
 
-        if ($this->configuration->withServerStatus()) {
-            $this->transaction->withServerStatus();
-        }
+        // Sampling server status if requested.
+        $this->transaction->sampleServerStatus(
+            $this->configuration->serverSamplingRatio()
+        );
 
         $this->addEntries($this->transaction);
         return $this->transaction;

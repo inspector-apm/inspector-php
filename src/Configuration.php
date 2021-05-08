@@ -39,7 +39,7 @@ class Configuration
     /**
      * @var bool
      */
-    protected $withServerStatus = false;
+    protected $serverSamplingRatio = 0;
 
     /**
      * @var string
@@ -152,16 +152,16 @@ class Configuration
     }
 
     /**
-     * @param bool|null $flag
+     * @param float|null $ratio
      * @return $this|bool
      */
-    public function withServerStatus($flag = null)
+    public function serverSamplingRatio($ratio = null)
     {
-        if (is_null($flag)) {
-            return $this->withServerStatus;
+        if (is_null($ratio)) {
+            return $this->serverSamplingRatio;
         }
 
-        $this->withServerStatus = $flag;
+        $this->serverSamplingRatio = $ratio;
         return $this;
     }
 
