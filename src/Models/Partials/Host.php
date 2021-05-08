@@ -11,18 +11,12 @@ class Host extends Arrayable
 {
     /**
      * Host constructor.
-     *
-     * @param bool $withServerStatus
      */
-    public function __construct(bool $withServerStatus = false)
+    public function __construct()
     {
         $this->hostname = gethostname();
         $this->ip = gethostbyname(gethostname());
         $this->os = PHP_OS_FAMILY;
-
-        if ($withServerStatus) {
-            $this->withServerStatus();
-        }
     }
 
     /**
