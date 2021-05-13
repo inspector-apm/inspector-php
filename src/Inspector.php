@@ -120,7 +120,7 @@ class Inspector
     }
 
     /**
-     * Determine if the current cycle has started its transaction yet.
+     * Determine if the current cycle hasn't started its transaction yet.
      *
      * @return bool
      */
@@ -140,7 +140,7 @@ class Inspector
     }
 
     /**
-     * Check if a transaction was started.
+     * Check if the monitoring is enabled.
      *
      * @return bool
      */
@@ -150,6 +150,8 @@ class Inspector
     }
 
     /**
+     * Enable recording.
+     *
      * @return Inspector
      */
     public function startRecording()
@@ -159,6 +161,8 @@ class Inspector
     }
 
     /**
+     * Stop recording.
+     *
      * @return Inspector
      */
     public function stopRecording()
@@ -168,7 +172,7 @@ class Inspector
     }
 
     /**
-     * Add new span to the queue.
+     * Add new segment to the queue.
      *
      * @param string $type
      * @param null|string $label
