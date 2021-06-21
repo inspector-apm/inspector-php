@@ -89,13 +89,13 @@ class AsyncTransport extends AbstractApiTransport
      */
     protected function buildCurlCommand($data): string
     {
-        $curl = "{$this->curlPath} -X POST --ipv4";
+        $curl = "{$this->curlPath} -X POST --ipv4 --max-time 5";
 
         foreach ($this->getApiHeaders() as $name => $value) {
             $curl .= " --header \"$name: $value\"";
         }
 
-        $curl .= " --data {$this->getPayload($data)} {$this->config->getUrl()} --max-time 5";
+        $curl .= " --data {$this->getPayload($data)} {$this->config->getUrl()}";
 
         if ($this->proxy) {
             $curl .= " --proxy \"{$this->proxy}\"";
