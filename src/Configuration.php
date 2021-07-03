@@ -61,7 +61,7 @@ class Configuration
      */
     public function __construct($ingestionKey = null)
     {
-        if(!is_null($ingestionKey)) {
+        if(!is_null($ingestionKey) && !empty($ingestionKey)) {
             $this->setIngestionKey($ingestionKey);
         }
     }
@@ -116,7 +116,7 @@ class Configuration
         $value = trim($value);
 
         if (empty($value)) {
-            throw new \InvalidArgumentException('Ingestion kKy cannot be empty');
+            throw new \InvalidArgumentException('Ingestion key cannot be empty');
         }
 
         $this->ingestionKey = $value;
