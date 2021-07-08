@@ -8,13 +8,6 @@ use PHPUnit\Framework\TestCase;
 
 class ConfigurationTest extends TestCase
 {
-    public function testInvalidArgumentException()
-    {
-        $this->expectException(\InvalidArgumentException::class);
-
-        new Configuration('');
-    }
-
     public function testDefault()
     {
         $configuration = new Configuration('aaa');
