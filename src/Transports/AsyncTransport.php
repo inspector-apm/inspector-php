@@ -61,7 +61,6 @@ class AsyncTransport extends AbstractApiTransport
             return substr($payload, 0, 1) === '@';
         };
 
-        // Curl will run in the background
         if (OS::isWin()) {
             $cmd = "start /B {$curl} > NUL";
 
@@ -95,7 +94,8 @@ class AsyncTransport extends AbstractApiTransport
             $curl .= " --header \"$name: $value\"";
         }
 
-        $curl .= " --data {$this->getPayload($data)} {$this->config->getUrl()}";
+        //$curl .= " --data {$this->getPayload($data)} {$this->config->getUrl()}";
+        $curl .= " --data {$data} {$this->config->getUrl()}";
 
         if ($this->proxy) {
             $curl .= " --proxy \"{$this->proxy}\"";
@@ -112,12 +112,12 @@ class AsyncTransport extends AbstractApiTransport
      * @param $string
      * @return mixed
      */
-    protected function getPayload($string)
+    /*protected function getPayload($string)
     {
         return OS::isWin()
             // https://stackoverflow.com/a/30224062/5161588
             ? '"' . str_replace('"', '""', $string) . '"'
             // http://stackoverflow.com/a/1250279/871861
             : "'" . str_replace("'", "'\"'\"'", $string) . "'";
-    }
+    }*/
 }

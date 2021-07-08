@@ -6,6 +6,7 @@ namespace Inspector\Transports;
 use Inspector\Configuration;
 use Inspector\Exceptions\InspectorException;
 use Inspector\Models\Arrayable;
+use Inspector\OS;
 
 abstract class AbstractApiTransport implements TransportInterface
 {
@@ -110,35 +111,44 @@ abstract class AbstractApiTransport implements TransportInterface
      */
     public function send($items)
     {
-        $json = json_encode($items);
-        $jsonLength = strlen($json);
-        $count = count($items);
+        $json = \json_encode($items);
+        $jsonLength = \strlen($json);
+        $count = \count($items);
 
         if ($jsonLength > $this->config->getMaxPostSize()) {
             if ($count === 1) {
-                // It makes no sense to divide into chunks, just try to send via file
-                return $this->sendViaFile($json);
+                // It makes no sense to divide into chunks, just try to send data via file
+                return $this->sendViaFile(\base64_encode($json));
             }
 
-            $chunkSize = floor($count / ceil($jsonLength / $this->config->getMaxPostSize()));
-            $chunks = array_chunk($items, $chunkSize > 0 ? $chunkSize : 1);
+            $chunkSize = \floor($count / \ceil($jsonLength / $this->config->getMaxPostSize()));
+            $chunks = \array_chunk($items, $chunkSize > 0 ? $chunkSize : 1);
 
             foreach ($chunks as $chunk) {
                 $this->send($chunk);
             }
         } else {
-            $this->sendChunk($json);
+            $this->sendChunk(\base64_encode($json));
         }
     }
 
     /**
-     * @param $json
+     * Put data into a file and provide CURL with the file path.
+     *
+     * @param string $data
      * @return void
      */
-    protected function sendViaFile($json)
+    protected function sendViaFile($data)
     {
-        $filepath = __DIR__.DIRECTORY_SEPARATOR.uniqid().'.dat';
-        file_put_contents($filepath, $json, LOCK_EX);
+        $filepath = DIRECTORY_SEPARATOR.\uniqid().'.dat';
+
+        if (OS::isWin()) {
+            $filepath = __DIR__.$filepath;
+        } else {
+            $filepath = '/tmp'.$filepath;
+        }
+
+        \file_put_contents($filepath, $data, LOCK_EX);
         $this->sendChunk('@'.$filepath);
     }
 
