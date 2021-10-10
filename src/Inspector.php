@@ -287,7 +287,7 @@ class Inspector
         }
 
         if (static::$beforeCallback) {
-            if (call_user_func(static::$beforeCallback, $this->currentTransaction()) === false) {
+            if (call_user_func(static::$beforeCallback, $this) === false) {
                 return;
             }
         }
