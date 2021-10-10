@@ -6,7 +6,6 @@ namespace Inspector;
 
 use Inspector\Exceptions\InspectorException;
 use Inspector\Models\Arrayable;
-use Inspector\Models\Partials\Host;
 use Inspector\Transports\AsyncTransport;
 use Inspector\Transports\TransportInterface;
 use Inspector\Models\PerformanceModel;
@@ -37,6 +36,13 @@ class Inspector
      * @var Transaction
      */
     protected $transaction;
+
+    /**
+     * Runa callback before flushing data to the remote platform.
+     *
+     * @var callable
+     */
+    protected static $beforeCallback;
 
     /**
      * Logger constructor.
@@ -256,6 +262,16 @@ class Inspector
     }
 
     /**
+     * Define a callback to run before flush data to the remote platform.
+     *
+     * @param callable $callback
+     */
+    public static function beforeFlush(callable $callback)
+    {
+        static::$beforeCallback = $callback;
+    }
+
+    /**
      * Flush data to the remote platform.
      *
      * @throws \Exception
@@ -268,6 +284,12 @@ class Inspector
 
         if (!$this->transaction->isEnded()) {
             $this->transaction->end();
+        }
+
+        if (static::$beforeCallback) {
+            if (call_user_func(static::$beforeCallback, $this->currentTransaction()) === false) {
+                return;
+            }
         }
 
         $this->transport->flush();
