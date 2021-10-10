@@ -224,12 +224,8 @@ class Inspector
      */
     public function reportException(\Throwable $exception, $handled = true)
     {
-        if (!$exception instanceof \Exception && !$exception instanceof \Throwable) {
-            throw new \InvalidArgumentException('$exception need to be an instance of Exception or Throwable.');
-        }
-
         if ($this->needTransaction()) {
-            $this->startTransaction($exception->getMessage());
+            $this->startTransaction(get_class($exception));
         }
 
         $segment = $this->startSegment('exception', substr($exception->getMessage(), 0, 50));
