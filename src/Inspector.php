@@ -196,18 +196,21 @@ class Inspector
     /**
      * Monitor the execution of a code block.
      *
-     * @param $callback
+     * @param callable $callback
      * @param string $type
      * @param null|string $label
      * @param bool $throw
      * @return mixed|void
      * @throws \Throwable
      */
-    public function addSegment($callback, $type, $label = null, $throw = false)
+    public function addSegment(callable $callback, string $type, $label = null, $throw = false)
     {
-        $segment = $this->startSegment($type, $label);
+        if (!$this->hasTransaction()) {
+            return $callback();
+        }
 
         try {
+            $segment = $this->startSegment($type, $label);
             return $callback($segment);
         } catch (\Throwable $exception) {
             if ($throw === true) {
