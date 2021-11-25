@@ -37,6 +37,7 @@ class Configuration
     protected $transport = 'async';
 
     /**
+     * @deprecated
      * @var bool
      */
     protected $serverSamplingRatio = 0;
