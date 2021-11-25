@@ -153,6 +153,7 @@ class Configuration
     }
 
     /**
+     * @deprecated
      * @param float|null $ratio
      * @return $this|bool
      */

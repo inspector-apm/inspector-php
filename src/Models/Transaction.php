@@ -40,6 +40,7 @@ class Transaction extends PerformanceModel
     /**
      * Collect server status information.
      *
+     * @deprecated
      * @param float $ratio
      * @return Transaction
      */
