@@ -26,7 +26,7 @@ class AsyncTransport extends AbstractApiTransport
     public function __construct($configuration)
     {
         if (!function_exists('proc_open')) {
-            throw new InspectorException("PHP function 'proc_open' is not available, is it disabled for security reasons?");
+            throw new InspectorException("PHP function 'proc_open' is not available.");
         }
 
         parent::__construct($configuration);
