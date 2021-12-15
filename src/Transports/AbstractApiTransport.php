@@ -150,9 +150,6 @@ abstract class AbstractApiTransport implements TransportInterface
 
         \file_put_contents($filepath, $data, LOCK_EX);*/
 
-        //$tmpfile = tmpfile();
-        //fwrite($tmpfile, $data);
-
         $tmpfile = tempnam(sys_get_temp_dir(), 'inspector');
         file_put_contents($tmpfile, $data, LOCK_EX);
 
