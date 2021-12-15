@@ -140,12 +140,12 @@ abstract class AbstractApiTransport implements TransportInterface
      */
     protected function sendViaFile($data)
     {
-        $filepath = DIRECTORY_SEPARATOR.\uniqid().'.dat';
+        $filepath = \uniqid().'.dat';
 
         if (OS::isWin()) {
-            $filepath = __DIR__.$filepath;
+            $filepath = __DIR__.DIRECTORY_SEPARATOR.$filepath;
         } else {
-            $filepath = '/tmp'.$filepath;
+            $filepath = '/tmp'.DIRECTORY_SEPARATOR.$filepath;
         }
 
         \file_put_contents($filepath, $data, LOCK_EX);
