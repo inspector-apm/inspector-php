@@ -56,25 +56,10 @@ class AsyncTransport extends AbstractApiTransport
     {
         $curl = $this->buildCurlCommand($data);
 
-        // Determine if the payload is a file.
-        $isFile = function ($payload) {
-            return substr($payload, 0, 1) === '@';
-        };
-
         if (OS::isWin()) {
             $cmd = "start /B {$curl} > NUL";
-
-            if ($isFile($data)) {
-                $cmd .= ' & timeout 1 > NUL & del /f ' . str_replace('@', '', $data);
-            }
         } else {
-            $cmd = "({$curl} > /dev/null 2>&1";
-
-            if ($isFile($data)) {
-                $cmd.= '; rm ' . str_replace('@', '', $data);
-            }
-
-            $cmd.= ')&';
+            $cmd = "{$curl} > /dev/null 2>&1 &";
         }
 
         proc_close(proc_open($cmd, [], $pipes));
@@ -94,7 +79,6 @@ class AsyncTransport extends AbstractApiTransport
             $curl .= " --header \"$name: $value\"";
         }
 
-        //$curl .= " --data {$this->getPayload($data)} {$this->config->getUrl()}";
         $curl .= " --data {$data} {$this->config->getUrl()}";
 
         if ($this->proxy) {
@@ -103,21 +87,4 @@ class AsyncTransport extends AbstractApiTransport
 
         return $curl;
     }
-
-    /**
-     * Escape character to use in the CLI.
-     *
-     * Compatible to send data via file path: @../file/path.dat
-     *
-     * @param $string
-     * @return mixed
-     */
-    /*protected function getPayload($string)
-    {
-        return OS::isWin()
-            // https://stackoverflow.com/a/30224062/5161588
-            ? '"' . str_replace('"', '""', $string) . '"'
-            // http://stackoverflow.com/a/1250279/871861
-            : "'" . str_replace("'", "'\"'\"'", $string) . "'";
-    }*/
 }
