@@ -59,7 +59,14 @@ class AsyncTransport extends AbstractApiTransport
         if (OS::isWin()) {
             $cmd = "start /B {$curl} > NUL";
         } else {
-            $cmd = "{$curl} > /dev/null 2>&1 &";
+            $cmd = "({$curl} > /dev/null 2>&1";
+
+            // Delete temporary file after data transfer
+            if (substr($data, 0, 1) === '@') {
+                $cmd.= '; rm ' . str_replace('@', '', $data);
+            }
+
+            $cmd .= ')&';
         }
 
         proc_close(proc_open($cmd, [], $pipes));
