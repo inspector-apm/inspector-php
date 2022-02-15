@@ -42,7 +42,7 @@ class Inspector
      *
      * @var callable
      */
-    protected static $beforeCallback;
+    protected static $beforeCallbacks = [];
 
     /**
      * Logger constructor.
@@ -265,13 +265,13 @@ class Inspector
     }
 
     /**
-     * Define a callback to run before flush data to the remote platform.
+     * Define a callback to run before flushing data to the remote platform.
      *
      * @param callable $callback
      */
     public static function beforeFlush(callable $callback)
     {
-        static::$beforeCallback = $callback;
+        static::$beforeCallbacks[] = $callback;
     }
 
     /**
@@ -289,8 +289,8 @@ class Inspector
             $this->transaction->end();
         }
 
-        if (static::$beforeCallback) {
-            if (call_user_func(static::$beforeCallback, $this) === false) {
+        foreach (static::$beforeCallbacks as $callback) {
+            if (call_user_func($callback, $this) === false) {
                 return;
             }
         }
