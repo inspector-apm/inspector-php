@@ -162,7 +162,7 @@ abstract class Arrayable implements \ArrayAccess, \JsonSerializable
     {
         return array_filter($this->toArray(), function ($value) {
             // remove NULL, FALSE, empty strings and empty arrays, but keep values of 0 (zero)
-            return $value === 0 || !empty($value);
+            return $value == 0 || !empty($value);
             //return is_array($value) ? !empty($value) : strlen($value);
         });
     }
