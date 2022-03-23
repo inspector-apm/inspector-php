@@ -72,7 +72,7 @@ class Configuration
      *
      * @return  integer
      */
-    public function getMaxPostSize()
+    public function getMaxPostSize(): int
     {
         return OS::isWin() ? 8000 : 65536;
     }
@@ -100,7 +100,7 @@ class Configuration
      *
      * @return string
      */
-    public function getUrl()
+    public function getUrl(): string
     {
         return $this->url;
     }
@@ -112,7 +112,7 @@ class Configuration
      * @return $this
      * @throws \InvalidArgumentException
      */
-    public function setIngestionKey($value)
+    public function setIngestionKey($value): Configuration
     {
         $value = trim($value);
 
@@ -129,7 +129,7 @@ class Configuration
      *
      * @return string
      */
-    public function getIngestionKey()
+    public function getIngestionKey(): string
     {
         return $this->ingestionKey;
     }
@@ -172,7 +172,7 @@ class Configuration
      *
      * @return array
      */
-    public function getOptions()
+    public function getOptions(): array
     {
         return $this->options;
     }
@@ -196,7 +196,7 @@ class Configuration
      * @param array $options
      * @return $this
      */
-    public function setOptions(array $options)
+    public function setOptions(array $options): Configuration
     {
         $this->options = $options;
         return $this;
@@ -207,7 +207,7 @@ class Configuration
      *
      * @return bool
      */
-    public function isEnabled()
+    public function isEnabled(): bool
     {
         return isset($this->ingestionKey) && is_string($this->ingestionKey) && $this->enabled;
     }
@@ -218,7 +218,7 @@ class Configuration
      * @param bool $enabled
      * @return $this
      */
-    public function setEnabled(bool $enabled)
+    public function setEnabled(bool $enabled): Configuration
     {
         $this->enabled = $enabled;
         return $this;
@@ -229,7 +229,7 @@ class Configuration
      *
      * @return string
      */
-    public function getTransport()
+    public function getTransport(): string
     {
         return $this->transport;
     }
@@ -240,7 +240,7 @@ class Configuration
      * @param string $transport
      * @return $this
      */
-    public function setTransport(string $transport)
+    public function setTransport(string $transport): static
     {
         $this->transport = $transport;
         return $this;
@@ -251,7 +251,7 @@ class Configuration
      *
      * @return string
      */
-    public function getVersion()
+    public function getVersion(): string
     {
         return $this->version;
     }
@@ -262,7 +262,7 @@ class Configuration
      * @param string $value
      * @return $this
      */
-    public function setVersion($value)
+    public function setVersion($value): Configuration
     {
         $this->version = $value;
         return $this;

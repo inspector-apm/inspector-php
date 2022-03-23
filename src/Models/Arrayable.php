@@ -20,7 +20,7 @@ abstract class Arrayable implements \ArrayAccess, \JsonSerializable
      * @param array $keys
      * @return array
      */
-    public function only(array $keys)
+    public function only(array $keys): array
     {
         $arr = [];
         foreach ($keys as $key) {
@@ -93,7 +93,7 @@ abstract class Arrayable implements \ArrayAccess, \JsonSerializable
      * @param mixed $value The value to set
      * @abstracting ArrayAccess
      */
-    public function offsetSet($key, $value)
+    public function offsetSet($key, $value): void
     {
         if (is_null($key)) {
             $this->data[] = $value;
@@ -120,7 +120,7 @@ abstract class Arrayable implements \ArrayAccess, \JsonSerializable
      * @param string $key The offset to unset
      * @abstracting ArrayAccess
      */
-    public function offsetUnset($key)
+    public function offsetUnset($key): void
     {
         if ($this->offsetExists($key)) {
             unset($this->data[$key]);
@@ -134,7 +134,7 @@ abstract class Arrayable implements \ArrayAccess, \JsonSerializable
      * @return mixed
      * @abstracting ArrayAccess
      */
-    public function offsetGet($key)
+    public function offsetGet($key): mixed
     {
         return $this->offsetExists($key) ? $this->data[$key] : null;
     }
@@ -162,8 +162,7 @@ abstract class Arrayable implements \ArrayAccess, \JsonSerializable
     {
         return array_filter($this->toArray(), function ($value) {
             // remove NULL, FALSE, empty strings and empty arrays, but keep values of 0 (zero)
-            return $value == 0 || !empty($value);
-            //return is_array($value) ? !empty($value) : strlen($value);
+            return is_array($value) ? !empty($value) : strlen($value??'');
         });
     }
 
@@ -172,7 +171,7 @@ abstract class Arrayable implements \ArrayAccess, \JsonSerializable
      *
      * @return array
      */
-    public function toArray()
+    public function toArray(): array
     {
         return $this->data;
     }
