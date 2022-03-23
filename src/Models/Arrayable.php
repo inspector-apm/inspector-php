@@ -154,15 +154,16 @@ abstract class Arrayable implements \ArrayAccess, \JsonSerializable
      *
      * @link https://php.net/manual/en/jsonserializable.jsonserialize.php
      *
-     * @return mixed data which can be serialized by <b>json_encode</b>,
+     * @return array data which can be serialized by <b>json_encode</b>,
      * which is a value of any type other than a resource.
      * @since 5.4
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         return array_filter($this->toArray(), function ($value) {
-            // remove NULL, FALSE and Empty Strings and Arrays, but leave values of 0 (zero)
-            return is_array($value) ? !empty($value) : strlen($value);
+            // remove NULL, FALSE, empty strings and empty arrays, but keep values of 0 (zero)
+            return $value === 0 || !empty($value);
+            //return is_array($value) ? !empty($value) : strlen($value);
         });
     }
 
