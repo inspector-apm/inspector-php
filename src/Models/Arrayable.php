@@ -109,7 +109,7 @@ abstract class Arrayable implements \ArrayAccess, \JsonSerializable
      * @return boolean
      * @abstracting ArrayAccess
      */
-    public function offsetExists($key)
+    public function offsetExists($key): bool
     {
         return isset($this->data[$key]);
     }
