@@ -45,7 +45,7 @@ class Configuration
     /**
      * @var string
      */
-    protected $version = '3.7.10';
+    protected $version = '3.7.11';
 
     /**
      * Transport options.
@@ -240,7 +240,7 @@ class Configuration
      * @param string $transport
      * @return $this
      */
-    public function setTransport(string $transport): static
+    public function setTransport(string $transport): Configuration
     {
         $this->transport = $transport;
         return $this;
