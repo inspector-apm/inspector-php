@@ -6,6 +6,7 @@ namespace Inspector\Transports;
 use Inspector\Configuration;
 use Inspector\Exceptions\InspectorException;
 use Inspector\Models\Arrayable;
+use Inspector\Models\Error;
 use Inspector\OS;
 
 abstract class AbstractApiTransport implements TransportInterface
@@ -81,7 +82,8 @@ abstract class AbstractApiTransport implements TransportInterface
      */
     public function addEntry($item): TransportInterface
     {
-        if(count($this->queue) <= $this->config->getMaxItems()) {
+        // Force insert when dealing with errors.
+        if($item['model'] === Error::MODEL_NAME || count($this->queue) <= $this->config->getMaxItems()) {
             $this->queue[] = $item;
         }
         return $this;
