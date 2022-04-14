@@ -76,7 +76,7 @@ abstract class Arrayable implements \ArrayAccess, \JsonSerializable
     }
 
     /**
-     * Unsets an data by key
+     * Unsets a data by key
      *
      * @param string $key The key to unset
      * @access public
@@ -89,54 +89,54 @@ abstract class Arrayable implements \ArrayAccess, \JsonSerializable
     /**
      * Assigns a value to the specified offset.
      *
-     * @param string $key The offset to assign the value to
+     * @param string $offset The offset to assign the value to
      * @param mixed $value The value to set
      * @abstracting ArrayAccess
      */
-    public function offsetSet($key, $value): void
+    public function offsetSet($offset, $value): void
     {
-        if (is_null($key)) {
+        if (is_null($offset)) {
             $this->data[] = $value;
         } else {
-            $this->data[$key] = $value;
+            $this->data[$offset] = $value;
         }
     }
 
     /**
-     * Whether or not an offset exists.
+     * Whether an offset exists.
      *
-     * @param string $key An offset to check for
+     * @param string $offset An offset to check for
      * @return boolean
      * @abstracting ArrayAccess
      */
-    public function offsetExists($key): bool
+    public function offsetExists($offset): bool
     {
-        return isset($this->data[$key]);
+        return isset($this->data[$offset]);
     }
 
     /**
      * Unsets an offset.
      *
-     * @param string $key The offset to unset
+     * @param string $offset The offset to unset
      * @abstracting ArrayAccess
      */
-    public function offsetUnset($key): void
+    public function offsetUnset($offset): void
     {
-        if ($this->offsetExists($key)) {
-            unset($this->data[$key]);
+        if ($this->offsetExists($offset)) {
+            unset($this->data[$offset]);
         }
     }
 
     /**
      * Returns the value at specified offset.
      *
-     * @param string $key The offset to retrieve
+     * @param string $offset The offset to retrieve
      * @return mixed
      * @abstracting ArrayAccess
      */
-    public function offsetGet($key): mixed
+    public function offsetGet($offset)
     {
-        return $this->offsetExists($key) ? $this->data[$key] : null;
+        return $this->offsetExists($offset) ? $this->data[$offset] : null;
     }
 
     /**
