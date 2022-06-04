@@ -14,12 +14,12 @@ class TransportTest extends TestCase
     {
         $transport = new CurlTransport(new Configuration('foo'));
 
-        $transport->addEntry(['foo' => 'bar']);
+        $transport->addEntry(['model' => 'example']);
 
         $this->assertCount(1, $transport->getQueue());
 
         for ($i=0; $i<150; $i++) {
-            $transport->addEntry(['foo' => 'bar']);
+            $transport->addEntry(['model' => 'example']);
         }
 
         // A transaction + 100 segments
@@ -33,7 +33,7 @@ class TransportTest extends TestCase
         );
 
         for ($i=0; $i<150; $i++) {
-            $transport->addEntry(['foo' => 'bar']);
+            $transport->addEntry(['model' => 'example']);
         }
 
         $this->assertCount(150, $transport->getQueue());
