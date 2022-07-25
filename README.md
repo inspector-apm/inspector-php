@@ -3,7 +3,7 @@
 [![Total Downloads](https://poser.pugx.org/inspector-apm/inspector-php/downloads)](//packagist.org/packages/inspector-apm/inspector-php)
 [![Latest Stable Version](https://poser.pugx.org/inspector-apm/inspector-php/v/stable)](https://packagist.org/packages/inspector-apm/inspector-php)
 [![License](https://poser.pugx.org/inspector-apm/inspector-php/license)](//packagist.org/packages/inspector-apm/inspector-php)
-[![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](code_of_conduct.md)
+[![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](CODE_OF_CONDUCT.md)
 [![Build Status](https://travis-ci.org/inspector-apm/inspector-php.svg?branch=master)](https://travis-ci.org/inspector-apm/inspector-php)
 
 Simple code execution monitoring, built for PHP developers.
@@ -102,7 +102,11 @@ $inspector->setTransport(function ($configuration) {
 });
 ```
 
-**[See official documentation](https://docs.inspector.dev/platforms/php)**
+**[Chek out the official documentation](https://docs.inspector.dev/php)**
+
+## Contributing
+
+We encourage you to contribute to Inspector! Please check out the [Contribution Guidelines](CONTRIBUTING.md) about how to proceed. Join us!
 
 ## LICENSE
 
