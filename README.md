@@ -1,7 +1,10 @@
 # Inspector | Code Execution Monitoring Tool
 
-[![Build Status](https://travis-ci.org/inspector-apm/inspector-php.svg?branch=master)](https://travis-ci.org/inspector-apm/inspector-php)
+[![Total Downloads](https://poser.pugx.org/inspector-apm/inspector-php/downloads)](//packagist.org/packages/inspector-apm/inspector-php)
 [![Latest Stable Version](https://poser.pugx.org/inspector-apm/inspector-php/v/stable)](https://packagist.org/packages/inspector-apm/inspector-php)
+[![License](https://poser.pugx.org/inspector-apm/inspector-php/license)](//packagist.org/packages/inspector-apm/inspector-php)
+[![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](code_of_conduct.md)
+[![Build Status](https://travis-ci.org/inspector-apm/inspector-php.svg?branch=master)](https://travis-ci.org/inspector-apm/inspector-php)
 
 Simple code execution monitoring, built for PHP developers.
 
