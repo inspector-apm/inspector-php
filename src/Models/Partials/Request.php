@@ -15,7 +15,9 @@ class Request extends Arrayable
     {
         $this->method = $_SERVER['REQUEST_METHOD'];
 
-        $this->version = substr($_SERVER['SERVER_PROTOCOL'], strpos($_SERVER['SERVER_PROTOCOL'], '/'));
+        $this->version = isset($_SERVER['SERVER_PROTOCOL'])
+            ? substr($_SERVER['SERVER_PROTOCOL'], strpos($_SERVER['SERVER_PROTOCOL'], '/'))
+            : 'unknown';
 
         $this->socket = new Socket();
 
