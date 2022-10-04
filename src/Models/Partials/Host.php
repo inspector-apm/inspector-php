@@ -22,6 +22,8 @@ class Host extends Arrayable
     /**
      * Collect server status information.
      *
+     * @deprecated It's not used anymore but it's interesting to take this script in mind for future use cases.
+     *
      * @return $this
      */
     public function withServerStatus()

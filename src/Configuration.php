@@ -37,15 +37,9 @@ class Configuration
     protected $transport = 'async';
 
     /**
-     * @deprecated
-     * @var bool
-     */
-    protected $serverSamplingRatio = 0;
-
-    /**
      * @var string
      */
-    protected $version = '3.7.15';
+    protected $version = '3.7.16';
 
     /**
      * Transport options.
@@ -149,21 +143,6 @@ class Configuration
     public function setMaxItems(int $maxItems): Configuration
     {
         $this->maxItems = $maxItems;
-        return $this;
-    }
-
-    /**
-     * @deprecated
-     * @param float|null $ratio
-     * @return $this|bool
-     */
-    public function serverSamplingRatio($ratio = null)
-    {
-        if (is_null($ratio)) {
-            return $this->serverSamplingRatio;
-        }
-
-        $this->serverSamplingRatio = $ratio;
         return $this;
     }
 
