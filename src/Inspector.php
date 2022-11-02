@@ -103,9 +103,20 @@ class Inspector
     /**
      * Get current transaction instance.
      *
+     * @deprecated
      * @return null|Transaction
      */
-    public function currentTransaction()
+    public function currentTransaction(): ?Transaction
+    {
+        return $this->transaction;
+    }
+
+    /**
+     * Get current transaction instance.
+     *
+     * @return null|Transaction
+     */
+    public function transaction(): ?Transaction
     {
         return $this->transaction;
     }
