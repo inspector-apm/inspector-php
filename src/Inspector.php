@@ -297,6 +297,7 @@ class Inspector
 
         foreach (static::$beforeCallbacks as $callback) {
             if (call_user_func($callback, $this) === false) {
+                unset($this->transaction);
                 return;
             }
         }
