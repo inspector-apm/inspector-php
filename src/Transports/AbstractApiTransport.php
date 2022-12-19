@@ -75,6 +75,17 @@ abstract class AbstractApiTransport implements TransportInterface
     }
 
     /**
+     * Empty the queue.
+     *
+     * @return $this
+     */
+    public function resetQueue()
+    {
+        $this->queue = [];
+        return $this;
+    }
+
+    /**
      * Add a message to the queue.
      *
      * @param array|Arrayable $item
@@ -102,7 +113,7 @@ abstract class AbstractApiTransport implements TransportInterface
 
         $this->send($this->queue);
 
-        $this->queue = [];
+        $this->resetQueue();
     }
 
     /**

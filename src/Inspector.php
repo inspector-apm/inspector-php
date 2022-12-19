@@ -297,6 +297,7 @@ class Inspector
 
         foreach (static::$beforeCallbacks as $callback) {
             if (call_user_func($callback, $this) === false) {
+                $this->transport->resetQueue();
                 unset($this->transaction);
                 return;
             }
