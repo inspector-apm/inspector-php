@@ -151,7 +151,7 @@ class Error extends Arrayable
      * @param int $linesAround
      * @return mixed
      */
-    public function getCode($filePath, $line, $linesAround = 5)
+    public function getCode($filePath, $line, $linesAround = 10)
     {
         if (!$filePath || !$line) {
             return null;
