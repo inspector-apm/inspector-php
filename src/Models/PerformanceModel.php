@@ -23,7 +23,7 @@ abstract class PerformanceModel extends Arrayable
     /**
      * Stop the timer and calculate duration.
      *
-     * @param null $duration milliseconds
+     * @param float|null $duration milliseconds
      * @return PerformanceModel
      */
     public function end($duration = null)
