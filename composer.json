@@ -18,6 +18,7 @@
         }
     },
     "config": {
+        "sort-packages": true,
         "preferred-install": "dist"
     },
     "minimum-stability": "dev",
@@ -29,5 +30,11 @@
         "psr-4": {
             "Inspector\\Tests\\": "tests/"
         }
+    },
+    "scripts": {
+        "test:unit": "phpunit --colors=always",
+        "test": [
+            "@test:unit"
+        ]
     }
 }
