@@ -1,0 +1,646 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Method Inspector\\\\Configuration\\:\\:addOption\\(\\) has parameter \\$value with no type specified\\.$#"
+			count: 1
+			path: src/Configuration.php
+
+		-
+			message: "#^Method Inspector\\\\Configuration\\:\\:getOptions\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Configuration.php
+
+		-
+			message: "#^Method Inspector\\\\Configuration\\:\\:setIngestionKey\\(\\) has parameter \\$value with no type specified\\.$#"
+			count: 1
+			path: src/Configuration.php
+
+		-
+			message: "#^Method Inspector\\\\Configuration\\:\\:setOptions\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Configuration.php
+
+		-
+			message: "#^Property Inspector\\\\Configuration\\:\\:\\$ingestionKey \\(string\\) in isset\\(\\) is not nullable\\.$#"
+			count: 1
+			path: src/Configuration.php
+
+		-
+			message: "#^Property Inspector\\\\Configuration\\:\\:\\$options type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Configuration.php
+
+		-
+			message: "#^Right side of && is always true\\.$#"
+			count: 1
+			path: src/Configuration.php
+
+		-
+			message: "#^Argument of an invalid type callable supplied for foreach, only iterables are supported\\.$#"
+			count: 1
+			path: src/Inspector.php
+
+		-
+			message: "#^Call to an undefined method Inspector\\\\Transports\\\\TransportInterface\\:\\:resetQueue\\(\\)\\.$#"
+			count: 1
+			path: src/Inspector.php
+
+		-
+			message: "#^Cannot access an offset on callable\\.$#"
+			count: 1
+			path: src/Inspector.php
+
+		-
+			message: "#^Method Inspector\\\\Inspector\\:\\:beforeFlush\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Inspector.php
+
+		-
+			message: "#^Method Inspector\\\\Inspector\\:\\:flush\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Inspector.php
+
+		-
+			message: "#^Method Inspector\\\\Inspector\\:\\:setTransport\\(\\) has parameter \\$resolver with no type specified\\.$#"
+			count: 1
+			path: src/Inspector.php
+
+		-
+			message: "#^PHPDoc tag @param references unknown parameter\\: \\$transport$#"
+			count: 1
+			path: src/Inspector.php
+
+		-
+			message: "#^Property Inspector\\\\Inspector\\:\\:\\$transaction \\(Inspector\\\\Models\\\\Transaction\\) in isset\\(\\) is not nullable\\.$#"
+			count: 1
+			path: src/Inspector.php
+
+		-
+			message: "#^Static property Inspector\\\\Inspector\\:\\:\\$beforeCallbacks \\(callable\\(\\)\\: mixed\\) does not accept default value of type array\\{\\}\\.$#"
+			count: 1
+			path: src/Inspector.php
+
+		-
+			message: "#^Variable \\$segment might not be defined\\.$#"
+			count: 1
+			path: src/Inspector.php
+
+		-
+			message: "#^Call to function is_null\\(\\) with string will always evaluate to false\\.$#"
+			count: 1
+			path: src/Models/Arrayable.php
+
+		-
+			message: "#^Class Inspector\\\\Models\\\\Arrayable implements generic interface ArrayAccess but does not specify its types\\: TKey, TValue$#"
+			count: 1
+			path: src/Models/Arrayable.php
+
+		-
+			message: "#^Method Inspector\\\\Models\\\\Arrayable\\:\\:__invoke\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Models/Arrayable.php
+
+		-
+			message: "#^Method Inspector\\\\Models\\\\Arrayable\\:\\:__set\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Models/Arrayable.php
+
+		-
+			message: "#^Method Inspector\\\\Models\\\\Arrayable\\:\\:__toString\\(\\) should return string but returns string\\|false\\.$#"
+			count: 1
+			path: src/Models/Arrayable.php
+
+		-
+			message: "#^Method Inspector\\\\Models\\\\Arrayable\\:\\:jsonSerialize\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Models/Arrayable.php
+
+		-
+			message: "#^Method Inspector\\\\Models\\\\Arrayable\\:\\:only\\(\\) has parameter \\$keys with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Models/Arrayable.php
+
+		-
+			message: "#^Method Inspector\\\\Models\\\\Arrayable\\:\\:only\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Models/Arrayable.php
+
+		-
+			message: "#^Method Inspector\\\\Models\\\\Arrayable\\:\\:toArray\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Models/Arrayable.php
+
+		-
+			message: "#^Property Inspector\\\\Models\\\\Arrayable\\:\\:\\$data type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Models/Arrayable.php
+
+		-
+			message: "#^Access to an undefined property Inspector\\\\Models\\\\Error\\:\\:\\$class\\.$#"
+			count: 1
+			path: src/Models/Error.php
+
+		-
+			message: "#^Access to an undefined property Inspector\\\\Models\\\\Error\\:\\:\\$code\\.$#"
+			count: 1
+			path: src/Models/Error.php
+
+		-
+			message: "#^Access to an undefined property Inspector\\\\Models\\\\Error\\:\\:\\$context\\.$#"
+			count: 4
+			path: src/Models/Error.php
+
+		-
+			message: "#^Access to an undefined property Inspector\\\\Models\\\\Error\\:\\:\\$file\\.$#"
+			count: 1
+			path: src/Models/Error.php
+
+		-
+			message: "#^Access to an undefined property Inspector\\\\Models\\\\Error\\:\\:\\$handled\\.$#"
+			count: 1
+			path: src/Models/Error.php
+
+		-
+			message: "#^Access to an undefined property Inspector\\\\Models\\\\Error\\:\\:\\$host\\.$#"
+			count: 1
+			path: src/Models/Error.php
+
+		-
+			message: "#^Access to an undefined property Inspector\\\\Models\\\\Error\\:\\:\\$line\\.$#"
+			count: 1
+			path: src/Models/Error.php
+
+		-
+			message: "#^Access to an undefined property Inspector\\\\Models\\\\Error\\:\\:\\$message\\.$#"
+			count: 1
+			path: src/Models/Error.php
+
+		-
+			message: "#^Access to an undefined property Inspector\\\\Models\\\\Error\\:\\:\\$model\\.$#"
+			count: 1
+			path: src/Models/Error.php
+
+		-
+			message: "#^Access to an undefined property Inspector\\\\Models\\\\Error\\:\\:\\$stack\\.$#"
+			count: 1
+			path: src/Models/Error.php
+
+		-
+			message: "#^Access to an undefined property Inspector\\\\Models\\\\Error\\:\\:\\$timestamp\\.$#"
+			count: 1
+			path: src/Models/Error.php
+
+		-
+			message: "#^Access to an undefined property Inspector\\\\Models\\\\Error\\:\\:\\$transaction\\.$#"
+			count: 1
+			path: src/Models/Error.php
+
+		-
+			message: "#^Instanceof between mixed and __PHP_Incomplete_Class will always evaluate to false\\.$#"
+			count: 1
+			path: src/Models/Error.php
+
+		-
+			message: "#^Method Inspector\\\\Models\\\\Error\\:\\:getCode\\(\\) has parameter \\$filePath with no type specified\\.$#"
+			count: 1
+			path: src/Models/Error.php
+
+		-
+			message: "#^Method Inspector\\\\Models\\\\Error\\:\\:getCode\\(\\) has parameter \\$line with no type specified\\.$#"
+			count: 1
+			path: src/Models/Error.php
+
+		-
+			message: "#^Method Inspector\\\\Models\\\\Error\\:\\:setContext\\(\\) has parameter \\$context with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Models/Error.php
+
+		-
+			message: "#^Method Inspector\\\\Models\\\\Error\\:\\:stackTraceArgsToArray\\(\\) has parameter \\$trace with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Models/Error.php
+
+		-
+			message: "#^Method Inspector\\\\Models\\\\Error\\:\\:stackTraceArgsToArray\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Models/Error.php
+
+		-
+			message: "#^Method Inspector\\\\Models\\\\Error\\:\\:stackTraceToArray\\(\\) has parameter \\$stackTrace with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Models/Error.php
+
+		-
+			message: "#^Method Inspector\\\\Models\\\\Error\\:\\:stackTraceToArray\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Models/Error.php
+
+		-
+			message: "#^Parameter \\#1 \\$line of method SplFileObject\\:\\:seek\\(\\) expects int, float\\|int\\<0, max\\> given\\.$#"
+			count: 1
+			path: src/Models/Error.php
+
+		-
+			message: "#^Parameter \\#1 \\$string of function rtrim expects string, array\\|string\\|false given\\.$#"
+			count: 1
+			path: src/Models/Error.php
+
+		-
+			message: "#^Parameter \\#3 \\$topLine of method Inspector\\\\Models\\\\Error\\:\\:stackTraceToArray\\(\\) expects string\\|null, int given\\.$#"
+			count: 1
+			path: src/Models/Error.php
+
+		-
+			message: "#^Access to an undefined property Inspector\\\\Models\\\\Partials\\\\Host\\:\\:\\$cpu\\.$#"
+			count: 1
+			path: src/Models/Partials/Host.php
+
+		-
+			message: "#^Access to an undefined property Inspector\\\\Models\\\\Partials\\\\Host\\:\\:\\$hdd\\.$#"
+			count: 1
+			path: src/Models/Partials/Host.php
+
+		-
+			message: "#^Access to an undefined property Inspector\\\\Models\\\\Partials\\\\Host\\:\\:\\$hostname\\.$#"
+			count: 1
+			path: src/Models/Partials/Host.php
+
+		-
+			message: "#^Access to an undefined property Inspector\\\\Models\\\\Partials\\\\Host\\:\\:\\$ip\\.$#"
+			count: 1
+			path: src/Models/Partials/Host.php
+
+		-
+			message: "#^Access to an undefined property Inspector\\\\Models\\\\Partials\\\\Host\\:\\:\\$os\\.$#"
+			count: 1
+			path: src/Models/Partials/Host.php
+
+		-
+			message: "#^Access to an undefined property Inspector\\\\Models\\\\Partials\\\\Host\\:\\:\\$ram\\.$#"
+			count: 1
+			path: src/Models/Partials/Host.php
+
+		-
+			message: "#^Parameter \\#1 \\$hostname of function gethostbyname expects string, string\\|false given\\.$#"
+			count: 1
+			path: src/Models/Partials/Host.php
+
+		-
+			message: "#^Parameter \\#3 \\$subject of function str_replace expects array\\|string, string\\|false\\|null given\\.$#"
+			count: 1
+			path: src/Models/Partials/Host.php
+
+		-
+			message: "#^Access to an undefined property Inspector\\\\Models\\\\Partials\\\\Http\\:\\:\\$request\\.$#"
+			count: 1
+			path: src/Models/Partials/Http.php
+
+		-
+			message: "#^Access to an undefined property Inspector\\\\Models\\\\Partials\\\\Http\\:\\:\\$url\\.$#"
+			count: 1
+			path: src/Models/Partials/Http.php
+
+		-
+			message: "#^Access to an undefined property Inspector\\\\Models\\\\Partials\\\\Request\\:\\:\\$cookies\\.$#"
+			count: 1
+			path: src/Models/Partials/Request.php
+
+		-
+			message: "#^Access to an undefined property Inspector\\\\Models\\\\Partials\\\\Request\\:\\:\\$headers\\.$#"
+			count: 1
+			path: src/Models/Partials/Request.php
+
+		-
+			message: "#^Access to an undefined property Inspector\\\\Models\\\\Partials\\\\Request\\:\\:\\$method\\.$#"
+			count: 1
+			path: src/Models/Partials/Request.php
+
+		-
+			message: "#^Access to an undefined property Inspector\\\\Models\\\\Partials\\\\Request\\:\\:\\$socket\\.$#"
+			count: 1
+			path: src/Models/Partials/Request.php
+
+		-
+			message: "#^Access to an undefined property Inspector\\\\Models\\\\Partials\\\\Request\\:\\:\\$version\\.$#"
+			count: 1
+			path: src/Models/Partials/Request.php
+
+		-
+			message: "#^Parameter \\#2 \\$offset of function substr expects int, int\\<0, max\\>\\|false given\\.$#"
+			count: 1
+			path: src/Models/Partials/Request.php
+
+		-
+			message: "#^Access to an undefined property Inspector\\\\Models\\\\Partials\\\\Socket\\:\\:\\$encrypted\\.$#"
+			count: 1
+			path: src/Models/Partials/Socket.php
+
+		-
+			message: "#^Access to an undefined property Inspector\\\\Models\\\\Partials\\\\Socket\\:\\:\\$remote_address\\.$#"
+			count: 1
+			path: src/Models/Partials/Socket.php
+
+		-
+			message: "#^Access to an undefined property Inspector\\\\Models\\\\Partials\\\\Url\\:\\:\\$full\\.$#"
+			count: 1
+			path: src/Models/Partials/Url.php
+
+		-
+			message: "#^Access to an undefined property Inspector\\\\Models\\\\Partials\\\\Url\\:\\:\\$path\\.$#"
+			count: 1
+			path: src/Models/Partials/Url.php
+
+		-
+			message: "#^Access to an undefined property Inspector\\\\Models\\\\Partials\\\\Url\\:\\:\\$port\\.$#"
+			count: 1
+			path: src/Models/Partials/Url.php
+
+		-
+			message: "#^Access to an undefined property Inspector\\\\Models\\\\Partials\\\\Url\\:\\:\\$protocol\\.$#"
+			count: 1
+			path: src/Models/Partials/Url.php
+
+		-
+			message: "#^Access to an undefined property Inspector\\\\Models\\\\Partials\\\\Url\\:\\:\\$search\\.$#"
+			count: 1
+			path: src/Models/Partials/Url.php
+
+		-
+			message: "#^Access to an undefined property Inspector\\\\Models\\\\Partials\\\\User\\:\\:\\$email\\.$#"
+			count: 1
+			path: src/Models/Partials/User.php
+
+		-
+			message: "#^Access to an undefined property Inspector\\\\Models\\\\Partials\\\\User\\:\\:\\$id\\.$#"
+			count: 1
+			path: src/Models/Partials/User.php
+
+		-
+			message: "#^Access to an undefined property Inspector\\\\Models\\\\Partials\\\\User\\:\\:\\$name\\.$#"
+			count: 1
+			path: src/Models/Partials/User.php
+
+		-
+			message: "#^Access to an undefined property Inspector\\\\Models\\\\PerformanceModel\\:\\:\\$context\\.$#"
+			count: 4
+			path: src/Models/PerformanceModel.php
+
+		-
+			message: "#^Access to an undefined property Inspector\\\\Models\\\\PerformanceModel\\:\\:\\$duration\\.$#"
+			count: 1
+			path: src/Models/PerformanceModel.php
+
+		-
+			message: "#^Access to an undefined property Inspector\\\\Models\\\\PerformanceModel\\:\\:\\$timestamp\\.$#"
+			count: 2
+			path: src/Models/PerformanceModel.php
+
+		-
+			message: "#^Method Inspector\\\\Models\\\\PerformanceModel\\:\\:setContext\\(\\) has parameter \\$context with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Models/PerformanceModel.php
+
+		-
+			message: "#^Access to an undefined property Inspector\\\\Models\\\\Segment\\:\\:\\$host\\.$#"
+			count: 1
+			path: src/Models/Segment.php
+
+		-
+			message: "#^Access to an undefined property Inspector\\\\Models\\\\Segment\\:\\:\\$label\\.$#"
+			count: 1
+			path: src/Models/Segment.php
+
+		-
+			message: "#^Access to an undefined property Inspector\\\\Models\\\\Segment\\:\\:\\$model\\.$#"
+			count: 1
+			path: src/Models/Segment.php
+
+		-
+			message: "#^Access to an undefined property Inspector\\\\Models\\\\Segment\\:\\:\\$start\\.$#"
+			count: 1
+			path: src/Models/Segment.php
+
+		-
+			message: "#^Access to an undefined property Inspector\\\\Models\\\\Segment\\:\\:\\$transaction\\.$#"
+			count: 2
+			path: src/Models/Segment.php
+
+		-
+			message: "#^Access to an undefined property Inspector\\\\Models\\\\Segment\\:\\:\\$type\\.$#"
+			count: 1
+			path: src/Models/Segment.php
+
+		-
+			message: "#^Method Inspector\\\\Models\\\\Segment\\:\\:__construct\\(\\) has parameter \\$label with no type specified\\.$#"
+			count: 1
+			path: src/Models/Segment.php
+
+		-
+			message: "#^Access to an undefined property Inspector\\\\Models\\\\Transaction\\:\\:\\$hash\\.$#"
+			count: 1
+			path: src/Models/Transaction.php
+
+		-
+			message: "#^Access to an undefined property Inspector\\\\Models\\\\Transaction\\:\\:\\$host\\.$#"
+			count: 1
+			path: src/Models/Transaction.php
+
+		-
+			message: "#^Access to an undefined property Inspector\\\\Models\\\\Transaction\\:\\:\\$http\\.$#"
+			count: 1
+			path: src/Models/Transaction.php
+
+		-
+			message: "#^Access to an undefined property Inspector\\\\Models\\\\Transaction\\:\\:\\$memory_peak\\.$#"
+			count: 1
+			path: src/Models/Transaction.php
+
+		-
+			message: "#^Access to an undefined property Inspector\\\\Models\\\\Transaction\\:\\:\\$model\\.$#"
+			count: 1
+			path: src/Models/Transaction.php
+
+		-
+			message: "#^Access to an undefined property Inspector\\\\Models\\\\Transaction\\:\\:\\$name\\.$#"
+			count: 1
+			path: src/Models/Transaction.php
+
+		-
+			message: "#^Access to an undefined property Inspector\\\\Models\\\\Transaction\\:\\:\\$result\\.$#"
+			count: 1
+			path: src/Models/Transaction.php
+
+		-
+			message: "#^Access to an undefined property Inspector\\\\Models\\\\Transaction\\:\\:\\$type\\.$#"
+			count: 1
+			path: src/Models/Transaction.php
+
+		-
+			message: "#^Access to an undefined property Inspector\\\\Models\\\\Transaction\\:\\:\\$user\\.$#"
+			count: 1
+			path: src/Models/Transaction.php
+
+		-
+			message: "#^Method Inspector\\\\Models\\\\Transaction\\:\\:isEnded\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Models/Transaction.php
+
+		-
+			message: "#^Parameter \\#1 \\$id of class Inspector\\\\Models\\\\Partials\\\\User constructor expects string\\|null, int\\|string given\\.$#"
+			count: 1
+			path: src/Models/Transaction.php
+
+		-
+			message: "#^Parameter \\#1 \\$length of function random_bytes expects int\\<1, max\\>, int given\\.$#"
+			count: 1
+			path: src/Models/Transaction.php
+
+		-
+			message: "#^Variable \\$length in isset\\(\\) always exists and is not nullable\\.$#"
+			count: 1
+			path: src/Models/Transaction.php
+
+		-
+			message: "#^Method Inspector\\\\OS\\:\\:getOsPrefix\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/OS.php
+
+		-
+			message: "#^Method Inspector\\\\OS\\:\\:isLinux\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/OS.php
+
+		-
+			message: "#^Method Inspector\\\\OS\\:\\:isMacOs\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/OS.php
+
+		-
+			message: "#^Method Inspector\\\\OS\\:\\:isWin\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/OS.php
+
+		-
+			message: "#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\\.$#"
+			count: 1
+			path: src/Transports/AbstractApiTransport.php
+
+		-
+			message: "#^Method Inspector\\\\Transports\\\\AbstractApiTransport\\:\\:addEntry\\(\\) has parameter \\$item with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Transports/AbstractApiTransport.php
+
+		-
+			message: "#^Method Inspector\\\\Transports\\\\AbstractApiTransport\\:\\:getApiHeaders\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Transports/AbstractApiTransport.php
+
+		-
+			message: "#^Method Inspector\\\\Transports\\\\AbstractApiTransport\\:\\:getQueue\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Transports/AbstractApiTransport.php
+
+		-
+			message: "#^Method Inspector\\\\Transports\\\\AbstractApiTransport\\:\\:send\\(\\) has parameter \\$items with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Transports/AbstractApiTransport.php
+
+		-
+			message: "#^Method Inspector\\\\Transports\\\\AbstractApiTransport\\:\\:send\\(\\) with return type void returns void but should not return anything\\.$#"
+			count: 1
+			path: src/Transports/AbstractApiTransport.php
+
+		-
+			message: "#^Method Inspector\\\\Transports\\\\AbstractApiTransport\\:\\:verifyOptions\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Transports/AbstractApiTransport.php
+
+		-
+			message: "#^Method Inspector\\\\Transports\\\\AbstractApiTransport\\:\\:verifyOptions\\(\\) has parameter \\$options with no type specified\\.$#"
+			count: 1
+			path: src/Transports/AbstractApiTransport.php
+
+		-
+			message: "#^Parameter \\#1 \\$filename of function file_put_contents expects string, string\\|false given\\.$#"
+			count: 1
+			path: src/Transports/AbstractApiTransport.php
+
+		-
+			message: "#^Parameter \\#1 \\$pattern of function preg_match expects string, mixed given\\.$#"
+			count: 1
+			path: src/Transports/AbstractApiTransport.php
+
+		-
+			message: "#^Parameter \\#1 \\$string of function base64_encode expects string, string\\|false given\\.$#"
+			count: 2
+			path: src/Transports/AbstractApiTransport.php
+
+		-
+			message: "#^Parameter \\#1 \\$string of function strlen expects string, string\\|false given\\.$#"
+			count: 1
+			path: src/Transports/AbstractApiTransport.php
+
+		-
+			message: "#^Parameter \\#2 \\$length of function array_chunk expects int\\<1, max\\>, 1\\|float given\\.$#"
+			count: 1
+			path: src/Transports/AbstractApiTransport.php
+
+		-
+			message: "#^Part \\$name \\(mixed\\) of encapsed string cannot be cast to string\\.$#"
+			count: 1
+			path: src/Transports/AbstractApiTransport.php
+
+		-
+			message: "#^Property Inspector\\\\Transports\\\\AbstractApiTransport\\:\\:\\$queue type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Transports/AbstractApiTransport.php
+
+		-
+			message: "#^Result of method Inspector\\\\Transports\\\\AbstractApiTransport\\:\\:sendViaFile\\(\\) \\(void\\) is used\\.$#"
+			count: 1
+			path: src/Transports/AbstractApiTransport.php
+
+		-
+			message: "#^Method Inspector\\\\Transports\\\\AsyncTransport\\:\\:buildCurlCommand\\(\\) has parameter \\$data with no type specified\\.$#"
+			count: 1
+			path: src/Transports/AsyncTransport.php
+
+		-
+			message: "#^Parameter \\#1 \\$process of function proc_close expects resource, resource\\|false given\\.$#"
+			count: 1
+			path: src/Transports/AsyncTransport.php
+
+		-
+			message: "#^Parameter \\#1 \\.\\.\\.\\$arrays of function array_merge expects array, mixed given\\.$#"
+			count: 1
+			path: src/Transports/AsyncTransport.php
+
+		-
+			message: "#^Parameter \\#1 \\$handle of function curl_close expects CurlHandle, CurlHandle\\|false given\\.$#"
+			count: 1
+			path: src/Transports/CurlTransport.php
+
+		-
+			message: "#^Parameter \\#1 \\$handle of function curl_errno expects CurlHandle, CurlHandle\\|false given\\.$#"
+			count: 1
+			path: src/Transports/CurlTransport.php
+
+		-
+			message: "#^Parameter \\#1 \\$handle of function curl_error expects CurlHandle, CurlHandle\\|false given\\.$#"
+			count: 1
+			path: src/Transports/CurlTransport.php
+
+		-
+			message: "#^Parameter \\#1 \\$handle of function curl_exec expects CurlHandle, CurlHandle\\|false given\\.$#"
+			count: 1
+			path: src/Transports/CurlTransport.php
+
+		-
+			message: "#^Parameter \\#1 \\$handle of function curl_getinfo expects CurlHandle, CurlHandle\\|false given\\.$#"
+			count: 1
+			path: src/Transports/CurlTransport.php
+
+		-
+			message: "#^Parameter \\#1 \\$handle of function curl_setopt expects CurlHandle, CurlHandle\\|false given\\.$#"
+			count: 9
+			path: src/Transports/CurlTransport.php

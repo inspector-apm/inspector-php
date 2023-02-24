@@ -24,6 +24,7 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require-dev": {
+        "phpstan/phpstan": "^1.10",
         "phpunit/phpunit": "^9.0"
     },
     "autoload-dev": {
@@ -32,8 +33,10 @@
         }
     },
     "scripts": {
+        "test:types": "phpstan analyse",
         "test:unit": "phpunit --colors=always",
         "test": [
+            "@test:types",
             "@test:unit"
         ]
     }
