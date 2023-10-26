@@ -173,7 +173,7 @@ class Error extends Arrayable
                 $file->next();
                 // `key()` returns 0 as the first line
                 $codeLines[] = [
-                    'line' => $file->key() + 1,
+                    'line' => $file->key(),
                     'code' => rtrim($file->current()),
                 ];
             }
