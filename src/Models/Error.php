@@ -165,15 +165,15 @@ class Error extends Arrayable
             $codeLines = [];
 
             $from = max(0, $line - $linesAround);
-            $to = min($line + $linesAround, $file->key() + 1);
+            $to = min($line + $linesAround, $file->key()+1);
 
             $file->seek($from);
 
-            while ($file->key() < $to && !$file->eof()) {
+            while ($file->key()+1 < $to-1 && !$file->eof()) {
                 $file->next();
                 // `key()` returns 0 as the first line
                 $codeLines[] = [
-                    'line' => $file->key(),
+                    'line' => $file->key()+1,
                     'code' => rtrim($file->current()),
                 ];
             }
