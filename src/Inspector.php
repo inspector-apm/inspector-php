@@ -243,7 +243,7 @@ class Inspector
             $this->startTransaction(get_class($exception));
         }
 
-        $segment = $this->startSegment('exception', substr($exception->getMessage(), 0, 50));
+        $segment = $this->startSegment('exception', $exception->getMessage());
 
         $error = (new Error($exception, $this->transaction))
             ->setHandled($handled);
