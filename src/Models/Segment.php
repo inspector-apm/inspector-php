@@ -12,8 +12,9 @@ class Segment extends PerformanceModel
     /**
      * Span constructor.
      *
-     * @param string $type
      * @param Transaction $transaction
+     * @param string $type
+     * @param null $label
      */
     public function __construct(Transaction $transaction, $type = 'process', $label = null)
     {

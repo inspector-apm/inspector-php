@@ -33,12 +33,12 @@ trait HasContext
     /**
      * Set the entire context bag.
      *
-     * @param array $context
+     * @param array $data
      * @return $this
      */
-    public function setContext(array $context)
+    public function setContext(array $data)
     {
-        $this->context = $context;
+        $this->context = $data;
         return $this;
     }
 

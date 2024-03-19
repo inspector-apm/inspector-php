@@ -32,9 +32,9 @@ class ModelTest extends TestCase
 
     public function testTransactionData()
     {
-        $this->assertSame($this->inspector->currentTransaction()::MODEL_NAME, $this->inspector->currentTransaction()->model);
-        $this->assertSame($this->inspector->currentTransaction()::TYPE_PROCESS, $this->inspector->currentTransaction()->type);
-        $this->assertSame('testcase', $this->inspector->currentTransaction()->name);
+        $this->assertSame($this->inspector->transaction()::MODEL_NAME, $this->inspector->transaction()->model);
+        $this->assertSame($this->inspector->transaction()::TYPE_PROCESS, $this->inspector->transaction()->type);
+        $this->assertSame('testcase', $this->inspector->transaction()->name);
     }
 
     public function testSegmentData()
@@ -45,7 +45,7 @@ class ModelTest extends TestCase
         $this->assertSame($segment::MODEL_NAME, $segment->model);
         $this->assertSame(__FUNCTION__, $segment->type);
         $this->assertSame('hello segment!', $segment->label);
-        $this->assertSame($this->inspector->currentTransaction()->only(['name', 'hash', 'timestamp']), $segment->transaction);
+        $this->assertSame($this->inspector->transaction()->only(['name', 'hash', 'timestamp']), $segment->transaction);
         $this->assertArrayHasKey('host', $segment);
     }
 
@@ -64,13 +64,13 @@ class ModelTest extends TestCase
         $this->assertArrayHasKey('host', $error_arr);
 
         $this->assertSame($error::MODEL_NAME, $error->model);
-        $this->assertSame($this->inspector->currentTransaction()->only(['name', 'hash']), $error->transaction);
+        $this->assertSame($this->inspector->transaction()->only(['name', 'hash']), $error->transaction);
     }
 
     public function testSetContext()
     {
-        $this->inspector->currentTransaction()->addContext('test', ['foo' => 'bar']);
+        $this->inspector->transaction()->addContext('test', ['foo' => 'bar']);
 
-        $this->assertEquals(['test' => ['foo' => 'bar']], $this->inspector->currentTransaction()->context);
+        $this->assertEquals(['test' => ['foo' => 'bar']], $this->inspector->transaction()->getContext());
     }
 }

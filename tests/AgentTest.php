@@ -82,7 +82,7 @@ class AgentTest extends TestCase
             return $segment->setContext(['foo' => 'bar']);
         }, 'callback', 'test callback', true);
 
-        $this->assertEquals(['foo' => 'bar'], $segment->context);
+        $this->assertEquals(['foo' => 'bar'], $segment->getContext());
     }
 
     public function testStatusChecks()
