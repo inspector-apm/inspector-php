@@ -36,11 +36,7 @@ class Error extends Arrayable
         $this->line = $throwable->getLine();
         $this->code = $throwable->getCode();
 
-        $this->stack = $this->stackTraceToArray(
-            $throwable->getTrace(),
-            $throwable->getFile(),
-            $throwable->getLine()
-        );
+        $this->stack = $this->stackTraceToArray($throwable);
 
         $this->transaction = $transaction->only(['name', 'hash']);
     }
@@ -60,27 +56,23 @@ class Error extends Arrayable
     /**
      * Serialize stack trace to array
      *
-     * @param array $stackTrace
-     * @param null|string $topFile
-     * @param null|string $topLine
+     * @param \Throwable $throwable
      * @return array
      */
-    public function stackTraceToArray(array $stackTrace, $topFile = null, $topLine = null)
+    public function stackTraceToArray(\Throwable $throwable)
     {
         $stack = [];
         $counter = 0;
 
         // Exception object `getTrace` does not return file and line number for the first line
         // http://php.net/manual/en/exception.gettrace.php#107563
-        if ($topFile !== null && $topLine !== null) {
-            $stack[] = [
-                'file' => $topFile,
-                'line' => $topLine,
-                'code' => $this->getCode($topFile, $topLine),
-            ];
-        }
+        $stack[] = [
+            'file' => $throwable->getFile(),
+            'line' => $throwable->getLine(),
+            'code' => $this->getCode($throwable->getFile(), $throwable->getLine()),
+        ];
 
-        foreach ($stackTrace as $trace) {
+        foreach ($throwable->getTrace() as $trace) {
             // Exclude vendor folder
             /*if (array_key_exists('file', $trace) && strpos($trace['file'], 'vendor') !== false) {
                 continue;
