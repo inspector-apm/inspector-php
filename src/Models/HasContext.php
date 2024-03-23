@@ -23,9 +23,12 @@ trait HasContext
      */
     public function addContext($key, $data)
     {
-        $this->context[$key] = array_key_exists($key, $this->context)
+        // It caused memory error
+        /*$this->context[$key] = array_key_exists($key, $this->context)
             ? array_merge($this->context[$key], $data)
-            : $data;
+            : $data;*/
+
+        $this->context[$key] = $data;
 
         return $this;
     }
