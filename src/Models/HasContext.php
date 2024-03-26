@@ -7,13 +7,6 @@ namespace Inspector\Models;
 trait HasContext
 {
     /**
-     * The context bag.
-     *
-     * @var array
-     */
-    protected $context = [];
-
-    /**
      * Add contextual information.
      * If the key exists it merge the given data instead of overwrite.
      *
@@ -23,11 +16,6 @@ trait HasContext
      */
     public function addContext($key, $data)
     {
-        // It caused memory error
-        /*$this->context[$key] = array_key_exists($key, $this->context)
-            ? array_merge($this->context[$key], $data)
-            : $data;*/
-
         $this->context[$key] = $data;
 
         return $this;
