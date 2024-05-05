@@ -288,6 +288,7 @@ class Inspector
     public function flush()
     {
         if (!$this->isRecording() || !$this->hasTransaction()) {
+            $this->reset();
             return;
         }
 
@@ -297,13 +298,23 @@ class Inspector
 
         foreach (static::$beforeCallbacks as $callback) {
             if (call_user_func($callback, $this) === false) {
-                $this->transport->resetQueue();
-                unset($this->transaction);
+                $this->reset();
                 return;
             }
         }
 
         $this->transport->flush();
+        unset($this->transaction);
+    }
+
+    /**
+     * Cancel the current transaction, segments, and errors.
+     *
+     * @return void
+     */
+    public function reset()
+    {
+        $this->transport->resetQueue();
         unset($this->transaction);
     }
 }
