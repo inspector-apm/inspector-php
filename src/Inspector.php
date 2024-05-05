@@ -310,11 +310,12 @@ class Inspector
     /**
      * Cancel the current transaction, segments, and errors.
      *
-     * @return void
+     * @return Inspector
      */
     public function reset()
     {
         $this->transport->resetQueue();
         unset($this->transaction);
+        return $this;
     }
 }
