@@ -239,7 +239,7 @@ class Inspector
      */
     public function reportException(\Throwable $exception, $handled = true)
     {
-        if ($this->needTransaction()) {
+        if (!$this->hasTransaction()) {
             $this->startTransaction(get_class($exception));
         }
 
