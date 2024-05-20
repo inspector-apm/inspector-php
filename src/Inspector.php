@@ -263,9 +263,11 @@ class Inspector
      */
     public function addEntries($entries)
     {
-        $entries = is_array($entries) ? $entries : [$entries];
-        foreach ($entries as $entry) {
-            $this->transport->addEntry($entry);
+        if ($this->isRecording()) {
+            $entries = is_array($entries) ? $entries : [$entries];
+            foreach ($entries as $entry) {
+                $this->transport->addEntry($entry);
+            }
         }
         return $this;
     }
