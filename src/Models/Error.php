@@ -80,8 +80,12 @@ class Error extends Arrayable
                 'type' => $trace['type'] ?? 'function',
                 'file' => $trace['file'] ?? '[internal]',
                 'line' => $trace['line'] ?? '0',
-                'code' => isset($trace['file']) ? $this->getCode($trace['file'], $trace['line'] ?? '0') : [],
-                'in_app' => strpos($trace['file'], 'vendor') === false,
+                'code' => isset($trace['file'])
+                    ? $this->getCode($trace['file'], $trace['line'] ?? '0')
+                    : [],
+                'in_app' => isset($trace['file'])
+                    ? strpos($trace['file'], 'vendor') === false
+                    : false,
             ];
 
             // Reporting limit
