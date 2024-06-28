@@ -73,11 +73,6 @@ class Error extends Arrayable
         ];
 
         foreach ($throwable->getTrace() as $trace) {
-            // Exclude vendor folder
-            /*if (array_key_exists('file', $trace) && strpos($trace['file'], 'vendor') !== false) {
-                continue;
-            }*/
-
             $stack[] = [
                 'class' => isset($trace['class']) ? $trace['class'] : null,
                 'function' => isset($trace['function']) ? $trace['function'] : null,
@@ -86,6 +81,7 @@ class Error extends Arrayable
                 'file' => $trace['file'] ?? '[internal]',
                 'line' => $trace['line'] ?? '0',
                 'code' => isset($trace['file']) ? $this->getCode($trace['file'], $trace['line'] ?? '0') : [],
+                'in_app' => strpos($trace['file'], 'vendor') === false,
             ];
 
             // Reporting limit
@@ -135,7 +131,7 @@ class Error extends Arrayable
     }
 
     /**
-     * Extract code source from file.
+     * Extract a code source from file.
      *
      * @param $filePath
      * @param $line
