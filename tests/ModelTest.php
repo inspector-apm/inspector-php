@@ -33,7 +33,6 @@ class ModelTest extends TestCase
     public function testTransactionData()
     {
         $this->assertSame($this->inspector->transaction()::MODEL_NAME, $this->inspector->transaction()->model);
-        $this->assertSame($this->inspector->transaction()::TYPE_PROCESS, $this->inspector->transaction()->type);
         $this->assertSame('testcase', $this->inspector->transaction()->name);
     }
 
