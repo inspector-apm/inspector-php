@@ -34,6 +34,7 @@ class ModelTest extends TestCase
     {
         $this->assertSame($this->inspector->transaction()::MODEL_NAME, $this->inspector->transaction()->model);
         $this->assertSame('testcase', $this->inspector->transaction()->name);
+        $this->assertSame('request', $this->inspector->transaction()->setType('request')->type);
     }
 
     public function testSegmentData()
