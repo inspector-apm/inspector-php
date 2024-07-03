@@ -24,6 +24,7 @@ class Transaction extends PerformanceModel
     {
         $this->model = self::MODEL_NAME;
         $this->name = $name;
+        $this->type = 'transaction';
         $this->hash = $this->generateUniqueHash();
         $this->host = new Host();
     }
