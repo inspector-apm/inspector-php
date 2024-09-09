@@ -14,8 +14,8 @@ class Host extends Arrayable
      */
     public function __construct()
     {
-        $this->hostname = gethostname();
-        $this->ip = gethostbyname(gethostname());
+        $this->hostname = \gethostname();
+        $this->ip = \gethostbyname(\gethostname());
         $this->os = PHP_OS_FAMILY;
     }
 
@@ -28,13 +28,13 @@ class Host extends Arrayable
      */
     public function withServerStatus()
     {
-        if (OS::isLinux() && function_exists('shell_exec')) {
+        if (OS::isLinux() && \function_exists('shell_exec')) {
             try {
-                $status = shell_exec('echo "`LC_ALL=C top -bn1 | grep "Cpu(s)" | sed "s/.*, *\([0-9.]*\)%* id.*/\1/" | awk \'{print 100 - $1}\'`%;`free -m | awk \'/Mem:/ { printf("%3.1f%%", $3/$2*100) }\'`;`df -h / | awk \'/\// {print $(NF-1)}\'`"');
-                $status = str_replace('%', '', $status);
-                $status = str_replace("\n", '', $status);
+                $status = \shell_exec('echo "`LC_ALL=C top -bn1 | grep "Cpu(s)" | sed "s/.*, *\([0-9.]*\)%* id.*/\1/" | awk \'{print 100 - $1}\'`%;`free -m | awk \'/Mem:/ { printf("%3.1f%%", $3/$2*100) }\'`;`df -h / | awk \'/\// {print $(NF-1)}\'`"');
+                $status = \str_replace('%', '', $status);
+                $status = \str_replace("\n", '', $status);
 
-                $status = explode(';', $status);
+                $status = \explode(';', $status);
 
                 $this->cpu = $status[0];
                 $this->ram = $status[1];

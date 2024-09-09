@@ -33,9 +33,9 @@ class Segment extends PerformanceModel
      */
     public function start($time = null)
     {
-        $initial = is_null($time) ? microtime(true) : $time;
+        $initial = \is_null($time) ? \microtime(true) : $time;
 
-        $this->start = round(($initial - $this->transaction['timestamp'])*1000, 2);
+        $this->start = \round(($initial - $this->transaction['timestamp'])*1000, 2);
         return parent::start($time);
     }
 }

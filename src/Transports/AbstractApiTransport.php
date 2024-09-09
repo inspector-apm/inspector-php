@@ -55,7 +55,7 @@ abstract class AbstractApiTransport implements TransportInterface
         foreach ($this->getAllowedOptions() as $name => $regex) {
             if (isset($options[$name])) {
                 $value = $options[$name];
-                if (preg_match($regex, $value)) {
+                if (\preg_match($regex, $value)) {
                     $this->$name = $value;
                 } else {
                     throw new InspectorException("Option '$name' has invalid value");
@@ -94,7 +94,7 @@ abstract class AbstractApiTransport implements TransportInterface
     public function addEntry($item): TransportInterface
     {
         // Force insert when dealing with errors.
-        if($item['model'] === Error::MODEL_NAME || count($this->queue) <= $this->config->getMaxItems()) {
+        if($item['model'] === Error::MODEL_NAME || \count($this->queue) <= $this->config->getMaxItems()) {
             $this->queue[] = $item;
         }
         return $this;

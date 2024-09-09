@@ -84,7 +84,7 @@ class Error extends Arrayable
                     ? $this->getCode($trace['file'], $trace['line'] ?? '0')
                     : [],
                 'in_app' => isset($trace['file'])
-                    ? strpos($trace['file'], 'vendor') === false
+                    ? \strpos($trace['file'], 'vendor') === false
                     : false,
             ];
 
@@ -112,22 +112,22 @@ class Error extends Arrayable
         }
 
         foreach ($trace['args'] as $arg) {
-            if (is_array($arg)) {
-                $params[] = 'array(' . count($arg) . ')';
-            } else if (is_object($arg)) {
-                $params[] = get_class($arg);
-            } else if (is_string($arg)) {
+            if (\is_array($arg)) {
+                $params[] = 'array(' . \count($arg) . ')';
+            } else if (\is_object($arg)) {
+                $params[] = \get_class($arg);
+            } else if (\is_string($arg)) {
                 $params[] = 'string(' . $arg . ')';
-            } else if (is_int($arg)) {
+            } else if (\is_int($arg)) {
                 $params[] = 'int(' . $arg . ')';
-            } else if (is_float($arg)) {
+            } else if (\is_float($arg)) {
                 $params[] = 'float(' . $arg . ')';
-            } else if (is_bool($arg)) {
+            } else if (\is_bool($arg)) {
                 $params[] = 'bool(' . ($arg ? 'true' : 'false') . ')';
             } else if ($arg instanceof \__PHP_Incomplete_Class) {
                 $params[] = 'object(__PHP_Incomplete_Class)';
             } else {
-                $params[] = gettype($arg);
+                $params[] = \gettype($arg);
             }
         }
 
@@ -151,15 +151,15 @@ class Error extends Arrayable
 
             $codeLines = [];
 
-            $from = max(0, $line - $linesAround);
-            $to = min($line + $linesAround, $file->key());
+            $from = \max(0, $line - $linesAround);
+            $to = \min($line + $linesAround, $file->key());
 
             $file->seek($from);
 
             while ($file->key() <= $to && !$file->eof()) {
                 $codeLines[] = [
                     'line' => $file->key()+1,
-                    'code' => rtrim($file->current()),
+                    'code' => \rtrim($file->current()),
                 ];
                 $file->next();
             }

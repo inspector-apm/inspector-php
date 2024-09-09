@@ -93,7 +93,7 @@ class Transaction extends PerformanceModel
 
     public function getMemoryPeak(): float
     {
-        return round((memory_get_peak_usage()/1024/1024), 2); // MB
+        return \round((\memory_get_peak_usage()/1024/1024), 2); // MB
     }
 
     /**
@@ -107,14 +107,14 @@ class Transaction extends PerformanceModel
      */
     public function generateUniqueHash($length = 32)
     {
-        if (!isset($length) || intval($length) <= 8) {
+        if (!isset($length) || \intval($length) <= 8) {
             $length = 32;
         }
 
-        if (function_exists('random_bytes')) {
-            return bin2hex(random_bytes($length));
-        } elseif (function_exists('openssl_random_pseudo_bytes')) {
-            return bin2hex(openssl_random_pseudo_bytes($length));
+        if (\function_exists('random_bytes')) {
+            return \bin2hex(random_bytes($length));
+        } elseif (\function_exists('openssl_random_pseudo_bytes')) {
+            return \bin2hex(\openssl_random_pseudo_bytes($length));
         }
 
         throw new InspectorException('Can\'t create unique transaction hash.');

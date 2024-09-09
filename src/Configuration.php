@@ -39,7 +39,7 @@ class Configuration
     /**
      * @var string
      */
-    protected $version = '3.8.1';
+    protected $version = '3.8.2';
 
     /**
      * Transport options.
@@ -79,7 +79,7 @@ class Configuration
      */
     public function setUrl($value): Configuration
     {
-        $value = trim($value);
+        $value = \trim($value);
 
         if (empty($value)) {
             throw new \InvalidArgumentException('Invalid URL');
@@ -108,7 +108,7 @@ class Configuration
      */
     public function setIngestionKey($value): Configuration
     {
-        $value = trim($value);
+        $value = \trim($value);
 
         if (empty($value)) {
             throw new \InvalidArgumentException('Ingestion key cannot be empty');
@@ -188,7 +188,7 @@ class Configuration
      */
     public function isEnabled(): bool
     {
-        return isset($this->ingestionKey) && is_string($this->ingestionKey) && $this->enabled;
+        return isset($this->ingestionKey) && \is_string($this->ingestionKey) && $this->enabled;
     }
 
     /**

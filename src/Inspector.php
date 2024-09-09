@@ -61,7 +61,7 @@ class Inspector
         }
 
         $this->configuration = $configuration;
-        register_shutdown_function(array($this, 'flush'));
+        \register_shutdown_function(array($this, 'flush'));
     }
 
     /**
@@ -73,7 +73,7 @@ class Inspector
      */
     public function setTransport($resolver)
     {
-        if (is_callable($resolver)) {
+        if (\is_callable($resolver)) {
             $this->transport = $resolver($this->configuration);
         } elseif ($resolver instanceof TransportInterface) {
             $this->transport = $resolver;
@@ -264,7 +264,7 @@ class Inspector
     public function addEntries($entries)
     {
         if ($this->isRecording()) {
-            $entries = is_array($entries) ? $entries : [$entries];
+            $entries = \is_array($entries) ? $entries : [$entries];
             foreach ($entries as $entry) {
                 $this->transport->addEntry($entry);
             }
@@ -299,7 +299,7 @@ class Inspector
         }
 
         foreach (static::$beforeCallbacks as $callback) {
-            if (call_user_func($callback, $this) === false) {
+            if (\call_user_func($callback, $this) === false) {
                 $this->reset();
                 return;
             }

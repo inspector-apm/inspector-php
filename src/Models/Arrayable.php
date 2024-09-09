@@ -96,7 +96,7 @@ abstract class Arrayable implements \ArrayAccess, \JsonSerializable
     #[\ReturnTypeWillChange]
     public function offsetSet($offset, $value)
     {
-        if (is_null($offset)) {
+        if (\is_null($offset)) {
             $this->data[] = $value;
         } else {
             $this->data[$offset] = $value;

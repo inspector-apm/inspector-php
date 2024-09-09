@@ -13,7 +13,7 @@ class OS
 
     public static function isLinux()
     {
-        return in_array(static::getOsPrefix(), ['LIN', 'BSD', 'SOL']);
+        return \in_array(static::getOsPrefix(), ['LIN', 'BSD', 'SOL']);
     }
 
     public function isMacOs()
@@ -23,6 +23,6 @@ class OS
 
     public static function getOsPrefix()
     {
-        return strtoupper(substr(PHP_OS_FAMILY, 0, 3));
+        return \strtoupper(\substr(\PHP_OS_FAMILY, 0, 3));
     }
 }

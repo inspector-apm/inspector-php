@@ -41,7 +41,7 @@ trait HasContext
      */
     public function getContext(?string $label = null)
     {
-        if (is_string($label)) {
+        if (\is_string($label)) {
             return $this->context[$label];
         }
 

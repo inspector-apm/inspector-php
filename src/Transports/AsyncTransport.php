@@ -25,7 +25,7 @@ class AsyncTransport extends AbstractApiTransport
      */
     public function __construct($configuration)
     {
-        if (!function_exists('proc_open')) {
+        if (!\function_exists('proc_open')) {
             throw new InspectorException("PHP function 'proc_open' is not available.");
         }
 
@@ -41,7 +41,7 @@ class AsyncTransport extends AbstractApiTransport
      */
     protected function getAllowedOptions()
     {
-        return array_merge(parent::getAllowedOptions(), [
+        return \array_merge(parent::getAllowedOptions(), [
             'curlPath' => '/.+/',
         ]);
     }
@@ -62,14 +62,14 @@ class AsyncTransport extends AbstractApiTransport
             $cmd = "({$curl} > /dev/null 2>&1";
 
             // Delete temporary file after data transfer
-            if (substr($data, 0, 1) === '@') {
-                $cmd.= '; rm ' . str_replace('@', '', $data);
+            if (\substr($data, 0, 1) === '@') {
+                $cmd.= '; rm ' . \str_replace('@', '', $data);
             }
 
             $cmd .= ')&';
         }
 
-        proc_close(proc_open($cmd, [], $pipes));
+        \proc_close(\proc_open($cmd, [], $pipes));
     }
 
     /**
