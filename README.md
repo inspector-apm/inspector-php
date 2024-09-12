@@ -6,7 +6,9 @@
 [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](CODE_OF_CONDUCT.md)
 [![Build Status](https://travis-ci.org/inspector-apm/inspector-php.svg?branch=master)](https://travis-ci.org/inspector-apm/inspector-php)
 
-Simple code execution monitoring, built for PHP developers.
+> Before moving on, please consider giving us a GitHub star ⭐️. Thank you!
+
+Code Execution Monitoring, built for PHP developers.
 
 ## Requirements
 
