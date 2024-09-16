@@ -48,9 +48,7 @@ abstract class AbstractApiTransport implements TransportInterface
         foreach ($this->getAllowedOptions() as $name => $regex) {
             if (isset($options[$name])) {
                 $value = $options[$name];
-                if (\preg_match($regex, $value)) {
-                    $this->$name = $value;
-                } else {
+                if (!\preg_match($regex, $value)) {
                     throw new InspectorException("Option '$name' has invalid value");
                 }
             }
