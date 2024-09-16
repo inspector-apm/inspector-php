@@ -85,8 +85,8 @@ class AsyncTransport extends AbstractApiTransport
 
         $curl .= " --data {$data} {$this->config->getUrl()}";
 
-        if ($this->proxy) {
-            $curl .= " --proxy \"{$this->proxy}\"";
+        if (\array_key_exists('proxy', $this->config->getOptions())) {
+            $curl .= " --proxy \"{$this->config->getOptions()['proxy']}\"";
         }
 
         return $curl;

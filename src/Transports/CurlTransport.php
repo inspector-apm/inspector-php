@@ -51,9 +51,11 @@ class CurlTransport extends AbstractApiTransport
         \curl_setopt($handle, CURLOPT_RETURNTRANSFER, true);
         \curl_setopt($handle, CURLOPT_SSL_VERIFYHOST, false);
         \curl_setopt($handle, CURLOPT_SSL_VERIFYPEER, true);
-        if ($this->proxy) {
-            \curl_setopt($handle, CURLOPT_PROXY, $this->proxy);
+
+        if (\array_key_exists('proxy', $this->config->getOptions())) {
+            \curl_setopt($handle, CURLOPT_PROXY, $this->config->getOptions()['proxy']);
         }
+
         $response = \curl_exec($handle);
         $errorNo = \curl_errno($handle);
         $code = \curl_getinfo($handle, CURLINFO_HTTP_CODE);

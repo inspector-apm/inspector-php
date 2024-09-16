@@ -19,13 +19,6 @@ abstract class AbstractApiTransport implements TransportInterface
     protected $config;
 
     /**
-     * Custom url of the proxy if needed.
-     *
-     * @var string
-     */
-    protected $proxy;
-
-    /**
      * Queue of messages to send.
      *
      * @var array
