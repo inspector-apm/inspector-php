@@ -11,13 +11,6 @@ use Inspector\OS;
 class AsyncTransport extends AbstractApiTransport
 {
     /**
-     * CURL command path.
-     *
-     * @var string
-     */
-    protected $curlPath = 'curl';
-
-    /**
      * AsyncTransport constructor.
      *
      * @param Configuration $configuration
@@ -37,7 +30,9 @@ class AsyncTransport extends AbstractApiTransport
      *
      * ['param-name' => 'regex']
      *
-     * @return mixed
+     * Override to introduce "curlPath".
+     *
+     * @return array
      */
     protected function getAllowedOptions()
     {
@@ -80,7 +75,9 @@ class AsyncTransport extends AbstractApiTransport
      */
     protected function buildCurlCommand($data): string
     {
-        $curl = "{$this->curlPath} -X POST --ipv4 --max-time 5";
+        $curl = $this->config->getOptions()['curlPath'] ?? 'curl';
+
+        $curl .= " -X POST --ipv4 --max-time 5";
 
         foreach ($this->getApiHeaders() as $name => $value) {
             $curl .= " --header \"$name: $value\"";
