@@ -69,6 +69,7 @@ class Error extends Arrayable
         $stack[] = [
             'file' => $throwable->getFile(),
             'line' => $throwable->getLine(),
+            'in_app' => \strpos($throwable->getFile(), 'vendor') === false,
             'code' => $this->getCode($throwable->getFile(), $throwable->getLine()),
         ];
 
