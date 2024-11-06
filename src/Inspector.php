@@ -91,7 +91,7 @@ class Inspector
      * @return Transaction
      * @throws \Exception
      */
-    public function startTransaction($name)
+    public function startTransaction($name): Transaction
     {
         $this->transaction = new Transaction($name);
         $this->transaction->start();
@@ -240,7 +240,7 @@ class Inspector
     public function reportException(\Throwable $exception, $handled = true)
     {
         if (!$this->hasTransaction()) {
-            $this->startTransaction(get_class($exception));
+            $this->startTransaction(get_class($exception))->setType('error');
         }
 
         $segment = $this->startSegment('exception', $exception->getMessage());
