@@ -66,11 +66,16 @@ class Error extends Arrayable
 
         // Exception object `getTrace` does not return file and line number for the first line
         // http://php.net/manual/en/exception.gettrace.php#107563
+
+        $inApp = function ($file) {
+            return \strpos($file, 'vendor') === false;
+        };
+
         $stack[] = [
             'file' => $throwable->getFile(),
             'line' => $throwable->getLine(),
-            'in_app' => \strpos($throwable->getFile(), 'vendor') === false,
-            'code' => $this->getCode($throwable->getFile(), $throwable->getLine()),
+            'in_app' => $inApp($throwable->getFile()),
+            'code' => $this->getCode($throwable->getFile(), $throwable->getLine(), $inApp($throwable->getFile()) ? 15 : 5),
         ];
 
         foreach ($throwable->getTrace() as $trace) {
@@ -82,11 +87,9 @@ class Error extends Arrayable
                 'file' => $trace['file'] ?? '[internal]',
                 'line' => $trace['line'] ?? '0',
                 'code' => isset($trace['file'])
-                    ? $this->getCode($trace['file'], $trace['line'] ?? '0')
+                    ? $this->getCode($trace['file'], $trace['line'] ?? '0', $inApp($trace['file']) ? 15 : 5)
                     : [],
-                'in_app' => isset($trace['file'])
-                    ? \strpos($trace['file'], 'vendor') === false
-                    : false,
+                'in_app' => isset($trace['file']) && $inApp($trace['file']),
             ];
 
             // Reporting limit
