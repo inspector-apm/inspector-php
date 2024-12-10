@@ -68,7 +68,7 @@ class Error extends Arrayable
         // http://php.net/manual/en/exception.gettrace.php#107563
 
         $inApp = function ($file) {
-            return \strpos($file, 'vendor') === false;
+            return \strpos($file, 'vendor') === false && \strpos($file, 'index.php') === false;
         };
 
         $stack[] = [
