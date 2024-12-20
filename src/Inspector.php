@@ -184,7 +184,7 @@ class Inspector
     }
 
     /**
-     * Add new segment to the queue.
+     * Add a new segment to the queue.
      *
      * @param string $type
      * @param null|string $label
