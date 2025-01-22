@@ -209,7 +209,7 @@ class Inspector
      * @return mixed|void
      * @throws \Throwable
      */
-    public function addSegment(callable $callback, string $type, $label = null, $throw = false)
+    public function addSegment(callable $callback, string $type, $label = null, $throw = true)
     {
         if (!$this->hasTransaction()) {
             return $callback();
