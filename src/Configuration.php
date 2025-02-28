@@ -39,7 +39,7 @@ class Configuration
     /**
      * @var string
      */
-    protected $version = '3.9.1';
+    protected $version = '3.9.2';
 
     /**
      * Transport options.
@@ -68,7 +68,7 @@ class Configuration
      */
     public function getMaxPostSize(): int
     {
-        return OS::isWin() ? 8000 : 65536;
+        return /*OS::isWin() ? 8000 :*/ 65536;
     }
 
     /**
