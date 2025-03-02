@@ -3,8 +3,6 @@
 [![Total Downloads](https://poser.pugx.org/inspector-apm/inspector-php/downloads)](//packagist.org/packages/inspector-apm/inspector-php)
 [![Latest Stable Version](https://poser.pugx.org/inspector-apm/inspector-php/v/stable)](https://packagist.org/packages/inspector-apm/inspector-php)
 [![License](https://poser.pugx.org/inspector-apm/inspector-php/license)](//packagist.org/packages/inspector-apm/inspector-php)
-[![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](CODE_OF_CONDUCT.md)
-[![Build Status](https://travis-ci.org/inspector-apm/inspector-php.svg?branch=master)](https://travis-ci.org/inspector-apm/inspector-php)
 
 > Before moving on, please consider giving us a GitHub star ⭐️. Thank you!
 
