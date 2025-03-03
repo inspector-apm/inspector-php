@@ -24,7 +24,8 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require-dev": {
-        "phpunit/phpunit": "^9.0"
+        "phpunit/phpunit": "^9.0",
+        "inspector-apm/neuron-ai": "^1.2.0"
     },
     "autoload-dev": {
         "psr-4": {
