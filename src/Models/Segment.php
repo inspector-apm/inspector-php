@@ -38,4 +38,10 @@ class Segment extends PerformanceModel
         $this->start = \round(($initial - $this->transaction['timestamp'])*1000, 2);
         return parent::start($time);
     }
+
+    public function setColor(string $color): Segment
+    {
+        $this->color = $color;
+        return $this;
+    }
 }
