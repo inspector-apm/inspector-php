@@ -39,8 +39,10 @@ class AgentMonitoring implements \SplObserver
     public function update(\SplSubject $subject, string $event = null, $data = null): void
     {
         $methods = [
-            'agent:start' => "agentStart",
-            'agent:stop' => "agentStop",
+            'rag:start' => 'start',
+            'rag:stop' => 'stop',
+            'agent:start' => "start",
+            'agent:stop' => "stop",
             'message:sending' => "messageSending",
             'message:sent' => "messageSent",
             'tool:calling' => "toolCalling",
@@ -57,11 +59,13 @@ class AgentMonitoring implements \SplObserver
         }
     }
 
-    public function agentStart(\NeuronAI\AgentInterface $agent, string $event, $data = null)
+    public function start(\NeuronAI\AgentInterface $agent, string $event, $data = null)
     {
         if (!$this->inspector->isRecording()) {
             return;
         }
+
+        $entity = explode(':', $event)[1];
 
         $class = get_class($agent);
 
@@ -69,13 +73,13 @@ class AgentMonitoring implements \SplObserver
             $this->inspector->startTransaction($class)
                 ->setContext($this->getContext($agent));
         } elseif ($this->inspector->canAddSegments()) {
-            $this->segments[$class] = $this->inspector->startSegment(self::SEGMENT_TYPE.':agent', $class)
+            $this->segments[$class] = $this->inspector->startSegment(self::SEGMENT_TYPE.':'.$entity, $class)
                 ->setContext($this->getContext($agent))
                 ->setColor(self::SEGMENT_COLOR);
         }
     }
 
-    public function agentStop(\NeuronAI\AgentInterface $agent, string $event, $data = null)
+    public function stop(\NeuronAI\AgentInterface $agent, string $event, $data = null)
     {
         $class = get_class($agent);
 
