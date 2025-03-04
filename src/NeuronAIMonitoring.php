@@ -12,7 +12,6 @@ use NeuronAI\Events\ToolCalling;
 use NeuronAI\Events\VectorStoreResult;
 use NeuronAI\Events\VectorStoreSearching;
 use NeuronAI\Messages\AbstractMessage;
-use NeuronAI\Messages\Message;
 use NeuronAI\Tools\Tool;
 use NeuronAI\Tools\ToolProperty;
 
