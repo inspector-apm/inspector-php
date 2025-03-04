@@ -18,7 +18,7 @@ use NeuronAI\Tools\ToolProperty;
 
 class AgentMonitoring implements \SplObserver
 {
-    const SEGMENT_TYPE = 'neuron-ai';
+    const SEGMENT_TYPE = 'neuron';
     const SEGMENT_COLOR = '#506b9b';
 
     /**
@@ -65,7 +65,7 @@ class AgentMonitoring implements \SplObserver
             return;
         }
 
-        $entity = explode(':', $event)[1];
+        $entity = explode(':', $event)[0];
 
         $class = get_class($agent);
 
@@ -73,7 +73,7 @@ class AgentMonitoring implements \SplObserver
             $this->inspector->startTransaction($class)
                 ->setContext($this->getContext($agent));
         } elseif ($this->inspector->canAddSegments()) {
-            $this->segments[$class] = $this->inspector->startSegment(self::SEGMENT_TYPE.':'.$entity, $class)
+            $this->segments[$entity.$class] = $this->inspector->startSegment(self::SEGMENT_TYPE.':'.$entity, $class)
                 ->setContext($this->getContext($agent))
                 ->setColor(self::SEGMENT_COLOR);
         }
@@ -83,8 +83,10 @@ class AgentMonitoring implements \SplObserver
     {
         $class = get_class($agent);
 
+        $entity = explode(':', $event)[0];
+
         if (\array_key_exists($class, $this->segments)) {
-            $this->segments[$class]->end();
+            $this->segments[$entity.$class]->end();
         }
     }
 
