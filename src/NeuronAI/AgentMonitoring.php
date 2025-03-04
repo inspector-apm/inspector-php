@@ -13,6 +13,7 @@ use NeuronAI\Events\ToolCalling;
 use NeuronAI\Events\VectorStoreResult;
 use NeuronAI\Events\VectorStoreSearching;
 use NeuronAI\Messages\AbstractMessage;
+use NeuronAI\RAG\Document;
 use NeuronAI\Tools\Tool;
 use NeuronAI\Tools\ToolProperty;
 
@@ -151,7 +152,7 @@ class AgentMonitoring implements \SplObserver
         $this->segments[
             $id
         ] = $this->inspector
-            ->startSegment(self::SEGMENT_TYPE.'-vector-search', "search( {$data->question->getContent()} )")
+            ->startSegment(self::SEGMENT_TYPE.'-vector-search', "vectorSearch( {$data->question->getContent()} )")
             ->setColor(self::SEGMENT_COLOR);
     }
 
@@ -161,7 +162,10 @@ class AgentMonitoring implements \SplObserver
 
         if (\array_key_exists($id, $this->segments)) {
             $this->segments[$id]
-                ->setContext($this->getContext($agent))
+                ->addContext('Data', [
+                    'question' => $data->question->getContent(),
+                    'documents' => \count($data->documents)
+                ])
                 ->end();
         }
     }
@@ -183,11 +187,14 @@ class AgentMonitoring implements \SplObserver
 
     public function instructionsChanged(\NeuronAI\AgentInterface $agent, string $event, InstructionsChanged $data)
     {
-        $id = \md5($data->instructions);
+        $id = \md5($data->previous);
 
         if (\array_key_exists($id, $this->segments)) {
             $this->segments[$id]
-                ->setContext($this->getContext($agent))
+                ->addContext('Instructions', [
+                    'previous' => $data->previous,
+                    'current' => $data->current
+                ])
                 ->end();
         }
     }
