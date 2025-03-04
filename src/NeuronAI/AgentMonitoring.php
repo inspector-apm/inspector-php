@@ -41,8 +41,8 @@ class AgentMonitoring implements \SplObserver
         $methods = [
             'rag:start' => 'start',
             'rag:stop' => 'stop',
-            'agent:start' => "start",
-            'agent:stop' => "stop",
+            'chat:start' => "start",
+            'chat:stop' => "stop",
             'message:sending' => "messageSending",
             'message:sent' => "messageSent",
             'tool:calling' => "toolCalling",
@@ -65,8 +65,7 @@ class AgentMonitoring implements \SplObserver
             return;
         }
 
-        $entity = explode(':', $event)[0];
-
+        $entity = $this->getEventEntity($event);
         $class = get_class($agent);
 
         if ($this->inspector->needTransaction()) {
@@ -81,11 +80,10 @@ class AgentMonitoring implements \SplObserver
 
     public function stop(\NeuronAI\AgentInterface $agent, string $event, $data = null)
     {
+        $entity = $this->getEventEntity($event);
         $class = get_class($agent);
 
-        $entity = explode(':', $event)[0];
-
-        if (\array_key_exists($class, $this->segments)) {
+        if (\array_key_exists($entity.$class, $this->segments)) {
             $this->segments[$entity.$class]->end();
         }
     }
@@ -97,7 +95,7 @@ class AgentMonitoring implements \SplObserver
         }
 
         $this->segments[
-            $this->getMessageId($data->message)
+        $this->getMessageId($data->message)
         ] = $this->inspector
             ->startSegment(self::SEGMENT_TYPE.':chat', $data->message->getContent())
             ->setColor(self::SEGMENT_COLOR)
@@ -122,7 +120,7 @@ class AgentMonitoring implements \SplObserver
         $tool = $data->toolCall->getTool();
 
         $this->segments[
-            $tool->getName()
+        $tool->getName()
         ] = $this->inspector
             ->startSegment(self::SEGMENT_TYPE.':tools', $tool->getName())
             ->setColor(self::SEGMENT_COLOR)
@@ -147,7 +145,7 @@ class AgentMonitoring implements \SplObserver
         $id = \md5($data->question->getContent());
 
         $this->segments[
-            $id
+        $id
         ] = $this->inspector
             ->startSegment(self::SEGMENT_TYPE.':vector-search', $data->question->getContent())
             ->setColor(self::SEGMENT_COLOR)
@@ -172,7 +170,7 @@ class AgentMonitoring implements \SplObserver
         $id = \md5($data->instructions);
 
         $this->segments[
-            $id
+        $id
         ] = $this->inspector
             ->startSegment(self::SEGMENT_TYPE.':instructions', $data->instructions)
             ->setColor(self::SEGMENT_COLOR)
@@ -186,6 +184,11 @@ class AgentMonitoring implements \SplObserver
         if (\array_key_exists($id, $this->segments)) {
             $this->segments[$id]->end();
         }
+    }
+
+    public function getEventEntity(string $event): string
+    {
+        return explode(':', $event)[0];
     }
 
     protected function getContext(\NeuronAI\AgentInterface $agent): array
