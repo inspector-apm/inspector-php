@@ -1,7 +1,8 @@
 <?php
 
-namespace Inspector;
+namespace Inspector\NeuronAI;
 
+use Inspector\Inspector;
 use Inspector\Models\Segment;
 use NeuronAI\Events\InstructionsChanged;
 use NeuronAI\Events\InstructionsChanging;
@@ -15,7 +16,7 @@ use NeuronAI\Messages\AbstractMessage;
 use NeuronAI\Tools\Tool;
 use NeuronAI\Tools\ToolProperty;
 
-class NeuronAIMonitoring implements \SplObserver
+class AgentMonitoring implements \SplObserver
 {
     const SEGMENT_TYPE = 'neuron-ai';
     const CONTEXT_LABEL = 'NeuronAI';
