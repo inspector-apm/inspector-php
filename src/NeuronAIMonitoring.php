@@ -3,6 +3,15 @@
 namespace Inspector;
 
 use Inspector\Models\Segment;
+use NeuronAI\Events\InstructionsChanged;
+use NeuronAI\Events\InstructionsChanging;
+use NeuronAI\Events\MessageSending;
+use NeuronAI\Events\MessageSent;
+use NeuronAI\Events\ToolCalled;
+use NeuronAI\Events\ToolCalling;
+use NeuronAI\Events\VectorStoreResult;
+use NeuronAI\Events\VectorStoreSearching;
+use NeuronAI\Messages\AbstractMessage;
 use NeuronAI\Messages\Message;
 use NeuronAI\Tools\Tool;
 use NeuronAI\Tools\ToolProperty;
@@ -36,15 +45,19 @@ class NeuronAIMonitoring implements \SplObserver
             'message:sent' => "messageSent",
             'tool:calling' => "toolCalling",
             'tool:called' => "toolCalled",
+            'rag:vectorstore:searching' => "vectorStoreSearching",
+            'rag:vectorstore:result' => "vectorStoreResult",
+            'rag:instructions:changing' => "instructionsChanging",
+            'rag:instructions:changed' => "instructionsChanged",
         ];
 
-        if (\array_key_exists($event, $methods) && $subject instanceof \NeuronAI\AgentInterface) {
+        if (!\is_null($event) && \array_key_exists($event, $methods) && $subject instanceof \NeuronAI\AgentInterface) {
             $method = $methods[$event];
             $this->$method($subject, $event, $data);
         }
     }
 
-    public function agentStart(\NeuronAI\AgentInterface $agent, string $event = null, $data = null)
+    public function agentStart(\NeuronAI\AgentInterface $agent, string $event, $data = null)
     {
         if (!$this->inspector->isRecording()) {
             return;
@@ -62,7 +75,7 @@ class NeuronAIMonitoring implements \SplObserver
         }
     }
 
-    public function agentStop(\NeuronAI\AgentInterface $agent, string $event = null, $data = null)
+    public function agentStop(\NeuronAI\AgentInterface $agent, string $event, $data = null)
     {
         $class = get_class($agent);
 
@@ -76,34 +89,36 @@ class NeuronAIMonitoring implements \SplObserver
         }
     }
 
-    public function messageSending(\NeuronAI\AgentInterface $agent, string $event, Message $data)
+    public function messageSending(\NeuronAI\AgentInterface $agent, string $event, MessageSending $data)
     {
         if (!$this->inspector->canAddSegments()) {
             return;
         }
 
         $this->segments[
-            $this->getMessageId($data)
+            $this->getMessageId($data->message)
         ] = $this->inspector
-            ->startSegment(self::SEGMENT_TYPE, get_class($data))
+            ->startSegment(self::SEGMENT_TYPE, get_class($data->message))
             ->setColor('#3a5a40')
             ->setContext($this->getContext($agent));
     }
 
-    public function messageSent(\NeuronAI\AgentInterface $agent, string $event, Message $data)
+    public function messageSent(\NeuronAI\AgentInterface $agent, string $event, MessageSent $data)
     {
-        $id = $this->getMessageId($data);
+        $id = $this->getMessageId($data->message);
 
         if (\array_key_exists($id, $this->segments)) {
             $this->segments[$id]->end();
         }
     }
 
-    public function toolCalling(\NeuronAI\AgentInterface $agent, string $event, Tool $tool)
+    public function toolCalling(\NeuronAI\AgentInterface $agent, string $event, ToolCalling $data)
     {
         if (!$this->inspector->canAddSegments()) {
             return;
         }
+
+        $tool = $data->toolCall->getTool();
 
         $this->segments[
             $tool->getName()
@@ -113,11 +128,33 @@ class NeuronAIMonitoring implements \SplObserver
             ->setContext($this->getContext($agent));
     }
 
-    public function toolCalled(\NeuronAI\AgentInterface $agent, string $event, Tool $tool)
+    public function toolCalled(\NeuronAI\AgentInterface $agent, string $event, ToolCalled $data)
     {
+        $tool = $data->toolCall->getTool();
+
         if (\array_key_exists($tool->getName(), $this->segments)) {
             $this->segments[$tool->getName()]->end();
         }
+    }
+
+    public function vectorStoreSearching(\NeuronAI\AgentInterface $agent, string $event, VectorStoreSearching $data)
+    {
+
+    }
+
+    public function vectorStoreResult(\NeuronAI\AgentInterface $agent, string $event, VectorStoreResult $data)
+    {
+
+    }
+
+    public function instructionsChanging(\NeuronAI\AgentInterface $agent, string $event, InstructionsChanging $data)
+    {
+
+    }
+
+    public function instructionsChanged(\NeuronAI\AgentInterface $agent, string $event, InstructionsChanged $data)
+    {
+
     }
 
     protected function getContext(\NeuronAI\AgentInterface $agent): array
@@ -135,12 +172,12 @@ class NeuronAIMonitoring implements \SplObserver
                         return $property->toArray();
                     }, $tool->getProperties()),
                 ];
-            }, $agent->tools()),
+            }, $agent->tools()??[]),
             'Messages' => $agent->resolveChatHistory()->getMessages(),
         ];
     }
 
-    public function getMessageId(Message $message): string
+    public function getMessageId(AbstractMessage $message): string
     {
         return \md5($message->getContent().$message->getRole());
     }
