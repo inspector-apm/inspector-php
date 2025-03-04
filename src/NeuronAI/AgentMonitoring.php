@@ -19,7 +19,7 @@ use NeuronAI\Tools\ToolProperty;
 class AgentMonitoring implements \SplObserver
 {
     const SEGMENT_TYPE = 'neuron-ai';
-    const CONTEXT_LABEL = 'NeuronAI';
+    const SEGMENT_COLOR = '#506b9b';
 
     /**
      * @var Inspector
@@ -67,11 +67,11 @@ class AgentMonitoring implements \SplObserver
 
         if ($this->inspector->needTransaction()) {
             $this->inspector->startTransaction($class)
-                ->addContext(self::CONTEXT_LABEL, $this->getContext($agent));
+                ->setContext($this->getContext($agent));
         } elseif ($this->inspector->canAddSegments()) {
             $this->segments[$class] = $this->inspector->startSegment(self::SEGMENT_TYPE.':agent', $class)
                 ->setContext($this->getContext($agent))
-                ->setColor('#3a5a40');
+                ->setColor(self::SEGMENT_COLOR);
         }
     }
 
@@ -80,9 +80,7 @@ class AgentMonitoring implements \SplObserver
         $class = get_class($agent);
 
         if (\array_key_exists($class, $this->segments)) {
-            $this->segments[$class]
-                ->setContext($this->getContext($agent))
-                ->end();
+            $this->segments[$class]->end();
         }
     }
 
@@ -96,7 +94,7 @@ class AgentMonitoring implements \SplObserver
             $this->getMessageId($data->message)
         ] = $this->inspector
             ->startSegment(self::SEGMENT_TYPE.':chat', get_class($data->message))
-            ->setColor('#3a5a40')
+            ->setColor(self::SEGMENT_COLOR)
             ->setContext($this->getContext($agent));
     }
 
@@ -121,7 +119,7 @@ class AgentMonitoring implements \SplObserver
             $tool->getName()
         ] = $this->inspector
             ->startSegment(self::SEGMENT_TYPE.':tools', $tool->getName())
-            ->setColor('#3a5a40')
+            ->setColor(self::SEGMENT_COLOR)
             ->setContext($this->getContext($agent));
     }
 
@@ -146,7 +144,7 @@ class AgentMonitoring implements \SplObserver
             $id
         ] = $this->inspector
             ->startSegment(self::SEGMENT_TYPE.':vector-search', $data->question)
-            ->setColor('#3a5a40')
+            ->setColor(self::SEGMENT_COLOR)
             ->setContext($this->getContext($agent));
     }
 
@@ -171,7 +169,7 @@ class AgentMonitoring implements \SplObserver
             $id
         ] = $this->inspector
             ->startSegment(self::SEGMENT_TYPE.':instructions', $data->instructions)
-            ->setColor('#3a5a40')
+            ->setColor(self::SEGMENT_COLOR)
             ->setContext($this->getContext($agent));
     }
 
