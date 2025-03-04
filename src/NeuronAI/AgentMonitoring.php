@@ -97,7 +97,7 @@ class AgentMonitoring implements \SplObserver
         $this->segments[
         $this->getMessageId($data->message)
         ] = $this->inspector
-            ->startSegment(self::SEGMENT_TYPE.'-chat', 'chat:'.$data->message->getContent())
+            ->startSegment(self::SEGMENT_TYPE.'-chat', "chat( {$data->message->getContent()} )")
             ->setColor(self::SEGMENT_COLOR)
             ->setContext($this->getContext($agent));
     }
@@ -122,7 +122,7 @@ class AgentMonitoring implements \SplObserver
         $this->segments[
         $tool->getName()
         ] = $this->inspector
-            ->startSegment(self::SEGMENT_TYPE.'-tools', $tool->getName())
+            ->startSegment(self::SEGMENT_TYPE.'-tools', "tool:{$tool->getName()}")
             ->setColor(self::SEGMENT_COLOR)
             ->setContext($this->getContext($agent));
     }
@@ -147,7 +147,7 @@ class AgentMonitoring implements \SplObserver
         $this->segments[
         $id
         ] = $this->inspector
-            ->startSegment(self::SEGMENT_TYPE.'-vector-search', $data->question->getContent())
+            ->startSegment(self::SEGMENT_TYPE.'-vector-search', "search( {$data->question->getContent()} )")
             ->setColor(self::SEGMENT_COLOR)
             ->setContext($this->getContext($agent));
     }
@@ -172,7 +172,7 @@ class AgentMonitoring implements \SplObserver
         $this->segments[
         $id
         ] = $this->inspector
-            ->startSegment(self::SEGMENT_TYPE.'-instructions', $data->instructions)
+            ->startSegment(self::SEGMENT_TYPE.'-instructions', "instructions( {$data->instructions} )")
             ->setColor(self::SEGMENT_COLOR)
             ->setContext($this->getContext($agent));
     }
