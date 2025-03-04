@@ -39,18 +39,18 @@ class AgentMonitoring implements \SplObserver
     public function update(\SplSubject $subject, string $event = null, $data = null): void
     {
         $methods = [
-            'rag:start' => 'start',
-            'rag:stop' => 'stop',
-            'chat:start' => "start",
-            'chat:stop' => "stop",
-            'message:sending' => "messageSending",
-            'message:sent' => "messageSent",
-            'tool:calling' => "toolCalling",
-            'tool:called' => "toolCalled",
-            'rag:vectorstore:searching' => "vectorStoreSearching",
-            'rag:vectorstore:result' => "vectorStoreResult",
-            'rag:instructions:changing' => "instructionsChanging",
-            'rag:instructions:changed' => "instructionsChanged",
+            'rag-start' => 'start',
+            'rag-stop' => 'stop',
+            'chat-start' => "start",
+            'chat-stop' => "stop",
+            'message-sending' => "messageSending",
+            'message-sent' => "messageSent",
+            'tool-calling' => "toolCalling",
+            'tool-called' => "toolCalled",
+            'rag-vectorstore-searching' => "vectorStoreSearching",
+            'rag-vectorstore-result' => "vectorStoreResult",
+            'rag-instructions-changing' => "instructionsChanging",
+            'rag-instructions-changed' => "instructionsChanged",
         ];
 
         if (!\is_null($event) && \array_key_exists($event, $methods) && $subject instanceof \NeuronAI\AgentInterface) {
@@ -72,7 +72,7 @@ class AgentMonitoring implements \SplObserver
             $this->inspector->startTransaction($class)
                 ->setContext($this->getContext($agent));
         } elseif ($this->inspector->canAddSegments()) {
-            $this->segments[$entity.$class] = $this->inspector->startSegment(self::SEGMENT_TYPE.':'.$entity, $class)
+            $this->segments[$entity.$class] = $this->inspector->startSegment(self::SEGMENT_TYPE.'-'.$entity, $entity.':'.$class)
                 ->setContext($this->getContext($agent))
                 ->setColor(self::SEGMENT_COLOR);
         }
@@ -97,7 +97,7 @@ class AgentMonitoring implements \SplObserver
         $this->segments[
         $this->getMessageId($data->message)
         ] = $this->inspector
-            ->startSegment(self::SEGMENT_TYPE.':chat', $data->message->getContent())
+            ->startSegment(self::SEGMENT_TYPE.'-chat', $data->message->getContent())
             ->setColor(self::SEGMENT_COLOR)
             ->setContext($this->getContext($agent));
     }
@@ -122,7 +122,7 @@ class AgentMonitoring implements \SplObserver
         $this->segments[
         $tool->getName()
         ] = $this->inspector
-            ->startSegment(self::SEGMENT_TYPE.':tools', $tool->getName())
+            ->startSegment(self::SEGMENT_TYPE.'-tools', $tool->getName())
             ->setColor(self::SEGMENT_COLOR)
             ->setContext($this->getContext($agent));
     }
@@ -147,7 +147,7 @@ class AgentMonitoring implements \SplObserver
         $this->segments[
         $id
         ] = $this->inspector
-            ->startSegment(self::SEGMENT_TYPE.':vector-search', $data->question->getContent())
+            ->startSegment(self::SEGMENT_TYPE.'-vector-search', $data->question->getContent())
             ->setColor(self::SEGMENT_COLOR)
             ->setContext($this->getContext($agent));
     }
@@ -172,7 +172,7 @@ class AgentMonitoring implements \SplObserver
         $this->segments[
         $id
         ] = $this->inspector
-            ->startSegment(self::SEGMENT_TYPE.':instructions', $data->instructions)
+            ->startSegment(self::SEGMENT_TYPE.'-instructions', $data->instructions)
             ->setColor(self::SEGMENT_COLOR)
             ->setContext($this->getContext($agent));
     }
@@ -188,7 +188,7 @@ class AgentMonitoring implements \SplObserver
 
     public function getEventEntity(string $event): string
     {
-        return explode(':', $event)[0];
+        return explode('-', $event)[0];
     }
 
     protected function getContext(\NeuronAI\AgentInterface $agent): array
