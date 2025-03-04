@@ -138,19 +138,19 @@ class AgentMonitoring implements \SplObserver
             return;
         }
 
-        $id = \md5($data->question);
+        $id = \md5($data->question->getContent());
 
         $this->segments[
             $id
         ] = $this->inspector
-            ->startSegment(self::SEGMENT_TYPE.':vector-search', $data->question)
+            ->startSegment(self::SEGMENT_TYPE.':vector-search', $data->question->getContent())
             ->setColor(self::SEGMENT_COLOR)
             ->setContext($this->getContext($agent));
     }
 
     public function vectorStoreResult(\NeuronAI\AgentInterface $agent, string $event, VectorStoreResult $data)
     {
-        $id = \md5($data->question);
+        $id = \md5($data->question->getContent());
 
         if (\array_key_exists($id, $this->segments)) {
             $this->segments[$id]->end();
