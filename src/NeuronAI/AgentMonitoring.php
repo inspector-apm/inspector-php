@@ -93,7 +93,7 @@ class AgentMonitoring implements \SplObserver
         $this->segments[
             $this->getMessageId($data->message)
         ] = $this->inspector
-            ->startSegment(self::SEGMENT_TYPE.':chat', get_class($data->message))
+            ->startSegment(self::SEGMENT_TYPE.':chat', $data->message->getContent())
             ->setColor(self::SEGMENT_COLOR)
             ->setContext($this->getContext($agent));
     }
