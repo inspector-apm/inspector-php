@@ -7,6 +7,8 @@ use Inspector\Models\Segment;
 use NeuronAI\Chat\Messages\Message;
 use NeuronAI\Events\InstructionsChanged;
 use NeuronAI\Events\InstructionsChanging;
+use NeuronAI\Events\MessageSaved;
+use NeuronAI\Events\MessageSaving;
 use NeuronAI\Events\MessageSending;
 use NeuronAI\Events\MessageSent;
 use NeuronAI\Events\ToolCalled;
@@ -43,6 +45,8 @@ class AgentMonitoring implements \SplObserver
             'rag-stop' => 'stop',
             'chat-start' => "start",
             'chat-stop' => "stop",
+            'message-saving' => 'messageSaving',
+            'message-saved' => 'messageSaved',
             'message-sending' => "messageSending",
             'message-sent' => "messageSent",
             'tool-calling' => "toolCalling",
@@ -90,6 +94,30 @@ class AgentMonitoring implements \SplObserver
         }
     }
 
+    public function messageSaving(\NeuronAI\AgentInterface $agent, string $event, MessageSaving $data)
+    {
+        if (!$this->inspector->canAddSegments()) {
+            return;
+        }
+
+        $this->segments[
+            $this->getMessageId($data->message).'-save'
+        ] = $this->inspector
+            ->startSegment(self::SEGMENT_TYPE.'-chathistory', "save( {$data->message->getContent()} )")
+            ->setColor(self::SEGMENT_COLOR);
+    }
+
+    public function messageSaved(\NeuronAI\AgentInterface $agent, string $event, MessageSaved $data)
+    {
+        $id = $this->getMessageId($data->message).'-save';
+
+        if (\array_key_exists($id, $this->segments)) {
+            $this->segments[$id]
+                ->addContext('Message', $data->message)
+                ->end();
+        }
+    }
+
     public function messageSending(\NeuronAI\AgentInterface $agent, string $event, MessageSending $data)
     {
         if (!$this->inspector->canAddSegments()) {
@@ -97,7 +125,7 @@ class AgentMonitoring implements \SplObserver
         }
 
         $this->segments[
-            $this->getMessageId($data->message)
+            $this->getMessageId($data->message).'-send'
         ] = $this->inspector
             ->startSegment(self::SEGMENT_TYPE.'-chat', "chat( {$data->message->getContent()} )")
             ->setColor(self::SEGMENT_COLOR);
@@ -105,7 +133,7 @@ class AgentMonitoring implements \SplObserver
 
     public function messageSent(\NeuronAI\AgentInterface $agent, string $event, MessageSent $data)
     {
-        $id = $this->getMessageId($data->message);
+        $id = $this->getMessageId($data->message).'-send';
 
         if (\array_key_exists($id, $this->segments)) {
             $this->segments[$id]
