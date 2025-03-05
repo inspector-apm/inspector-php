@@ -4,6 +4,7 @@ namespace Inspector\NeuronAI;
 
 use Inspector\Inspector;
 use Inspector\Models\Segment;
+use NeuronAI\Chat\Messages\Message;
 use NeuronAI\Events\InstructionsChanged;
 use NeuronAI\Events\InstructionsChanging;
 use NeuronAI\Events\MessageSending;
@@ -12,8 +13,6 @@ use NeuronAI\Events\ToolCalled;
 use NeuronAI\Events\ToolCalling;
 use NeuronAI\Events\VectorStoreResult;
 use NeuronAI\Events\VectorStoreSearching;
-use NeuronAI\Messages\AbstractMessage;
-use NeuronAI\RAG\Document;
 use NeuronAI\Tools\Tool;
 use NeuronAI\Tools\ToolProperty;
 
@@ -121,22 +120,18 @@ class AgentMonitoring implements \SplObserver
             return;
         }
 
-        $tool = $data->toolCall->getTool();
-
         $this->segments[
-        $tool->getName()
+            $data->tool->getName()
         ] = $this->inspector
-            ->startSegment(self::SEGMENT_TYPE.'-tools', "tool:{$tool->getName()}")
+            ->startSegment(self::SEGMENT_TYPE.'-tools', "tool:{$data->tool->getName()}")
             ->setColor(self::SEGMENT_COLOR);
     }
 
     public function toolCalled(\NeuronAI\AgentInterface $agent, string $event, ToolCalled $data)
     {
-        $tool = $data->toolCall->getTool();
-
-        if (\array_key_exists($tool->getName(), $this->segments)) {
-            $this->segments[$tool->getName()]
-                ->setContext($this->getContext($agent))
+        if (\array_key_exists($data->tool->getName(), $this->segments)) {
+            $this->segments[$data->tool->getName()]
+                ->addContext('Tool', $data->tool->jsonSerialize())
                 ->end();
         }
     }
@@ -224,7 +219,7 @@ class AgentMonitoring implements \SplObserver
         ];
     }
 
-    public function getMessageId(AbstractMessage $message): string
+    public function getMessageId(Message $message): string
     {
         return \md5($message->getContent().$message->getRole());
     }
