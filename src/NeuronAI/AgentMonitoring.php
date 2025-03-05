@@ -113,7 +113,7 @@ class AgentMonitoring implements \SplObserver
 
         if (\array_key_exists($id, $this->segments)) {
             $this->segments[$id]
-                ->addContext('Message', $data->message)
+                ->addContext('Message', $data->message->jsonSerialize())
                 ->end();
         }
     }
