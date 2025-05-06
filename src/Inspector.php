@@ -188,7 +188,7 @@ class Inspector
      *
      * @param string $type
      * @param null|string $label
-     * @return PerformanceModel
+     * @return Segment
      */
     public function startSegment($type, $label = null)
     {
