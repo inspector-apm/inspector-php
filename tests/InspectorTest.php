@@ -44,6 +44,11 @@ class InspectorTest extends TestCase
                 // Custom addEntry logic
             }
 
+            public function resetQueue()
+            {
+                // Custom logic
+            }
+
             public function flush()
             {
                 // Custom flush logic
