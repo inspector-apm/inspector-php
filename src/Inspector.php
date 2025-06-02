@@ -8,7 +8,6 @@ use Inspector\Exceptions\InspectorException;
 use Inspector\Models\Arrayable;
 use Inspector\Transports\AsyncTransport;
 use Inspector\Transports\TransportInterface;
-use Inspector\Models\PerformanceModel;
 use Inspector\Models\Error;
 use Inspector\Models\Segment;
 use Inspector\Models\Transaction;
@@ -33,19 +32,19 @@ class Inspector
     /**
      * Current transaction.
      *
-     * @var Transaction
+     * @var Transaction|null
      */
     protected $transaction;
 
     /**
-     * Runa callback before flushing data to the remote platform.
+     * Run a list of callbacks before flushing data to the remote platform.
      *
-     * @var callable
+     * @var callable[]
      */
     protected static $beforeCallbacks = [];
 
     /**
-     * Logger constructor.
+     * Inspector constructor.
      *
      * @param Configuration $configuration
      * @throws Exceptions\InspectorException
@@ -316,7 +315,9 @@ class Inspector
      */
     public function reset()
     {
-        $this->transport->resetQueue();
+        if (method_exists($this->transport, 'resetQueue')) {
+            $this->transport->resetQueue();
+        }
         unset($this->transaction);
         return $this;
     }
