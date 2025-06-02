@@ -315,9 +315,7 @@ class Inspector
      */
     public function reset()
     {
-        if (method_exists($this->transport, 'resetQueue')) {
-            $this->transport->resetQueue();
-        }
+        $this->transport->resetQueue();
         unset($this->transaction);
         return $this;
     }

@@ -17,6 +17,13 @@ interface TransportInterface
     public function addEntry(Arrayable $entry);
 
     /**
+     * Clean the internal queue.
+     *
+     * @return self
+     */
+    public function resetQueue();
+
+    /**
      * Send data to Inspector.
      *
      * This method is invoked after your application has sent
