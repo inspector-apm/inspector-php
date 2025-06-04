@@ -6,16 +6,16 @@ namespace Inspector;
 class Configuration
 {
     /**
-     * Remote endpoint to send data.
+     * The remote url to send data.
      *
      * @var string
      */
     protected $url = 'https://ingest.inspector.dev';
 
     /**
-     * Authentication key.
+     * The API key.
      *
-     * @var string
+     * @var string|null
      */
     protected $ingestionKey;
 
@@ -42,14 +42,14 @@ class Configuration
     protected $version = '3.12.2';
 
     /**
-     * Transport options.
+     * General-purpose options, E.g. we can set the transport proxy.
      *
      * @var array
      */
     protected $options = [];
 
     /**
-     * Environment constructor.
+     * Configuration constructor.
      *
      * @param null|string $ingestionKey
      * @throws \InvalidArgumentException
@@ -63,8 +63,6 @@ class Configuration
 
     /**
      * Max size of a POST request content.
-     *
-     * @return  integer
      */
     public function getMaxPostSize(): int
     {
@@ -72,17 +70,22 @@ class Configuration
     }
 
     /**
-     * Set ingestion url.
+     * Set the remote url.
      *
      * @param string $value
-     * @return Configuration
+     * @return $this
+     * @throws \InvalidArgumentException
      */
     public function setUrl($value): Configuration
     {
         $value = \trim($value);
 
         if (empty($value)) {
-            throw new \InvalidArgumentException('Invalid URL');
+            throw new \InvalidArgumentException('URL can not be empty');
+        }
+
+        if (filter_var($value, FILTER_VALIDATE_URL) === false) {
+            throw new \InvalidArgumentException('URL is invalid');
         }
 
         $this->url = $value;
@@ -90,9 +93,7 @@ class Configuration
     }
 
     /**
-     * Get ingestion endpoint.
-     *
-     * @return string
+     * Get the remote url.
      */
     public function getUrl(): string
     {
@@ -102,7 +103,7 @@ class Configuration
     /**
      * Verify if api key is well formed.
      *
-     * @param $value
+     * @param string $value
      * @return $this
      * @throws \InvalidArgumentException
      */
@@ -119,18 +120,13 @@ class Configuration
     }
 
     /**
-     * Get current API key.
-     *
-     * @return string
+     * Get the current API key.
      */
     public function getIngestionKey(): string
     {
         return $this->ingestionKey;
     }
 
-    /**
-     * @return int
-     */
     public function getMaxItems(): int
     {
         return $this->maxItems;
@@ -138,7 +134,7 @@ class Configuration
 
     /**
      * @param int $maxItems
-     * @return Configuration
+     * @return $this
      */
     public function setMaxItems(int $maxItems): Configuration
     {
@@ -146,22 +142,17 @@ class Configuration
         return $this;
     }
 
-    /**
-     * Transport options.
-     *
-     * @return array
-     */
     public function getOptions(): array
     {
         return $this->options;
     }
 
     /**
-     * Add a new entry in the options list.
+     * Add a key-value pair to the options list.
      *
      * @param string $key
-     * @param $value
-     * @return Configuration
+     * @param mixed $value
+     * @return $this
      */
     public function addOption($key, $value): Configuration
     {
@@ -170,7 +161,7 @@ class Configuration
     }
 
     /**
-     * Override the transport options.
+     * Override the entire options.
      *
      * @param array $options
      * @return $this
@@ -183,8 +174,6 @@ class Configuration
 
     /**
      * Check if data transfer is enabled.
-     *
-     * @return bool
      */
     public function isEnabled(): bool
     {
@@ -205,8 +194,6 @@ class Configuration
 
     /**
      * Get current transport method.
-     *
-     * @return string
      */
     public function getTransport(): string
     {
@@ -227,8 +214,6 @@ class Configuration
 
     /**
      * Get the package version.
-     *
-     * @return string
      */
     public function getVersion(): string
     {
