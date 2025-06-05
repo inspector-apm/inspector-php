@@ -31,22 +31,60 @@ class ConfigurationTest extends TestCase
     {
         $configuration = new Configuration('aaa');
 
-        $this->assertInstanceOf(Configuration::class, $configuration->setIngestionKey('xxx'));
-        $this->assertSame('xxx', $configuration->getIngestionKey());
-
-        $this->assertInstanceOf(Configuration::class, $configuration->setUrl('http://www.example.com'));
+        $this->assertSame($configuration, $configuration->setUrl('http://www.example.com'));
         $this->assertSame('http://www.example.com', $configuration->getUrl());
 
-        $this->assertInstanceOf(Configuration::class, $configuration->setOptions([]));
-        $this->assertSame([], $configuration->getOptions());
+        $this->assertSame($configuration, $configuration->setIngestionKey('xxx'));
+        $this->assertSame('xxx', $configuration->getIngestionKey());
 
-        $this->assertInstanceOf(Configuration::class, $configuration->setEnabled(true));
+        $this->assertSame($configuration, $configuration->setEnabled(true));
         $this->assertSame(true, $configuration->isEnabled());
 
-        $this->assertInstanceOf(Configuration::class, $configuration->setTransport('async'));
-        $this->assertSame('async', $configuration->getTransport());
-
-        $this->assertInstanceOf(Configuration::class, $configuration->setMaxItems(150));
+        $this->assertSame($configuration, $configuration->setMaxItems(150));
         $this->assertSame(150, $configuration->getMaxItems());
+
+        $this->assertSame($configuration, $configuration->setTransport('sync'));
+        $this->assertSame('sync', $configuration->getTransport());
+
+        $this->assertSame($configuration, $configuration->addOption('one', 1));
+        $this->assertSame(['one' => 1], $configuration->getOptions());
+        $this->assertSame($configuration, $configuration->addOption('two', 2));
+        $this->assertSame(['one' => 1, 'two' => 2], $configuration->getOptions());
+        // It override existing keys.
+        $this->assertSame($configuration, $configuration->addOption('one', 'number1'));
+        $this->assertSame(['one' => 'number1', 'two' => 2], $configuration->getOptions());
+
+        $this->assertSame($configuration, $configuration->setOptions([]));
+        $this->assertSame([], $configuration->getOptions());
+    }
+
+    public function testUrlCanNotBeEmpty()
+    {
+        $configuration = new Configuration('aaa');
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('URL can not be empty');
+
+        $configuration->setUrl('');
+    }
+
+    public function testUrlMustBeValid()
+    {
+        $configuration = new Configuration();
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('URL is invalid');
+
+        $configuration->setUrl('foobar');
+    }
+
+    public function testIngestionKeyCanNotBeEmpty()
+    {
+        $configuration = new Configuration();
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Ingestion key cannot be empty');
+
+        $configuration->setIngestionKey('');
     }
 }
