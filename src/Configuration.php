@@ -39,7 +39,7 @@ class Configuration
     /**
      * @var string
      */
-    protected $version = '3.12.2';
+    protected $version = '3.12.3';
 
     /**
      * General-purpose options, E.g. we can set the transport proxy.
