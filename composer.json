@@ -27,6 +27,7 @@
         "phpunit/phpunit": "^9.0",
         "inspector-apm/neuron-ai": "^1.2.22",
         "phpstan/phpstan": "^2.1",
+        "tomasvotruba/type-coverage": "^2.0",
         "rector/rector": "^2.0",
         "friendsofphp/php-cs-fixer": "^3.75"
     },

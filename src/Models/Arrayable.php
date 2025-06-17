@@ -10,7 +10,7 @@ abstract class Arrayable implements \ArrayAccess, \JsonSerializable
      * @var array
      * @access private
      */
-    private $data = [];
+    private array $data = [];
 
     /**
      * Return a sub-array that contains only the given keys.
@@ -32,30 +32,26 @@ abstract class Arrayable implements \ArrayAccess, \JsonSerializable
      *
      * @return array
      */
-    public function &__invoke()
+    public function &__invoke(): array
     {
         return $this->data;
     }
 
     /**
-     * Get a data by key
+     * Get data by key
      *
      * @param string $key The key data to retrieve
      * @return mixed
      */
-    public function &__get($key)
+    public function &__get(string $key): mixed
     {
         return $this->data[$key];
     }
 
     /**
      * Assigns a value to the specified data
-     *
-     * @param string $key The data key to assign the value to
-     * @param mixed $value The value to set
-     * @access public
      */
-    public function __set($key, $value)
+    public function __set(string $key, mixed $value): void
     {
         $this->data[$key] = $value;
     }
@@ -68,31 +64,20 @@ abstract class Arrayable implements \ArrayAccess, \JsonSerializable
      * @return boolean
      * @abstracting ArrayAccess
      */
-    public function __isset($key)
+    public function __isset(string $key): bool
     {
         return isset($this->data[$key]);
     }
 
     /**
      * Unsets a data by key
-     *
-     * @param string $key The key to unset
-     * @access public
      */
-    public function __unset($key)
+    public function __unset(string $key): void
     {
         unset($this->data[$key]);
     }
 
-    /**
-     * Assigns a value to the specified offset.
-     *
-     * @param string $offset The offset to assign the value to
-     * @param mixed $value The value to set
-     * @abstracting ArrayAccess
-     */
-    #[\ReturnTypeWillChange]
-    public function offsetSet($offset, $value)
+    public function offsetSet(mixed $offset, mixed $value): void
     {
         if (\is_null($offset)) {
             $this->data[] = $value;
@@ -101,27 +86,15 @@ abstract class Arrayable implements \ArrayAccess, \JsonSerializable
         }
     }
 
-    /**
-     * Whether an offset exists.
-     *
-     * @param string $offset An offset to check for
-     * @return boolean
-     * @abstracting ArrayAccess
-     */
-    #[\ReturnTypeWillChange]
-    public function offsetExists($offset)
+    public function offsetExists(mixed $offset): bool
     {
         return isset($this->data[$offset]);
     }
 
     /**
      * Unsets an offset.
-     *
-     * @param string $offset The offset to unset
-     * @abstracting ArrayAccess
      */
-    #[\ReturnTypeWillChange]
-    public function offsetUnset($offset)
+    public function offsetUnset(mixed $offset): void
     {
         if ($this->offsetExists($offset)) {
             unset($this->data[$offset]);
@@ -130,22 +103,12 @@ abstract class Arrayable implements \ArrayAccess, \JsonSerializable
 
     /**
      * Returns the value at specified offset.
-     *
-     * @param string $offset The offset to retrieve
-     * @return mixed
-     * @abstracting ArrayAccess
      */
-    #[\ReturnTypeWillChange]
-    public function offsetGet($offset)
+    public function offsetGet(mixed $offset): mixed
     {
         return $this->offsetExists($offset) ? $this->data[$offset] : null;
     }
 
-    /**
-     * Json String representation of the object.
-     *
-     * @return false|string
-     */
     public function __toString()
     {
         return \json_encode($this->jsonSerialize());

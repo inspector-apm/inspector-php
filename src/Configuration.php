@@ -6,54 +6,35 @@ class Configuration
 {
     /**
      * The remote url to send data.
-     *
-     * @var string
      */
-    protected $url = 'https://ingest.inspector.dev';
+    protected string $url = 'https://ingest.inspector.dev';
 
-    /**
-     * The API key.
-     *
-     * @var string|null
-     */
-    protected $ingestionKey;
+    protected string $ingestionKey;
 
-    /**
-     * @var bool
-     */
-    protected $enabled = true;
+    protected bool $enabled = true;
 
     /**
      * Max numbers of items to collect in a single session.
-     *
-     * @var int
      */
-    protected $maxItems = 100;
+    protected int $maxItems = 100;
 
-    /**
-     * @var string
-     */
-    protected $transport = 'async';
+    protected string $transport = 'async';
 
-    /**
-     * @var string
-     */
-    protected $version = '3.12.3';
+    protected string $version = '4.0.0';
 
     /**
      * General-purpose options, E.g. we can set the transport proxy.
      *
      * @var array
      */
-    protected $options = [];
+    protected array $options = [];
 
     /**
      * Configuration constructor.
      *
-     * @param null|string $ingestionKey
      * @throws \InvalidArgumentException
      */
-    public function __construct($ingestionKey = null)
+    public function __construct(string $ingestionKey = null)
     {
         if (!empty($ingestionKey)) {
             $this->setIngestionKey($ingestionKey);
@@ -71,11 +52,9 @@ class Configuration
     /**
      * Set the remote url.
      *
-     * @param string $value
-     * @return $this
      * @throws \InvalidArgumentException
      */
-    public function setUrl($value): Configuration
+    public function setUrl(string $value): Configuration
     {
         $value = \trim($value);
 
@@ -106,7 +85,7 @@ class Configuration
      * @return $this
      * @throws \InvalidArgumentException
      */
-    public function setIngestionKey($value): Configuration
+    public function setIngestionKey(string $value): Configuration
     {
         $value = \trim($value);
 
@@ -153,7 +132,7 @@ class Configuration
      * @param mixed $value
      * @return $this
      */
-    public function addOption($key, $value): Configuration
+    public function addOption(string $key, mixed $value): Configuration
     {
         $this->options[$key] = $value;
         return $this;
@@ -176,14 +155,11 @@ class Configuration
      */
     public function isEnabled(): bool
     {
-        return isset($this->ingestionKey) && \is_string($this->ingestionKey) && $this->enabled;
+        return isset($this->ingestionKey) && $this->enabled;
     }
 
     /**
      * Enable/Disable data transfer.
-     *
-     * @param bool $enabled
-     * @return $this
      */
     public function setEnabled(bool $enabled): Configuration
     {
@@ -201,9 +177,6 @@ class Configuration
 
     /**
      * Set the preferred transport method.
-     *
-     * @param string $transport
-     * @return $this
      */
     public function setTransport(string $transport): Configuration
     {
@@ -221,11 +194,8 @@ class Configuration
 
     /**
      * Set the package version.
-     *
-     * @param string $value
-     * @return $this
      */
-    public function setVersion($value): Configuration
+    public function setVersion(string $value): Configuration
     {
         $this->version = $value;
         return $this;

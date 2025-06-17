@@ -60,11 +60,9 @@ class Inspector
     /**
      * Set custom transport.
      *
-     * @param TransportInterface|callable $transport
-     * @return $this
      * @throws InspectorException
      */
-    public function setTransport($resolver): Inspector
+    public function setTransport(TransportInterface|callable $resolver): Inspector
     {
         if (\is_callable($resolver)) {
             $this->transport = $resolver($this->configuration);
@@ -195,11 +193,6 @@ class Inspector
     /**
      * Monitor the execution of a code block.
      *
-     * @param callable $callback
-     * @param string $type
-     * @param null|string $label
-     * @param bool $throw
-     * @return mixed|void
      * @throws \Throwable
      */
     public function addSegment(callable $callback, string $type, string $label = null, bool $throw = true): mixed
@@ -208,8 +201,8 @@ class Inspector
             return $callback();
         }
 
+        $segment = $this->startSegment($type, $label);
         try {
-            $segment = $this->startSegment($type, $label);
             return $callback($segment);
         } catch (\Throwable $exception) {
             if ($throw === true) {
@@ -220,6 +213,7 @@ class Inspector
         } finally {
             $segment->end();
         }
+        return null;
     }
 
     /**
