@@ -17,31 +17,27 @@ class Inspector
 {
     /**
      * Agent configuration.
-     *
-     * @var Configuration
      */
-    protected $configuration;
+    protected Configuration $configuration;
 
     /**
      * Transport strategy.
      *
      * @var TransportInterface
      */
-    protected $transport;
+    protected TransportInterface $transport;
 
     /**
      * Current transaction.
-     *
-     * @var Transaction|null
      */
-    protected $transaction;
+    protected ?Transaction $transaction = null;
 
     /**
      * Run a list of callbacks before flushing data to the remote platform.
      *
      * @var callable[]
      */
-    protected static $beforeCallbacks = [];
+    protected static array $beforeCallbacks = [];
 
     /**
      * Inspector constructor.
@@ -70,7 +66,7 @@ class Inspector
      * @return $this
      * @throws InspectorException
      */
-    public function setTransport($resolver)
+    public function setTransport($resolver): Inspector
     {
         if (\is_callable($resolver)) {
             $this->transport = $resolver($this->configuration);
@@ -208,7 +204,7 @@ class Inspector
      * @return mixed|void
      * @throws \Throwable
      */
-    public function addSegment(callable $callback, string $type, $label = null, $throw = true)
+    public function addSegment(callable $callback, string $type, string $label = null, bool $throw = true): mixed
     {
         if (!$this->hasTransaction()) {
             return $callback();
@@ -236,7 +232,7 @@ class Inspector
      * @return Error
      * @throws \Exception
      */
-    public function reportException(\Throwable $exception, $handled = true)
+    public function reportException(\Throwable $exception, bool $handled = true): Error
     {
         if (!$this->hasTransaction()) {
             $this->startTransaction(get_class($exception))->setType('error');
@@ -260,7 +256,7 @@ class Inspector
      * @param Arrayable[]|Arrayable $entries
      * @return Inspector
      */
-    public function addEntries($entries)
+    public function addEntries($entries): Inspector
     {
         if ($this->isRecording()) {
             $entries = \is_array($entries) ? $entries : [$entries];
@@ -276,7 +272,7 @@ class Inspector
      *
      * @param callable $callback
      */
-    public static function beforeFlush(callable $callback)
+    public static function beforeFlush(callable $callback): void
     {
         static::$beforeCallbacks[] = $callback;
     }
@@ -286,7 +282,7 @@ class Inspector
      *
      * @throws \Exception
      */
-    public function flush()
+    public function flush(): void
     {
         if (!$this->isRecording() || !$this->hasTransaction()) {
             $this->reset();
@@ -313,7 +309,7 @@ class Inspector
      *
      * @return Inspector
      */
-    public function reset()
+    public function reset(): Inspector
     {
         $this->transport->resetQueue();
         unset($this->transaction);
