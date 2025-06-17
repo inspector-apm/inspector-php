@@ -2,24 +2,19 @@
 
 namespace Inspector\Transports;
 
-use Inspector\Models\Arrayable;
+use Inspector\Models\Model;
 
 interface TransportInterface
 {
     /**
-     * Add an Arrayable entity in the queue.
-     *
-     * @param \Inspector\Models\Arrayable $entry
-     * @return mixed
+     * Add an Array able entity in the queue.
      */
-    public function addEntry(Arrayable $entry);
+    public function addEntry(Model $model): TransportInterface;
 
     /**
      * Clean the internal queue.
-     *
-     * @return self
      */
-    public function resetQueue();
+    public function resetQueue(): TransportInterface;
 
     /**
      * Send data to Inspector.
@@ -28,8 +23,6 @@ interface TransportInterface
      * the response to the client.
      *
      * So this is the right place to perform the data transfer.
-     *
-     * @return mixed
      */
-    public function flush();
+    public function flush(): TransportInterface;
 }

@@ -2,9 +2,9 @@
 
 namespace Inspector\Models\Partials;
 
-use Inspector\Models\Arrayable;
+use Inspector\Models\Model;
 
-class Socket extends Arrayable
+class Socket extends Model
 {
     /**
      * Socket constructor.

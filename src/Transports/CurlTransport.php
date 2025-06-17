@@ -13,7 +13,7 @@ class CurlTransport extends AbstractApiTransport
      * @param Configuration $configuration
      * @throws InspectorException
      */
-    public function __construct($configuration)
+    public function __construct(Configuration $configuration)
     {
         // System need to have CURL available
         if (!function_exists('curl_init')) {
@@ -28,7 +28,7 @@ class CurlTransport extends AbstractApiTransport
      *
      * @param string $data
      */
-    public function sendChunk($data)
+    public function sendChunk(string $data): void
     {
         $headers = [];
 

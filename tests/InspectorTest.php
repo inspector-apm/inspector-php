@@ -4,7 +4,7 @@ namespace Inspector\Tests;
 
 use Inspector\Inspector;
 use Inspector\Configuration;
-use Inspector\Models\Arrayable;
+use Inspector\Models\Model;
 use Inspector\Transports\AsyncTransport;
 use Inspector\Transports\CurlTransport;
 use PHPUnit\Framework\TestCase;
@@ -38,7 +38,7 @@ class InspectorTest extends TestCase
 
         $inspector = new Inspector($configuration);
         $inspector->setTransport($transport = new class () implements \Inspector\Transports\TransportInterface {
-            public function addEntry(Arrayable $entry)
+            public function addEntry(Model $model)
             {
                 // Custom addEntry logic
             }
@@ -110,7 +110,7 @@ class TestingTransport implements \Inspector\Transports\TransportInterface
         // Custom transport initialization logic
     }
 
-    public function addEntry(Arrayable $entry)
+    public function addEntry(Model $model)
     {
         // Stub implementation
     }

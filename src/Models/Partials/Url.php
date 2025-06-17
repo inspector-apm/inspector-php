@@ -2,9 +2,9 @@
 
 namespace Inspector\Models\Partials;
 
-use Inspector\Models\Arrayable;
+use Inspector\Models\Model;
 
-class Url extends Arrayable
+class Url extends Model
 {
     /**
      * Url constructor.

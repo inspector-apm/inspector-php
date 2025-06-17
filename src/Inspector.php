@@ -3,7 +3,7 @@
 namespace Inspector;
 
 use Inspector\Exceptions\InspectorException;
-use Inspector\Models\Arrayable;
+use Inspector\Models\Model;
 use Inspector\Transports\AsyncTransport;
 use Inspector\Transports\TransportInterface;
 use Inspector\Models\Error;
@@ -245,7 +245,7 @@ class Inspector
     /**
      * Add an entry to the queue.
      *
-     * @param Arrayable[]|Arrayable $entries
+     * @param Model[]|Model $entries
      * @return Inspector
      */
     public function addEntries($entries): Inspector

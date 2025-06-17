@@ -2,9 +2,9 @@
 
 namespace Inspector\Models\Partials;
 
-use Inspector\Models\Arrayable;
+use Inspector\Models\Model;
 
-class Request extends Arrayable
+class Request extends Model
 {
     /**
      * Request constructor.

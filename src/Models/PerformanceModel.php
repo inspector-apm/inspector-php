@@ -2,7 +2,7 @@
 
 namespace Inspector\Models;
 
-abstract class PerformanceModel extends Arrayable
+abstract class PerformanceModel extends Model
 {
     use HasContext;
 

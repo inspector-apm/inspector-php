@@ -4,14 +4,31 @@ namespace Inspector\Models;
 
 use Inspector\Models\Partials\Host;
 
-class Error extends Arrayable
+class Error extends Model
 {
     use HasContext;
 
-    /**
-     * name of the model.
-     */
-    public const MODEL_NAME = 'error';
+    public string $model = 'error';
+
+    public string|float $timestamp;
+
+    public Host $host;
+
+    public string $message;
+
+    public string $class;
+
+    public string $file;
+
+    public int $line;
+
+    public int $code;
+
+    public array $stack;
+
+    public bool $handled = false;
+
+    public array $transaction;
 
     /**
      * Error constructor.
@@ -21,7 +38,6 @@ class Error extends Arrayable
      */
     public function __construct(\Throwable $throwable, Transaction $transaction)
     {
-        $this->model = self::MODEL_NAME;
         $this->timestamp = microtime(true);
 
         $this->host = new Host();
@@ -42,11 +58,8 @@ class Error extends Arrayable
 
     /**
      * Determine if the exception is handled/unhandled.
-     *
-     * @param bool $value
-     * @return $this
      */
-    public function setHandled(bool $value)
+    public function setHandled(bool $value): Error
     {
         $this->handled = $value;
         return $this;
@@ -54,11 +67,8 @@ class Error extends Arrayable
 
     /**
      * Serialize stack trace to array
-     *
-     * @param \Throwable $throwable
-     * @return array
      */
-    public function stackTraceToArray(\Throwable $throwable)
+    public function stackTraceToArray(\Throwable $throwable): array
     {
         $stack = [];
         $counter = 0;
@@ -67,9 +77,9 @@ class Error extends Arrayable
         // http://php.net/manual/en/exception.gettrace.php#107563
 
         $inApp = function ($file) {
-            return \strpos($file, 'vendor') === false &&
-                \strpos($file, 'index.php') === false &&
-                \strpos($file, 'web/core') === false; // Drupal
+            return !str_contains($file, 'vendor') &&
+                !str_contains($file, 'index.php') &&
+                !str_contains($file, 'web/core'); // Drupal
         };
 
         $stack[] = [
@@ -81,8 +91,8 @@ class Error extends Arrayable
 
         foreach ($throwable->getTrace() as $trace) {
             $stack[] = [
-                'class' => isset($trace['class']) ? $trace['class'] : null,
-                'function' => isset($trace['function']) ? $trace['function'] : null,
+                'class' => $trace['class'] ?? null,
+                'function' => $trace['function'],
                 'args' => $this->stackTraceArgsToArray($trace),
                 'type' => $trace['type'] ?? 'function',
                 'file' => $trace['file'] ?? '[internal]',
@@ -104,11 +114,8 @@ class Error extends Arrayable
 
     /**
      * Serialize stack trace function arguments
-     *
-     * @param array $trace
-     * @return array
      */
-    protected function stackTraceArgsToArray(array $trace)
+    protected function stackTraceArgsToArray(array $trace): array
     {
         $params = [];
 
@@ -129,8 +136,6 @@ class Error extends Arrayable
                 $params[] = 'float(' . $arg . ')';
             } elseif (\is_bool($arg)) {
                 $params[] = 'bool(' . ($arg ? 'true' : 'false') . ')';
-            } elseif ($arg instanceof \__PHP_Incomplete_Class) {
-                $params[] = 'object(__PHP_Incomplete_Class)';
             } else {
                 $params[] = \gettype($arg);
             }
@@ -141,13 +146,8 @@ class Error extends Arrayable
 
     /**
      * Extract a code source from file.
-     *
-     * @param $filePath
-     * @param $line
-     * @param int $linesAround
-     * @return mixed
      */
-    public function getCode($filePath, $line, $linesAround = 5)
+    public function getCode(string $filePath, int $line, int $linesAround = 5): ?array
     {
         try {
             $file = new \SplFileObject($filePath);

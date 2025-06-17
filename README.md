@@ -70,7 +70,7 @@ class CustomTransport implements \Inspector\Transports\TransportInterface
         $this->configuration = $configuration;
     }
 
-    public function addEntry(\Inspector\Models\Arrayable $entry)
+    public function addEntry(\Inspector\Models\Model $entry)
     {
         // Add an \Inspector\Models\Arrayable entry in the queue.
         $this->queue[] = $entry;

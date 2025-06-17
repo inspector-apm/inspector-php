@@ -2,8 +2,10 @@
 
 namespace Inspector\Models;
 
-abstract class Arrayable implements \ArrayAccess, \JsonSerializable
+abstract class Model implements \ArrayAccess, \JsonSerializable
 {
+    public string $model;
+
     /**
      * Data.
      *

@@ -2,10 +2,10 @@
 
 namespace Inspector\Models\Partials;
 
-use Inspector\Models\Arrayable;
+use Inspector\Models\Model;
 use Inspector\OS;
 
-class Host extends Arrayable
+class Host extends Model
 {
     /**
      * Host constructor.

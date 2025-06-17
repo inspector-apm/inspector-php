@@ -4,7 +4,7 @@ namespace Inspector\Transports;
 
 use Inspector\Configuration;
 use Inspector\Exceptions\InspectorException;
-use Inspector\Models\Arrayable;
+use Inspector\Models\Model;
 use Inspector\Models\Error;
 
 abstract class AbstractApiTransport implements TransportInterface
@@ -38,10 +38,9 @@ abstract class AbstractApiTransport implements TransportInterface
     /**
      * Verify if given options match constraints.
      *
-     * @param $options
      * @throws InspectorException
      */
-    protected function verifyOptions($options)
+    protected function verifyOptions(array $options): void
     {
         foreach ($this->getAllowedOptions() as $name => $regex) {
             if (isset($options[$name])) {
@@ -55,8 +54,6 @@ abstract class AbstractApiTransport implements TransportInterface
 
     /**
      * Get the current queue.
-     *
-     * @return array
      */
     public function getQueue(): array
     {
@@ -65,10 +62,8 @@ abstract class AbstractApiTransport implements TransportInterface
 
     /**
      * Empty the queue.
-     *
-     * @return $this
      */
-    public function resetQueue()
+    public function resetQueue(): TransportInterface
     {
         $this->queue = [];
         return $this;
@@ -76,33 +71,29 @@ abstract class AbstractApiTransport implements TransportInterface
 
     /**
      * Add a message to the queue.
-     *
-     * @param array|Arrayable $item
-     * @return TransportInterface
      */
-    public function addEntry($item): TransportInterface
+    public function addEntry(Model $model): TransportInterface
     {
         // Force insert when dealing with errors.
-        if ($item['model'] === Error::MODEL_NAME || \count($this->queue) <= $this->config->getMaxItems()) {
-            $this->queue[] = $item;
+        if ($model->model === 'error' || \count($this->queue) <= $this->config->getMaxItems()) {
+            $this->queue[] = $model;
         }
         return $this;
     }
 
     /**
      * Deliver everything on the queue to LOG Engine.
-     *
-     * @return void
      */
-    public function flush()
+    public function flush(): TransportInterface
     {
         if (empty($this->queue)) {
-            return;
+            return $this;
         }
 
         $this->send($this->queue);
 
         $this->resetQueue();
+        return $this;
     }
 
     /**
@@ -111,7 +102,7 @@ abstract class AbstractApiTransport implements TransportInterface
      * @param array $items
      * @return void
      */
-    public function send($items)
+    public function send(array $items): void
     {
         $json = \json_encode($items);
         $jsonLength = \strlen($json);
@@ -136,11 +127,8 @@ abstract class AbstractApiTransport implements TransportInterface
 
     /**
      * Put data into a file and provide CURL with the file path.
-     *
-     * @param string $data
-     * @return void
      */
-    protected function sendViaFile($data)
+    protected function sendViaFile(string $data): void
     {
         $tmpfile = tempnam(sys_get_temp_dir(), 'inspector');
 
@@ -151,20 +139,15 @@ abstract class AbstractApiTransport implements TransportInterface
 
     /**
      * Send a portion of the load to the remote service.
-     *
-     * @param string $data
-     * @return void
      */
-    abstract protected function sendChunk($data);
+    abstract protected function sendChunk(string $data): void;
 
     /**
      * List of available transport's options with validation regex.
      *
      * ['param-name' => 'regex']
-     *
-     * @return mixed
      */
-    protected function getAllowedOptions()
+    protected function getAllowedOptions(): array
     {
         return [
             'proxy' => '/.+/', // Custom url for
@@ -172,10 +155,7 @@ abstract class AbstractApiTransport implements TransportInterface
         ];
     }
 
-    /**
-     * @return array
-     */
-    protected function getApiHeaders()
+    protected function getApiHeaders(): array
     {
         return [
             'Content-Type' => 'application/json',

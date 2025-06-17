@@ -2,9 +2,9 @@
 
 namespace Inspector\Models\Partials;
 
-use Inspector\Models\Arrayable;
+use Inspector\Models\Model;
 
-class Http extends Arrayable
+class Http extends Model
 {
     /**
      * Http constructor.
