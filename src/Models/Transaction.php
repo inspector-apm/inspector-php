@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Inspector\Models;
-
 
 use Exception;
 use Inspector\Exceptions\InspectorException;
@@ -12,7 +10,7 @@ use Inspector\Models\Partials\User;
 
 class Transaction extends PerformanceModel
 {
-    const MODEL_NAME = 'transaction';
+    public const MODEL_NAME = 'transaction';
 
     /**
      * Transaction constructor.
@@ -93,7 +91,7 @@ class Transaction extends PerformanceModel
 
     public function getMemoryPeak(): float
     {
-        return \round((\memory_get_peak_usage()/1024/1024), 2); // MB
+        return \round((\memory_get_peak_usage() / 1024 / 1024), 2); // MB
     }
 
     /**

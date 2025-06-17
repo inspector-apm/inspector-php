@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Inspector\Tests;
-
 
 use Inspector\Configuration;
 use Inspector\Transports\CurlTransport;
@@ -18,7 +16,7 @@ class TransportTest extends TestCase
 
         $this->assertCount(1, $transport->getQueue());
 
-        for ($i=0; $i<150; $i++) {
+        for ($i = 0; $i < 150; $i++) {
             $transport->addEntry(['model' => 'example']);
         }
 
@@ -32,7 +30,7 @@ class TransportTest extends TestCase
             (new Configuration('foo'))->setMaxItems(150)
         );
 
-        for ($i=0; $i<150; $i++) {
+        for ($i = 0; $i < 150; $i++) {
             $transport->addEntry(['model' => 'example']);
         }
 

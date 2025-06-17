@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Inspector\Transports;
-
 
 use Inspector\Configuration;
 use Inspector\Exceptions\InspectorException;
@@ -58,7 +56,7 @@ class AsyncTransport extends AbstractApiTransport
 
             // Delete temporary file after data transfer
             if (\substr($data, 0, 1) === '@') {
-                $cmd.= '; rm ' . \str_replace('@', '', $data);
+                $cmd .= '; rm ' . \str_replace('@', '', $data);
             }
 
             $cmd .= ')&';

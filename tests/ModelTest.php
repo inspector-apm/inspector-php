@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Inspector\Tests;
-
 
 use Inspector\Inspector;
 use Inspector\Configuration;

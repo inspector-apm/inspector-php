@@ -2,7 +2,6 @@
 
 namespace Inspector\Tests;
 
-
 use Inspector\Configuration;
 use PHPUnit\Framework\TestCase;
 

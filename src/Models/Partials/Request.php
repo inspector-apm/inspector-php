@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Inspector\Models\Partials;
-
 
 use Inspector\Models\Arrayable;
 
@@ -13,7 +11,7 @@ class Request extends Arrayable
      */
     public function __construct()
     {
-        $this->method = $_SERVER['REQUEST_METHOD']??null;
+        $this->method = $_SERVER['REQUEST_METHOD'] ?? null;
 
         $this->version = isset($_SERVER['SERVER_PROTOCOL'])
             ? \substr($_SERVER['SERVER_PROTOCOL'], \strpos($_SERVER['SERVER_PROTOCOL'], '/'))

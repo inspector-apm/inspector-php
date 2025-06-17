@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Inspector\Models;
-
 
 abstract class PerformanceModel extends Arrayable
 {
@@ -28,7 +26,7 @@ abstract class PerformanceModel extends Arrayable
      */
     public function end($duration = null)
     {
-        $this->duration = $duration ?? \round((\microtime(true) - $this->timestamp)*1000, 2); // milliseconds
+        $this->duration = $duration ?? \round((\microtime(true) - $this->timestamp) * 1000, 2); // milliseconds
         return $this;
     }
 }

@@ -36,9 +36,14 @@
         }
     },
     "scripts": {
-        "test:unit": "phpunit --colors=always",
+        "analyse": [
+            "vendor/bin/phpstan analyse --memory-limit=1G -v"
+        ],
+        "format": [
+            "php-cs-fixer fix"
+        ],
         "test": [
-            "@test:unit"
+            "vendor/bin/phpunit --colors=always"
         ]
     }
 }

@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Inspector\Tests;
-
 
 use Inspector\Models\Partials\Host;
 use Inspector\Models\Partials\Http;

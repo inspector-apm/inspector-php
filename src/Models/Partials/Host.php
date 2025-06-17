@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Inspector\Models\Partials;
-
 
 use Inspector\Models\Arrayable;
 use Inspector\OS;

@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Inspector;
-
 
 use Inspector\Exceptions\InspectorException;
 use Inspector\Models\Arrayable;

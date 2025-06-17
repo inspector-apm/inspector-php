@@ -2,12 +2,11 @@
 
 namespace Inspector\Models;
 
-
 use Inspector\Models\Partials\Host;
 
 class Segment extends PerformanceModel
 {
-    const MODEL_NAME = 'segment';
+    public const MODEL_NAME = 'segment';
 
     /**
      * Span constructor.
@@ -35,7 +34,7 @@ class Segment extends PerformanceModel
     {
         $initial = \is_null($time) ? \microtime(true) : $time;
 
-        $this->start = \round(($initial - $this->transaction['timestamp'])*1000, 2);
+        $this->start = \round(($initial - $this->transaction['timestamp']) * 1000, 2);
         return parent::start($time);
     }
 

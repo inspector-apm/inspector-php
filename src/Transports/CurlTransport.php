@@ -2,7 +2,6 @@
 
 namespace Inspector\Transports;
 
-
 use Inspector\Configuration;
 use Inspector\Exceptions\InspectorException;
 

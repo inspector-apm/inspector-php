@@ -2,7 +2,6 @@
 
 namespace Inspector\Models;
 
-
 use Inspector\Models\Partials\Host;
 
 class Error extends Arrayable
@@ -12,7 +11,7 @@ class Error extends Arrayable
     /**
      * name of the model.
      */
-    const MODEL_NAME = 'error';
+    public const MODEL_NAME = 'error';
 
     /**
      * Error constructor.
@@ -120,17 +119,17 @@ class Error extends Arrayable
         foreach ($trace['args'] as $arg) {
             if (\is_array($arg)) {
                 $params[] = 'array(' . \count($arg) . ')';
-            } else if (\is_object($arg)) {
+            } elseif (\is_object($arg)) {
                 $params[] = \get_class($arg);
-            } else if (\is_string($arg)) {
+            } elseif (\is_string($arg)) {
                 $params[] = 'string(' . $arg . ')';
-            } else if (\is_int($arg)) {
+            } elseif (\is_int($arg)) {
                 $params[] = 'int(' . $arg . ')';
-            } else if (\is_float($arg)) {
+            } elseif (\is_float($arg)) {
                 $params[] = 'float(' . $arg . ')';
-            } else if (\is_bool($arg)) {
+            } elseif (\is_bool($arg)) {
                 $params[] = 'bool(' . ($arg ? 'true' : 'false') . ')';
-            } else if ($arg instanceof \__PHP_Incomplete_Class) {
+            } elseif ($arg instanceof \__PHP_Incomplete_Class) {
                 $params[] = 'object(__PHP_Incomplete_Class)';
             } else {
                 $params[] = \gettype($arg);
@@ -164,7 +163,7 @@ class Error extends Arrayable
 
             while ($file->key() <= $to && !$file->eof()) {
                 $codeLines[] = [
-                    'line' => $file->key()+1,
+                    'line' => $file->key() + 1,
                     'code' => \rtrim($file->current()),
                 ];
                 $file->next();

@@ -2,7 +2,6 @@
 
 namespace Inspector;
 
-
 class Configuration
 {
     /**
@@ -56,7 +55,7 @@ class Configuration
      */
     public function __construct($ingestionKey = null)
     {
-        if(!empty($ingestionKey)) {
+        if (!empty($ingestionKey)) {
             $this->setIngestionKey($ingestionKey);
         }
     }

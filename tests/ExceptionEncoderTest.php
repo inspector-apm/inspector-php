@@ -2,7 +2,6 @@
 
 namespace Inspector\Tests;
 
-
 use Inspector\Inspector;
 use Inspector\Configuration;
 use Inspector\Models\Error;
@@ -46,7 +45,7 @@ class ExceptionEncoderTest extends TestCase
 
     public function testStackTraceResult()
     {
-        $exception = new \DomainException;
+        $exception = new \DomainException();
         $error = new Error($exception, $this->inspector->currentTransaction());
         $originalStackTrace = $exception->getTrace();
 
@@ -54,8 +53,8 @@ class ExceptionEncoderTest extends TestCase
 
         // Contains vendor folder
         $vendor = false;
-        foreach ($error['stack'] as $stack){
-            if(array_key_exists('file', $stack) && strpos($stack['file'], 'vendor') !== false){
+        foreach ($error['stack'] as $stack) {
+            if (array_key_exists('file', $stack) && strpos($stack['file'], 'vendor') !== false) {
                 $vendor = true;
                 break;
             }
@@ -67,7 +66,7 @@ class ExceptionEncoderTest extends TestCase
 
     public function testEmptyExceptionMessageCase()
     {
-        $exception = new \DomainException;
+        $exception = new \DomainException();
         $error = new Error($exception, $this->inspector->transaction());
 
         $this->assertSame('DomainException', $error['message']);

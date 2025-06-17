@@ -2,7 +2,6 @@
 
 namespace Inspector\Tests;
 
-
 use Inspector\Inspector;
 use Inspector\Configuration;
 use Inspector\Models\Arrayable;
@@ -38,7 +37,7 @@ class InspectorTest extends TestCase
         $configuration = new Configuration('example-api-key');
 
         $inspector = new Inspector($configuration);
-        $inspector->setTransport($transport = new class implements \Inspector\Transports\TransportInterface {
+        $inspector->setTransport($transport = new class () implements \Inspector\Transports\TransportInterface {
             public function addEntry(Arrayable $entry)
             {
                 // Custom addEntry logic

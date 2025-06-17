@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Inspector\Models;
-
 
 trait HasContext
 {

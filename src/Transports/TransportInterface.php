@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Inspector\Transports;
-
 
 use Inspector\Models\Arrayable;
 
