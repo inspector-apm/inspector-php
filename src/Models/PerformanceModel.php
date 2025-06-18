@@ -4,8 +4,6 @@ namespace Inspector\Models;
 
 abstract class PerformanceModel extends Model
 {
-    use HasContext;
-
     public int|float $timestamp;
     public int|float|null $duration = null;
 

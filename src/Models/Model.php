@@ -7,6 +7,8 @@ use ReflectionProperty;
 
 abstract class Model implements \JsonSerializable
 {
+    use HasContext;
+
     public string $model;
 
     /**

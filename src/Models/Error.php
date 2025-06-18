@@ -6,8 +6,6 @@ use Inspector\Models\Partials\Host;
 
 class Error extends Model
 {
-    use HasContext;
-
     public string $model = 'error';
 
     public string|float $timestamp;
