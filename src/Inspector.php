@@ -38,6 +38,22 @@ class Inspector
     protected static array $beforeCallbacks = [];
 
     /**
+     * Create an Inspector instance with a single ingestion key.
+     */
+    public static function create(string $ingestionKey, ?callable $configure = null): static
+    {
+        $configuration = new Configuration($ingestionKey);
+
+        if ($configure) {
+            $configure($configuration);
+        }
+
+        $inspector = new static($configuration);
+
+        return $inspector;
+    }
+
+    /**
      * Inspector constructor.
      *
      * @param Configuration $configuration
@@ -52,6 +68,16 @@ class Inspector
 
         $this->configuration = $configuration;
         \register_shutdown_function(array($this, 'flush'));
+    }
+
+    /**
+     * Change the configuration instance.
+     */
+    public function configure(callable $callback)
+    {
+        $callback($this->configuration, $this);
+
+        return $this;
     }
 
     /**
