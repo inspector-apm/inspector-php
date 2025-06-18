@@ -9,7 +9,6 @@ use Inspector\Transports\AsyncTransport;
 use Inspector\Transports\CurlTransport;
 use Inspector\Transports\TransportInterface;
 use PHPUnit\Framework\TestCase;
-use Reflection;
 use ReflectionProperty;
 
 class InspectorTest extends TestCase

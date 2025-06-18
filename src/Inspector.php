@@ -48,9 +48,7 @@ class Inspector
             $configure($configuration);
         }
 
-        $inspector = new static($configuration);
-
-        return $inspector;
+        return new static($configuration);
     }
 
     /**
@@ -59,7 +57,7 @@ class Inspector
      * @param Configuration $configuration
      * @throws Exceptions\InspectorException
      */
-    public function __construct(Configuration $configuration)
+    final public function __construct(Configuration $configuration)
     {
         $this->transport = match ($configuration->getTransport()) {
             'async' => new AsyncTransport($configuration),
@@ -73,7 +71,7 @@ class Inspector
     /**
      * Change the configuration instance.
      */
-    public function configure(callable $callback)
+    public function configure(callable $callback): Inspector
     {
         $callback($this->configuration, $this);
 
@@ -99,11 +97,9 @@ class Inspector
     /**
      * Create and start new Transaction.
      *
-     * @param string $name
-     * @return Transaction
      * @throws \Exception
      */
-    public function startTransaction($name): Transaction
+    public function startTransaction(string $name): Transaction
     {
         $this->transaction = new Transaction($name);
         $this->transaction->start();
