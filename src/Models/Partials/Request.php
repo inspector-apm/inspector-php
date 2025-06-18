@@ -6,6 +6,12 @@ use Inspector\Models\Model;
 
 class Request extends Model
 {
+    public ?string $method = null;
+    public ?string $version = null;
+    public ?Socket $socket = null;
+    public ?array $cookies = null;
+    public ?array $headers = null;
+
     /**
      * Request constructor.
      */

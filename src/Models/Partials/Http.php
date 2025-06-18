@@ -9,9 +9,9 @@ class Http extends Model
     /**
      * Http constructor.
      */
-    public function __construct()
-    {
-        $this->request = new Request();
-        $this->url = new Url();
+    public function __construct(
+        public Request $request = new Request(),
+        public Url $url = new Url(),
+    ) {
     }
 }

@@ -45,13 +45,10 @@ class Inspector
      */
     public function __construct(Configuration $configuration)
     {
-        switch ($configuration->getTransport()) {
-            case 'async':
-                $this->transport = new AsyncTransport($configuration);
-                break;
-            default:
-                $this->transport = new CurlTransport($configuration);
-        }
+        $this->transport = match ($configuration->getTransport()) {
+            'async' => new AsyncTransport($configuration),
+            default => new CurlTransport($configuration),
+        };
 
         $this->configuration = $configuration;
         \register_shutdown_function(array($this, 'flush'));
@@ -66,10 +63,8 @@ class Inspector
     {
         if (\is_callable($resolver)) {
             $this->transport = $resolver($this->configuration);
-        } elseif ($resolver instanceof TransportInterface) {
-            $this->transport = $resolver;
         } else {
-            throw new InspectorException('Invalid transport resolver.');
+            $this->transport = $resolver;
         }
 
         return $this;
@@ -154,10 +149,8 @@ class Inspector
 
     /**
      * Enable recording.
-     *
-     * @return Inspector
      */
-    public function startRecording()
+    public function startRecording(): Inspector
     {
         $this->configuration->setEnabled(true);
         return $this;
@@ -165,10 +158,8 @@ class Inspector
 
     /**
      * Stop recording.
-     *
-     * @return Inspector
      */
-    public function stopRecording()
+    public function stopRecording(): Inspector
     {
         $this->configuration->setEnabled(false);
         return $this;
@@ -176,12 +167,8 @@ class Inspector
 
     /**
      * Add a new segment to the queue.
-     *
-     * @param string $type
-     * @param null|string $label
-     * @return Segment
      */
-    public function startSegment($type, $label = null)
+    public function startSegment(string $type, string $label = null): Segment
     {
         $segment = new Segment($this->transaction, addslashes($type), $label);
         $segment->start();
@@ -219,9 +206,6 @@ class Inspector
     /**
      * Error reporting.
      *
-     * @param \Throwable $exception
-     * @param bool $handled
-     * @return Error
      * @throws \Exception
      */
     public function reportException(\Throwable $exception, bool $handled = true): Error
@@ -237,18 +221,16 @@ class Inspector
 
         $this->addEntries($error);
 
-        $segment->addContext('Error', $error)->end();
+        $segment->addContext('Error', $error);
+        $segment->end();
 
         return $error;
     }
 
     /**
      * Add an entry to the queue.
-     *
-     * @param Model[]|Model $entries
-     * @return Inspector
      */
-    public function addEntries($entries): Inspector
+    public function addEntries(array|Model $entries): Inspector
     {
         if ($this->isRecording()) {
             $entries = \is_array($entries) ? $entries : [$entries];
@@ -261,8 +243,6 @@ class Inspector
 
     /**
      * Define a callback to run before flushing data to the remote platform.
-     *
-     * @param callable $callback
      */
     public static function beforeFlush(callable $callback): void
     {
@@ -298,8 +278,6 @@ class Inspector
 
     /**
      * Cancel the current transaction, segments, and errors.
-     *
-     * @return Inspector
      */
     public function reset(): Inspector
     {

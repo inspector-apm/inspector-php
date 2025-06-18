@@ -6,6 +6,9 @@ use Inspector\Models\Model;
 
 class Socket extends Model
 {
+    public string $remote_address;
+    public bool $encrypted;
+
     /**
      * Socket constructor.
      */

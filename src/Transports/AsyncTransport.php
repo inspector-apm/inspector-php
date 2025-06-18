@@ -14,7 +14,7 @@ class AsyncTransport extends AbstractApiTransport
      * @param Configuration $configuration
      * @throws InspectorException
      */
-    public function __construct($configuration)
+    public function __construct(Configuration $configuration)
     {
         if (!\function_exists('proc_open')) {
             throw new InspectorException("PHP function 'proc_open' is not available.");
@@ -24,15 +24,13 @@ class AsyncTransport extends AbstractApiTransport
     }
 
     /**
-     * List of available transport's options with validation regex.
+     * List of available transport options with validation regex.
      *
      * ['param-name' => 'regex']
      *
      * Override to introduce "curlPath".
-     *
-     * @return array
      */
-    protected function getAllowedOptions()
+    protected function getAllowedOptions(): array
     {
         return \array_merge(parent::getAllowedOptions(), [
             'curlPath' => '/.+/',
@@ -41,11 +39,8 @@ class AsyncTransport extends AbstractApiTransport
 
     /**
      * Send a portion of the load to the remote service.
-     *
-     * @param string $data
-     * @return void|mixed
      */
-    public function sendChunk($data)
+    public function sendChunk(string $data): void
     {
         $curl = $this->buildCurlCommand($data);
 
@@ -55,7 +50,7 @@ class AsyncTransport extends AbstractApiTransport
             $cmd = "({$curl} > /dev/null 2>&1";
 
             // Delete temporary file after data transfer
-            if (\substr($data, 0, 1) === '@') {
+            if (\str_starts_with($data, '@')) {
                 $cmd .= '; rm ' . \str_replace('@', '', $data);
             }
 
@@ -67,11 +62,8 @@ class AsyncTransport extends AbstractApiTransport
 
     /**
      * Carl command is agnostic between Win and Unix.
-     *
-     * @param $data
-     * @return string
      */
-    protected function buildCurlCommand($data): string
+    protected function buildCurlCommand(string $data): string
     {
         $curl = $this->config->getOptions()['curlPath'] ?? 'curl';
 

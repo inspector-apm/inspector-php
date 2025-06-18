@@ -6,17 +6,10 @@ use Inspector\Models\Model;
 
 class User extends Model
 {
-    /**
-     * User constructor.
-     *
-     * @param null|string $id
-     * @param null|string $name
-     * @param null|string $email
-     */
-    public function __construct($id = null, $name = null, $email = null)
-    {
-        $this->id = $id;
-        $this->name = $name;
-        $this->email = $email;
+    public function __construct(
+        public string|int|null $id = null,
+        public ?string $name = null,
+        public ?string $email = null,
+    ) {
     }
 }

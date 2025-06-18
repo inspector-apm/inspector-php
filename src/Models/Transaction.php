@@ -10,7 +10,15 @@ use Inspector\Models\Partials\User;
 
 class Transaction extends PerformanceModel
 {
-    public const MODEL_NAME = 'transaction';
+    public string $model = 'transaction';
+    public string $type = 'transaction';
+    public string $name;
+    public string $hash;
+    public ?string $result = null;
+    public ?Http $http = null;
+    public ?User $user = null;
+    public ?Host $host = null;
+    public ?float $memory_peak = null;
 
     /**
      * Transaction constructor.
@@ -20,9 +28,7 @@ class Transaction extends PerformanceModel
      */
     public function __construct(string $name)
     {
-        $this->model = self::MODEL_NAME;
         $this->name = $name;
-        $this->type = 'transaction';
         $this->hash = $this->generateUniqueHash();
         $this->host = new Host();
     }
@@ -32,7 +38,7 @@ class Transaction extends PerformanceModel
      *
      * @return $this
      */
-    public function markAsRequest()
+    public function markAsRequest(): Transaction
     {
         $this->setType('request');
         $this->http = new Http();
@@ -45,7 +51,7 @@ class Transaction extends PerformanceModel
      * @param string $type
      * @return $this
      */
-    public function setType(string $type)
+    public function setType(string $type): Transaction
     {
         $this->type = $type;
         return $this;
@@ -59,7 +65,7 @@ class Transaction extends PerformanceModel
      * @param null|string $email
      * @return $this
      */
-    public function withUser($id, $name = null, $email = null)
+    public function withUser($id, string $name = null, string $email = null): Transaction
     {
         $this->user = new User($id, $name, $email);
         return $this;
@@ -77,14 +83,15 @@ class Transaction extends PerformanceModel
         return $this;
     }
 
-    public function end($duration = null)
+    public function end(int|float $duration = null): Transaction
     {
         // Sample memory peak at the end of execution.
         $this->memory_peak = $this->getMemoryPeak();
-        return parent::end($duration);
+        parent::end($duration);
+        return $this;
     }
 
-    public function isEnded()
+    public function isEnded(): bool
     {
         return isset($this->duration) && $this->duration > 0;
     }
@@ -99,13 +106,11 @@ class Transaction extends PerformanceModel
      *
      * http://www.php.net/manual/en/function.uniqid.php
      *
-     * @param int $length
-     * @return string
      * @throws \Exception
      */
-    public function generateUniqueHash($length = 32)
+    public function generateUniqueHash(int $length = 32): string
     {
-        if (!isset($length) || \intval($length) <= 8) {
+        if ($length <= 8) {
             $length = 32;
         }
 

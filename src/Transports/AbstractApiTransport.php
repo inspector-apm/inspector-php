@@ -5,7 +5,6 @@ namespace Inspector\Transports;
 use Inspector\Configuration;
 use Inspector\Exceptions\InspectorException;
 use Inspector\Models\Model;
-use Inspector\Models\Error;
 
 abstract class AbstractApiTransport implements TransportInterface
 {
@@ -98,9 +97,6 @@ abstract class AbstractApiTransport implements TransportInterface
 
     /**
      * Send data chunks based on MAX_POST_LENGTH.
-     *
-     * @param array $items
-     * @return void
      */
     public function send(array $items): void
     {
@@ -111,7 +107,8 @@ abstract class AbstractApiTransport implements TransportInterface
         if ($jsonLength > $this->config->getMaxPostSize()) {
             if ($count === 1) {
                 // It makes no sense to divide into chunks, just try to send data via file
-                return $this->sendViaFile(\base64_encode($json));
+                $this->sendViaFile(\base64_encode($json));
+                return;
             }
 
             $chunkSize = \floor($count / \ceil($jsonLength / $this->config->getMaxPostSize()));

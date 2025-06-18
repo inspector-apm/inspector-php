@@ -8,10 +8,7 @@ use PHPUnit\Framework\TestCase;
 
 class ModelTest extends TestCase
 {
-    /**
-     * @var Inspector
-     */
-    public $inspector;
+    public Inspector $inspector;
 
     /**
      * Sets up the fixture, for example, open a network connection.
@@ -30,7 +27,6 @@ class ModelTest extends TestCase
 
     public function testTransactionData()
     {
-        $this->assertSame($this->inspector->transaction()::MODEL_NAME, $this->inspector->transaction()->model);
         $this->assertSame('testcase', $this->inspector->transaction()->name);
         $this->assertSame('request', $this->inspector->transaction()->setType('request')->type);
     }
@@ -39,18 +35,15 @@ class ModelTest extends TestCase
     {
         $segment = $this->inspector->startSegment(__FUNCTION__, 'hello segment!');
 
-        $this->assertIsArray($segment->toArray());
-        $this->assertSame($segment::MODEL_NAME, $segment->model);
         $this->assertSame(__FUNCTION__, $segment->type);
         $this->assertSame('hello segment!', $segment->label);
         $this->assertSame($this->inspector->transaction()->only(['name', 'hash', 'timestamp']), $segment->transaction);
-        $this->assertArrayHasKey('host', $segment);
     }
 
     public function testErrorData()
     {
         $error = $this->inspector->reportException(new \Exception('test error'));
-        $error_arr = $error->toArray();
+        $error_arr = $error->jsonSerialize();
 
         $this->assertArrayHasKey('message', $error_arr);
         $this->assertArrayHasKey('stack', $error_arr);
@@ -61,7 +54,6 @@ class ModelTest extends TestCase
         $this->assertArrayHasKey('timestamp', $error_arr);
         $this->assertArrayHasKey('host', $error_arr);
 
-        $this->assertSame($error::MODEL_NAME, $error->model);
         $this->assertSame($this->inspector->transaction()->only(['name', 'hash']), $error->transaction);
     }
 

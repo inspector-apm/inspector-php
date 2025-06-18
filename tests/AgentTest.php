@@ -12,7 +12,7 @@ class AgentTest extends TestCase
     /**
      * @var Inspector
      */
-    public $inspector;
+    public Inspector $inspector;
 
     /**
      * Sets up the fixture, for example, open a network connection.
@@ -27,14 +27,6 @@ class AgentTest extends TestCase
 
         $this->inspector = new Inspector($configuration);
         $this->inspector->startTransaction('transaction-test');
-    }
-
-    /**
-     * @throws \Inspector\Exceptions\InspectorException
-     */
-    public function testInspectorInstance()
-    {
-        $this->assertInstanceOf(Inspector::class, $this->inspector);
     }
 
     public function testAddEntry()
@@ -56,7 +48,7 @@ class AgentTest extends TestCase
 
         $this->inspector->addSegment(function () {
             throw new \Exception('Error in segment');
-        }, 'callback', 'test exception throw', true);
+        }, 'callback', 'test exception throw');
     }
 
     public function testCallbackReturn()

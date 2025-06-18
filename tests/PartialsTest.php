@@ -19,8 +19,8 @@ class PartialsTest extends TestCase
         $this->assertEquals(gethostbyname(gethostname()), $host->ip);
 
         if (PHP_OS_FAMILY !== 'Linux') {
-            $this->assertEquals(0, $host->cpu_usage);
-            $this->assertEquals(0, $host->memory_usage);
+            $this->assertEquals(0, $host->cpu);
+            $this->assertEquals(0, $host->ram);
         }
 
         $this->assertSame(PHP_OS_FAMILY, $host->os);
@@ -104,7 +104,7 @@ class PartialsTest extends TestCase
     {
         $_SERVER['SERVER_PORT'] = 8000;
         $url = new Url();
-        $this->assertSame(8000, $url->port);
+        $this->assertSame('8000', $url->port);
 
         unset($_SERVER['SERVER_PORT']);
         $url = new Url();

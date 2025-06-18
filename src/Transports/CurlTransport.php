@@ -38,7 +38,7 @@ class CurlTransport extends AbstractApiTransport
 
         $handle = \curl_init($this->config->getUrl());
 
-        \curl_setopt($handle, CURLOPT_POST, 1);
+        \curl_setopt($handle, CURLOPT_POST, true);
 
         // Tell cURL that it should only spend 10 seconds trying to connect to the URL in question.
         \curl_setopt($handle, CURLOPT_CONNECTTIMEOUT, 5);
@@ -48,7 +48,7 @@ class CurlTransport extends AbstractApiTransport
         \curl_setopt($handle, CURLOPT_HTTPHEADER, $headers);
         \curl_setopt($handle, CURLOPT_POSTFIELDS, $data);
         \curl_setopt($handle, CURLOPT_RETURNTRANSFER, true);
-        \curl_setopt($handle, CURLOPT_SSL_VERIFYHOST, false);
+        \curl_setopt($handle, CURLOPT_SSL_VERIFYHOST, 0);
         \curl_setopt($handle, CURLOPT_SSL_VERIFYPEER, true);
 
         if (\array_key_exists('proxy', $this->config->getOptions())) {

@@ -7,6 +7,7 @@ use Inspector\Configuration;
 use Inspector\Models\Model;
 use Inspector\Transports\AsyncTransport;
 use Inspector\Transports\CurlTransport;
+use Inspector\Transports\TransportInterface;
 use PHPUnit\Framework\TestCase;
 
 class InspectorTest extends TestCase
@@ -37,25 +38,27 @@ class InspectorTest extends TestCase
         $configuration = new Configuration('example-api-key');
 
         $inspector = new Inspector($configuration);
-        $inspector->setTransport($transport = new class () implements \Inspector\Transports\TransportInterface {
-            public function addEntry(Model $model)
+        $inspector->setTransport($transport = new class () implements TransportInterface {
+            public function addEntry(Model $model): TransportInterface
             {
                 // Custom addEntry logic
+                return $this;
             }
 
-            public function resetQueue()
+            public function resetQueue(): TransportInterface
             {
                 // Custom logic
+                return $this;
             }
 
-            public function flush()
+            public function flush(): TransportInterface
             {
                 // Custom flush logic
+                return $this;
             }
         });
 
         $property = new \ReflectionProperty(Inspector::class, 'transport');
-        $property->setAccessible(true);
         $this->assertSame($transport, $property->getValue($inspector));
     }
 
@@ -70,21 +73,9 @@ class InspectorTest extends TestCase
         });
 
         $property = new \ReflectionProperty(Inspector::class, 'transport');
-        $property->setAccessible(true);
 
         $this->assertInstanceOf(TestingTransport::class, $property->getValue($inspector));
         $this->assertSame($configuration, $property->getValue($inspector)->config);
-    }
-
-    public function testSetTransportFailed()
-    {
-        $this->expectException(\Inspector\Exceptions\InspectorException::class);
-        $this->expectExceptionMessage('Invalid transport resolver.');
-
-        $configuration = new Configuration('example-api-key');
-        $inspector = new Inspector($configuration);
-
-        $inspector->setTransport('invalid-resolver');
     }
 
     public function testItCallsTransportResetQueue()
@@ -97,31 +88,35 @@ class InspectorTest extends TestCase
 
         $inspector->reset();
 
+        // @phpstan-ignore-next-line
         $this->assertTrue($_SERVER['TestingTransport::resetQueue']);
 
         unset($_SERVER['TestingTransport::resetQueue']);
     }
 }
 
-class TestingTransport implements \Inspector\Transports\TransportInterface
+class TestingTransport implements TransportInterface
 {
     public function __construct(public Configuration $config)
     {
         // Custom transport initialization logic
     }
 
-    public function addEntry(Model $model)
+    public function addEntry(Model $model): TransportInterface
     {
         // Stub implementation
+        return $this;
     }
 
-    public function flush()
+    public function flush(): TransportInterface
     {
         // Stub implementation
+        return $this;
     }
 
-    public function resetQueue()
+    public function resetQueue(): TransportInterface
     {
         $_SERVER['TestingTransport::resetQueue'] = true;
+        return $this;
     }
 }

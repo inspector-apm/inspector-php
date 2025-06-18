@@ -6,36 +6,34 @@ use Inspector\Models\Partials\Host;
 
 class Segment extends PerformanceModel
 {
-    public const MODEL_NAME = 'segment';
+    public string $model = 'segment';
+    public int|float $start;
+    public ?string $color = null;
+    public ?array $transaction = null;
+    public ?Host $host = null;
 
     /**
      * Span constructor.
-     *
-     * @param Transaction $transaction
-     * @param string $type
-     * @param null $label
      */
-    public function __construct(Transaction $transaction, $type = 'process', $label = null)
-    {
-        $this->model = self::MODEL_NAME;
-        $this->type = $type;
-        $this->label = $label;
+    public function __construct(
+        Transaction $transaction,
+        public string $type = 'process',
+        public ?string $label = null
+    ) {
         $this->host = new Host();
         $this->transaction = $transaction->only(['name', 'hash', 'timestamp']);
     }
 
     /**
      * Start the timer.
-     *
-     * @param null|float $time
-     * @return $this
      */
-    public function start($time = null)
+    public function start(int|float $timestamp = null): Segment
     {
-        $initial = \is_null($time) ? \microtime(true) : $time;
+        $initial = \is_null($timestamp) ? \microtime(true) : $timestamp;
 
         $this->start = \round(($initial - $this->transaction['timestamp']) * 1000, 2);
-        return parent::start($time);
+        parent::start($timestamp);
+        return $this;
     }
 
     public function setColor(string $color): Segment

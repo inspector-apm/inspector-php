@@ -7,6 +7,13 @@ use Inspector\OS;
 
 class Host extends Model
 {
+    public string $hostname;
+    public string $ip;
+    public string $os;
+    public ?string $cpu = null;
+    public ?string $ram = null;
+    public ?string $hdd = null;
+
     /**
      * Host constructor.
      */
@@ -20,11 +27,9 @@ class Host extends Model
     /**
      * Collect server status information.
      *
-     * @deprecated It's not used anymore but it's interesting to take this script in mind for future use cases.
-     *
-     * @return $this
+     * @deprecated It's not used anymore, but it's interesting to take this script in mind for future use cases.
      */
-    public function withServerStatus()
+    public function withServerStatus(): Host
     {
         if (OS::isLinux() && \function_exists('shell_exec')) {
             try {

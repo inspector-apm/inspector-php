@@ -12,7 +12,7 @@ class ExceptionEncoderTest extends TestCase
     /**
      * @var Inspector
      */
-    public $inspector;
+    public Inspector $inspector;
 
     /**
      * Sets up the fixture, for example, open a network connection.
@@ -36,11 +36,11 @@ class ExceptionEncoderTest extends TestCase
 
         $error = new Error($exception, $this->inspector->transaction());
 
-        $this->assertSame($message, $error['message']);
-        $this->assertSame('DomainException', $error['class']);
-        $this->assertSame($code, $error['code']);
-        $this->assertSame(__FILE__, $error['file']);
-        $this->assertNotEmpty($error['line']);
+        $this->assertSame($message, $error->message);
+        $this->assertSame('DomainException', $error->class);
+        $this->assertSame($code, $error->code);
+        $this->assertSame(__FILE__, $error->file);
+        $this->assertNotEmpty($error->line);
     }
 
     public function testStackTraceResult()
@@ -49,19 +49,17 @@ class ExceptionEncoderTest extends TestCase
         $error = new Error($exception, $this->inspector->currentTransaction());
         $originalStackTrace = $exception->getTrace();
 
-        $this->assertTrue(is_array($error['stack']));
-
         // Contains vendor folder
         $vendor = false;
-        foreach ($error['stack'] as $stack) {
-            if (array_key_exists('file', $stack) && strpos($stack['file'], 'vendor') !== false) {
+        foreach ($error->stack as $stack) {
+            if (array_key_exists('file', $stack) && str_contains($stack['file'], 'vendor')) {
                 $vendor = true;
                 break;
             }
         }
         $this->assertTrue($vendor);
 
-        $this->assertSame($originalStackTrace[0]['class'], $error['stack'][1]['class']);
+        $this->assertSame($originalStackTrace[0]['class'], $error->stack[1]['class']);
     }
 
     public function testEmptyExceptionMessageCase()
@@ -69,6 +67,6 @@ class ExceptionEncoderTest extends TestCase
         $exception = new \DomainException();
         $error = new Error($exception, $this->inspector->transaction());
 
-        $this->assertSame('DomainException', $error['message']);
+        $this->assertSame('DomainException', $error->message);
     }
 }
