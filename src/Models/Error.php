@@ -6,7 +6,7 @@ use Inspector\Models\Partials\Host;
 
 class Error extends Model
 {
-    public string $model = 'error';
+    public ?string $model = 'error';
 
     public string|float $timestamp;
 

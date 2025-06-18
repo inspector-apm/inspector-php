@@ -10,7 +10,7 @@ use Inspector\Models\Partials\User;
 
 class Transaction extends PerformanceModel
 {
-    public string $model = 'transaction';
+    public ?string $model = 'transaction';
     public string $type = 'transaction';
     public string $name;
     public string $hash;

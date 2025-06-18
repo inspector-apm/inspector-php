@@ -9,7 +9,7 @@ abstract class Model implements \JsonSerializable
 {
     use HasContext;
 
-    public string $model;
+    public ?string $model = null;
 
     /**
      * Return a subarray that contains only the given keys.
