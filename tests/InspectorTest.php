@@ -9,6 +9,8 @@ use Inspector\Models\Arrayable;
 use Inspector\Transports\AsyncTransport;
 use Inspector\Transports\CurlTransport;
 use PHPUnit\Framework\TestCase;
+use Reflection;
+use ReflectionProperty;
 
 class InspectorTest extends TestCase
 {
@@ -101,6 +103,53 @@ class InspectorTest extends TestCase
         $this->assertTrue($_SERVER['TestingTransport::resetQueue']);
 
         unset($_SERVER['TestingTransport::resetQueue']);
+    }
+
+    public function testCreateMethodWithoutConfigureCallback()
+    {
+        $inspector = Inspector::create('example-api-key');
+
+        $reflector = new ReflectionProperty($inspector, 'configuration');
+        $reflector->setAccessible(true);
+
+        $configuration = $reflector->getValue($inspector);
+
+        $this->assertInstanceOf(Configuration::class, $configuration);
+
+        $this->assertSame('example-api-key', $configuration->getIngestionKey());
+    }
+
+    public function testCreateMethodWithConfigureCallback()
+    {
+        $inspector = Inspector::create('example-api-key', function (Configuration $config) {
+            $config
+                ->setUrl('https://ingest.example.com')
+                ->setMaxItems(111);
+        });
+
+        $reflector = new ReflectionProperty($inspector, 'configuration');
+        $reflector->setAccessible(true);
+
+        $configuration = $reflector->getValue($inspector);
+
+        $this->assertSame('https://ingest.example.com', $configuration->getUrl());
+        $this->assertSame(111, $configuration->getMaxItems());
+    }
+
+    public function testConfigureMethod()
+    {
+        $inspector = Inspector::create('example-api-key');
+
+        $inspector->configure(function (Configuration $config) {
+            $config->setIngestionKey('change-api-key');
+        });
+
+        $reflector = new ReflectionProperty($inspector, 'configuration');
+        $reflector->setAccessible(true);
+
+        $configuration = $reflector->getValue($inspector);
+
+        $this->assertSame('change-api-key', $configuration->getIngestionKey());
     }
 }
 
