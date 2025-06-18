@@ -20,7 +20,7 @@ class Configuration
 
     protected string $transport = 'async';
 
-    protected string $version = '3.15.0';
+    protected string $version = '3.15.4';
 
     /**
      * General-purpose options, E.g., we can set the transport proxy.
