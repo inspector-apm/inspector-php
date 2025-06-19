@@ -19,4 +19,4 @@ jobs:
         run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
 
       - name: Run PHP-CS-Fixer
-        run: vendor/bin/php-cs-fixer check
+        run: vendor/bin/php-cs-fixer check --show-progress=none
