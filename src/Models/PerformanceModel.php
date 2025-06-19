@@ -10,7 +10,7 @@ abstract class PerformanceModel extends Model
     /**
      * Start the timer.
      */
-    public function start(int|float $timestamp = null): PerformanceModel
+    public function start(int|float|null $timestamp = null): PerformanceModel
     {
         $this->timestamp = \is_null($timestamp) ? \microtime(true) : $timestamp;
         return $this;
@@ -19,7 +19,7 @@ abstract class PerformanceModel extends Model
     /**
      * Stop the timer and calculate the duration.
      */
-    public function end(int|float$duration = null): PerformanceModel
+    public function end(int|float|null $duration = null): PerformanceModel
     {
         $this->duration = $duration ?? \round((\microtime(true) - $this->timestamp) * 1000, 2); // milliseconds
         return $this;

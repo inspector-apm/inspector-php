@@ -1,0 +1,22 @@
+name: Linter
+
+on: ['push', 'pull_request']
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          # Because running we check if code style is in right formatted,
+          # any PHP versions support php-cs-fixer (^3.75) is fine.
+          php-version: '8.1'
+
+      - name: Install Dependencies
+        run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+
+      - name: Run PHP-CS-Fixer
+        run: vendor/bin/php-cs-fixer check --show-progress=none

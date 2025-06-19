@@ -65,7 +65,7 @@ class Transaction extends PerformanceModel
      * @param null|string $email
      * @return $this
      */
-    public function withUser($id, string $name = null, string $email = null): Transaction
+    public function withUser($id, ?string $name = null, ?string $email = null): Transaction
     {
         $this->user = new User($id, $name, $email);
         return $this;
@@ -83,7 +83,7 @@ class Transaction extends PerformanceModel
         return $this;
     }
 
-    public function end(int|float $duration = null): Transaction
+    public function end(int|float|null $duration = null): Transaction
     {
         // Sample memory peak at the end of execution.
         $this->memory_peak = $this->getMemoryPeak();
