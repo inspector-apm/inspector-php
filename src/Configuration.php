@@ -20,7 +20,7 @@ class Configuration
 
     protected string $transport = 'async';
 
-    protected string $version = '3.15.6';
+    protected string $version = '3.15.7';
 
     /**
      * General-purpose options, E.g., we can set the transport proxy.
@@ -32,7 +32,7 @@ class Configuration
      *
      * @throws \InvalidArgumentException
      */
-    public function __construct(string $ingestionKey = null)
+    public function __construct(?string $ingestionKey = null)
     {
         if (!empty($ingestionKey)) {
             $this->setIngestionKey($ingestionKey);
