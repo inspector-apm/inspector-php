@@ -32,7 +32,7 @@ class Configuration
      *
      * @throws \InvalidArgumentException
      */
-    public function __construct(string $ingestionKey = null)
+    public function __construct(?string $ingestionKey = null)
     {
         if (!empty($ingestionKey)) {
             $this->setIngestionKey($ingestionKey);
