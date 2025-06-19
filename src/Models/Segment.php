@@ -27,7 +27,7 @@ class Segment extends PerformanceModel
     /**
      * Start the timer.
      */
-    public function start(int|float $timestamp = null): Segment
+    public function start(int|float|null $timestamp = null): Segment
     {
         $initial = \is_null($timestamp) ? \microtime(true) : $timestamp;
 
