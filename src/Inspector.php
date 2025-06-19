@@ -190,7 +190,7 @@ class Inspector
     /**
      * Add a new segment to the queue.
      */
-    public function startSegment(string $type, string $label = null): Segment
+    public function startSegment(string $type, ?string $label = null): Segment
     {
         $segment = new Segment($this->transaction, addslashes($type), $label);
         $segment->start();
@@ -204,7 +204,7 @@ class Inspector
      *
      * @throws \Throwable
      */
-    public function addSegment(callable $callback, string $type, string $label = null, bool $throw = true): mixed
+    public function addSegment(callable $callback, string $type, ?string $label = null, bool $throw = true): mixed
     {
         if (!$this->hasTransaction()) {
             return $callback();
