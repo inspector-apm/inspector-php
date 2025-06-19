@@ -190,7 +190,7 @@ class Inspector
     /**
      * Add a new segment to the queue.
      */
-    public function startSegment(string $type, string $label = null): Segment
+    public function startSegment(string $type, ?string $label = null): Segment
     {
         $segment = new Segment($this->transaction, addslashes($type), $label);
         $segment->start();
