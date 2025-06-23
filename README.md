@@ -32,7 +32,7 @@ $configuration = new Configuration('YOUR_INGESTION_KEY');
 $inspector = new Inspector($configuration);
 ```
 
-All start with a `transaction`. Transaction represents an execution cycle and it can contains one or hundred of segments:
+All start with a `transaction`. Transaction represents an execution cycle, and it can contain one or hundred of segments:
 
 ```php
 // Start an execution cycle with a transaction
@@ -53,7 +53,7 @@ echo $result; // this will print "Hello World!"
 Inspector will monitor your code execution in real time alerting you if something goes wrong.
 
 ## Custom Transport
-You can also set up custom transport class to transfer monitoring data from your server to Inspector
+You can also set up a custom transport class to transfer monitoring data from your server to Inspector
 in a personalized way.
 
 The transport class needs to implement `\Inspector\Transports\TransportInterface`:
@@ -72,7 +72,7 @@ class CustomTransport implements \Inspector\Transports\TransportInterface
 
     public function addEntry(\Inspector\Models\Model $entry)
     {
-        // Add an \Inspector\Models\Arrayable entry in the queue.
+        // Add an \Inspector\Models\Model entry in the queue.
         $this->queue[] = $entry;
     }
 
@@ -94,10 +94,10 @@ class CustomTransport implements \Inspector\Transports\TransportInterface
 ```
 
 Then you can set the new transport in the `Inspector` instance
-using a callback the will receive the current configuration state as parameter.
+using a callback that will receive the current configuration state as parameter.
 
 ```php
-$inspector->setTransport(function ($configuration) {
+$inspector->setTransport(function (\Inspector\Configuration $configuration) {
     return new CustomTransport($configuration);
 });
 ```
