@@ -10,7 +10,7 @@ Code Execution Monitoring, built for PHP developers.
 
 ## Requirements
 
-- PHP >= 7.2.0
+- PHP >= ^8.1
 
 ## Install
 Install the latest version by:
@@ -32,7 +32,7 @@ $configuration = new Configuration('YOUR_INGESTION_KEY');
 $inspector = new Inspector($configuration);
 ```
 
-All start with a `transaction`. Transaction represent an execution cycle and it can contains one or hundred of segments:
+All start with a `transaction`. Transaction represents an execution cycle and it can contains one or hundred of segments:
 
 ```php
 // Start an execution cycle with a transaction
