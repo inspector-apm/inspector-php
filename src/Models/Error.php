@@ -47,7 +47,7 @@ class Error extends Model
         $this->class = get_class($throwable);
         $this->file = $throwable->getFile();
         $this->line = $throwable->getLine();
-        $this->code = $throwable->getCode();
+        $this->code = intval($throwable->getCode());
 
         $this->stack = $this->stackTraceToArray($throwable);
 
