@@ -20,7 +20,7 @@ class Configuration
 
     protected string $transport = 'async';
 
-    protected ?string $version = '3.15.9';
+    protected ?string $version = '3.15.10';
 
     /**
      * General-purpose options, E.g., we can set the transport proxy.
@@ -77,7 +77,7 @@ class Configuration
     }
 
     /**
-     * Verify if api key is well formed.
+     * Verify if api key is well-formed.
      *
      * @param string $value
      * @return $this
