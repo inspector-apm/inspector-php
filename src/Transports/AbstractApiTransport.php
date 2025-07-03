@@ -140,7 +140,7 @@ abstract class AbstractApiTransport implements TransportInterface
     abstract protected function sendChunk(string $data): void;
 
     /**
-     * List of available transport's options with validation regex.
+     * List of available transport options with validation regex.
      *
      * ['param-name' => 'regex']
      */

@@ -20,7 +20,7 @@ class Configuration
 
     protected string $transport = 'async';
 
-    protected string $version = '3.15.9';
+    protected ?string $version = '3.15.9';
 
     /**
      * General-purpose options, E.g., we can set the transport proxy.
@@ -185,7 +185,7 @@ class Configuration
     /**
      * Get the package version.
      */
-    public function getVersion(): string
+    public function getVersion(): ?string
     {
         return $this->version;
     }
@@ -193,7 +193,7 @@ class Configuration
     /**
      * Set the package version.
      */
-    public function setVersion(string $value): Configuration
+    public function setVersion(?string $value): Configuration
     {
         $this->version = $value;
         return $this;
