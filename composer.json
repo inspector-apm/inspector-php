@@ -1,7 +1,7 @@
 {
     "name": "inspector-apm/inspector-php",
-    "description": "Inspector for PHP applications.",
-    "keywords": ["monitoring", "php", "inspector"],
+    "description": "Inspector monitoring for PHP applications.",
+    "keywords": ["monitoring", "php", "inspector", "observability", "telemetry"],
     "license": "MIT",
     "authors": [
         {
@@ -21,8 +21,7 @@
         "sort-packages": true,
         "preferred-install": "dist"
     },
-    "minimum-stability": "dev",
-    "prefer-stable": true,
+    "minimum-stability": "stable",
     "require-dev": {
         "ext-curl": "*",
         "friendsofphp/php-cs-fixer": "^3.75",
