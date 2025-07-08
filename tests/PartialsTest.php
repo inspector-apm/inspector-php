@@ -15,15 +15,15 @@ class PartialsTest extends TestCase
     public function testHost()
     {
         $host = new Host();
-        $this->assertEquals(gethostname(), $host->hostname);
-        $this->assertEquals(gethostbyname(gethostname()), $host->ip);
+        $this->assertEquals(\gethostname(), $host->hostname);
+        $this->assertEquals(\gethostbyname(\gethostname()), $host->ip);
 
-        if (PHP_OS_FAMILY !== 'Linux') {
+        if (\PHP_OS_FAMILY !== 'Linux') {
             $this->assertEquals(0, $host->cpu);
             $this->assertEquals(0, $host->ram);
         }
 
-        $this->assertSame(PHP_OS_FAMILY, $host->os);
+        $this->assertSame(\PHP_OS_FAMILY, $host->os);
     }
 
     public function testHttp()

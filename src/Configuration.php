@@ -60,7 +60,7 @@ class Configuration
             throw new \InvalidArgumentException('URL can not be empty');
         }
 
-        if (filter_var($value, FILTER_VALIDATE_URL) === false) {
+        if (\filter_var($value, \FILTER_VALIDATE_URL) === false) {
             throw new \InvalidArgumentException('URL is invalid');
         }
 

@@ -127,9 +127,9 @@ abstract class AbstractApiTransport implements TransportInterface
      */
     protected function sendViaFile(string $data): void
     {
-        $tmpfile = tempnam(sys_get_temp_dir(), 'inspector');
+        $tmpfile = \tempnam(\sys_get_temp_dir(), 'inspector');
 
-        file_put_contents($tmpfile, $data, LOCK_EX);
+        \file_put_contents($tmpfile, $data, \LOCK_EX);
 
         $this->sendChunk('@'.$tmpfile);
     }

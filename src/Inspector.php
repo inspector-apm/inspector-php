@@ -31,6 +31,14 @@ class Inspector
     protected ?Transaction $transaction = null;
 
     /**
+     * Stack of currently open segments for managing parent-child relationships.
+     * The last element is the most recent open segment.
+     *
+     * @var Segment[]
+     */
+    protected array $openSegments = [];
+
+    /**
      * Run a list of callbacks before flushing data to the remote platform.
      *
      * @var callable[]
@@ -103,6 +111,9 @@ class Inspector
     {
         $this->transaction = new Transaction($name);
         $this->transaction->start();
+
+        // Clear any open segments from the previous transaction
+        $this->openSegments = [];
 
         $this->addEntries($this->transaction);
         return $this->transaction;
@@ -188,11 +199,19 @@ class Inspector
     }
 
     /**
+     * Get the currently open parent segment, if any.
+     */
+    protected function getCurrentParentSegment(): ?Segment
+    {
+        return $this->openSegments === [] ? null : \end($this->openSegments);
+    }
+
+    /**
      * Add a new segment to the queue.
      */
     public function startSegment(string $type, ?string $label = null): Segment
     {
-        $segment = new Segment($this->transaction, addslashes($type), $label);
+        $segment = new Segment($this->transaction, \addslashes($type), $label);
         $segment->start();
 
         $this->addEntries($segment);
@@ -233,7 +252,7 @@ class Inspector
     public function reportException(\Throwable $exception, bool $handled = true): Error
     {
         if (!$this->hasTransaction()) {
-            $this->startTransaction(get_class($exception))->setType('error');
+            $this->startTransaction(\get_class($exception))->setType('error');
         }
 
         $segment = $this->startSegment('exception', $exception->getMessage());

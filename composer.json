@@ -42,7 +42,7 @@
             "vendor/bin/phpstan analyse --memory-limit=1G -v"
         ],
         "format": [
-            "php-cs-fixer fix"
+            "php-cs-fixer fix --allow-risky=yes"
         ],
         "test": [
             "vendor/bin/phpunit --colors=always"

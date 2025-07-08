@@ -52,7 +52,7 @@ class ExceptionEncoderTest extends TestCase
         // Contains vendor folder
         $vendor = false;
         foreach ($error->stack as $stack) {
-            if (array_key_exists('file', $stack) && str_contains($stack['file'], 'vendor')) {
+            if (\array_key_exists('file', $stack) && \str_contains($stack['file'], 'vendor')) {
                 $vendor = true;
                 break;
             }

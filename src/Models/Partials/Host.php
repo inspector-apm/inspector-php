@@ -21,7 +21,7 @@ class Host extends Model
     {
         $this->hostname = \gethostname();
         $this->ip = \gethostbyname(\gethostname());
-        $this->os = PHP_OS_FAMILY;
+        $this->os = \PHP_OS_FAMILY;
     }
 
     /**

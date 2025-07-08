@@ -36,18 +36,18 @@ class Error extends Model
      */
     public function __construct(\Throwable $throwable, Transaction $transaction)
     {
-        $this->timestamp = microtime(true);
+        $this->timestamp = \microtime(true);
 
         $this->host = new Host();
 
         $this->message = $throwable->getMessage()
             ? $throwable->getMessage()
-            : get_class($throwable);
+            : \get_class($throwable);
 
-        $this->class = get_class($throwable);
+        $this->class = \get_class($throwable);
         $this->file = $throwable->getFile();
         $this->line = $throwable->getLine();
-        $this->code = intval($throwable->getCode());
+        $this->code = \intval($throwable->getCode());
 
         $this->stack = $this->stackTraceToArray($throwable);
 
@@ -75,9 +75,9 @@ class Error extends Model
         // http://php.net/manual/en/exception.gettrace.php#107563
 
         $inApp = function ($file) {
-            return !str_contains($file, 'vendor') &&
-                !str_contains($file, 'index.php') &&
-                !str_contains($file, 'web/core'); // Drupal
+            return !\str_contains($file, 'vendor') &&
+                !\str_contains($file, 'index.php') &&
+                !\str_contains($file, 'web/core'); // Drupal
         };
 
         $stack[] = [
@@ -150,7 +150,7 @@ class Error extends Model
         try {
             $file = new \SplFileObject($filePath);
             $file->setMaxLineLen(250);
-            $file->seek(PHP_INT_MAX);
+            $file->seek(\PHP_INT_MAX);
 
             $codeLines = [];
 
