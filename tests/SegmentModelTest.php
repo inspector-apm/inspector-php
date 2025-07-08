@@ -196,7 +196,7 @@ class SegmentModelTest extends TestCase
     public function testSegmentStartWithCustomTimestamp(): void
     {
         $transactionTimestamp = \microtime(true);
-        $customStartTimestamp = $transactionTimestamp+5;
+        $customStartTimestamp = $transactionTimestamp + 5;
 
         $transactionData = [
             'name' => 'test-transaction',
