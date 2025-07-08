@@ -71,9 +71,7 @@ class Segment extends PerformanceModel
         parent::end($duration);
 
         // Notify Inspector that this segment has ended
-        if ($this->inspector) {
-            $this->inspector->segmentEnded($this);
-        }
+        $this->inspector?->endSegment($this);
 
         return $this;
     }

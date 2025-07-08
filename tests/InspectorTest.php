@@ -100,7 +100,6 @@ class InspectorTest extends TestCase
         $inspector = Inspector::create('example-api-key');
 
         $reflector = new ReflectionProperty($inspector, 'configuration');
-        $reflector->setAccessible(true);
 
         $configuration = $reflector->getValue($inspector);
 
@@ -118,7 +117,6 @@ class InspectorTest extends TestCase
         });
 
         $reflector = new ReflectionProperty($inspector, 'configuration');
-        $reflector->setAccessible(true);
 
         $configuration = $reflector->getValue($inspector);
 
@@ -135,7 +133,6 @@ class InspectorTest extends TestCase
         });
 
         $reflector = new ReflectionProperty($inspector, 'configuration');
-        $reflector->setAccessible(true);
 
         $configuration = $reflector->getValue($inspector);
 

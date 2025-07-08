@@ -65,7 +65,7 @@ class Inspector
      * @param Configuration $configuration
      * @throws Exceptions\InspectorException
      */
-    final public function __construct(Configuration $configuration)
+    public function __construct(Configuration $configuration)
     {
         $this->transport = match ($configuration->getTransport()) {
             'async' => new AsyncTransport($configuration),
@@ -212,7 +212,20 @@ class Inspector
     public function startSegment(string $type, ?string $label = null): Segment
     {
         $segment = new Segment($this->transaction, \addslashes($type), $label);
+
+        // Set Inspector reference for lifecycle management
+        $segment->setInspector($this);
+
+        // Set a parent relationship if there's an open segment
+        $parentSegment = $this->getCurrentParentSegment();
+        if ($parentSegment) {
+            $segment->setParent($parentSegment->getHash());
+        }
+
         $segment->start();
+
+        // Add to open segments stack
+        $this->openSegments[] = $segment;
 
         $this->addEntries($segment);
         return $segment;
@@ -242,6 +255,23 @@ class Inspector
             $segment->end();
         }
         return null;
+    }
+
+    /**
+     * Called by Segment when it ends to remove from open segments stack.
+     * This maintains the parent-child relationship hierarchy.
+     */
+    public function endSegment(Segment $segment): void
+    {
+        // Remove the segment from the open segments stack
+        foreach ($this->openSegments as $index => $openSegment) {
+            if ($openSegment === $segment) {
+                unset($this->openSegments[$index]);
+                // Re-index array to maintain proper stack behavior
+                $this->openSegments = \array_values($this->openSegments);
+                break;
+            }
+        }
     }
 
     /**
@@ -315,6 +345,9 @@ class Inspector
 
         $this->transport->flush();
         unset($this->transaction);
+
+        // Clear open segments when flushing
+        $this->openSegments = [];
     }
 
     /**
@@ -324,6 +357,22 @@ class Inspector
     {
         $this->transport->resetQueue();
         unset($this->transaction);
+        $this->openSegments = [];
         return $this;
+    }
+
+    /**
+     * Get information about currently open segments (useful for debugging).
+     * Returns an array of segment types and labels.
+     */
+    public function getOpenSegments(): array
+    {
+        return \array_map(function (Segment $segment) {
+            return [
+                'type' => $segment->type,
+                'label' => $segment->label,
+                'hash' => $segment->getHash()
+            ];
+        }, $this->openSegments);
     }
 }
