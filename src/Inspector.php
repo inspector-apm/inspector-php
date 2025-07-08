@@ -65,7 +65,7 @@ class Inspector
      * @param Configuration $configuration
      * @throws Exceptions\InspectorException
      */
-    public function __construct(Configuration $configuration)
+    final public function __construct(Configuration $configuration)
     {
         $this->transport = match ($configuration->getTransport()) {
             'async' => new AsyncTransport($configuration),

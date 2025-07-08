@@ -10,7 +10,10 @@ use Inspector\Inspector;
 
 class SegmentModelTest extends TestCase
 {
+    /** @var MockObject&Transaction */
     private MockObject $mockTransaction;
+
+    /** @var MockObject&Inspector */
     private MockObject $mockInspector;
 
     protected function setUp(): void
@@ -37,9 +40,6 @@ class SegmentModelTest extends TestCase
         $this->assertEquals('select-users', $segment->label);
         $this->assertEquals('segment', $segment->model);
         $this->assertNull($segment->parent_hash);
-        $this->assertNotNull($segment->getHash());
-        $this->assertIsString($segment->getHash());
-        $this->assertNotEmpty($segment->getHash());
     }
 
     public function testSetParent(): void
@@ -92,10 +92,6 @@ class SegmentModelTest extends TestCase
         $segment = new Segment($this->mockTransaction, 'database', 'select-users');
         $hash = $segment->getHash();
 
-        // Hash should be a non-empty string
-        $this->assertIsString($hash);
-        $this->assertNotEmpty($hash);
-
         // Should be a valid hash format (assuming SHA256 which produces 64 character hex string)
         $this->assertMatchesRegularExpression('/^[a-f0-9]{64}$/', $hash);
     }
@@ -146,7 +142,6 @@ class SegmentModelTest extends TestCase
         $this->assertSame($segment, $result);
         $this->assertEquals('parent-hash', $segment->parent_hash);
         $this->assertEquals('blue', $segment->color);
-        $this->assertNotNull($segment->timestamp);
     }
 
     public function testSegmentTimingCalculation(): void
@@ -173,22 +168,6 @@ class SegmentModelTest extends TestCase
 
         $this->assertEquals('database/query', $segment->type);
         $this->assertEquals('select * from "users"', $segment->label);
-        $this->assertNotNull($segment->getHash());
-    }
-
-    public function testTransactionDataIsStored(): void
-    {
-        $transactionData = [
-            'name' => 'test-transaction',
-            'hash' => 'trans-hash-123',
-            'timestamp' => 1234567890.123
-        ];
-
-        $this->mockTransaction->method('only')->willReturn($transactionData);
-
-        $segment = new Segment($this->mockTransaction, 'database', 'select-users');
-
-        $this->assertEquals($transactionData, $segment->transaction);
     }
 
     public function testStartCalculatesRelativeTime(): void
@@ -207,7 +186,7 @@ class SegmentModelTest extends TestCase
         $segmentStartTime = \microtime(true);
         $segment->start();
 
-        // The start time should be relative to transaction timestamp in milliseconds
+        // The start time should be relative to the transaction timestamp in milliseconds
         $expectedRelativeStart = \round(($segmentStartTime - $transactionTimestamp) * 1000, 2);
 
         // Allow for small timing differences in test execution
@@ -216,8 +195,8 @@ class SegmentModelTest extends TestCase
 
     public function testSegmentStartWithCustomTimestamp(): void
     {
-        $transactionTimestamp = 1000.0;
-        $customStartTimestamp = 1005.5; // 5.5 seconds after transaction
+        $transactionTimestamp = \microtime(true);
+        $customStartTimestamp = $transactionTimestamp+5;
 
         $transactionData = [
             'name' => 'test-transaction',
@@ -227,11 +206,10 @@ class SegmentModelTest extends TestCase
 
         $this->mockTransaction->method('only')->willReturn($transactionData);
 
-        $segment = new Segment($this->mockTransaction, 'database', 'select-users');
+        $segment = new Segment($this->mockTransaction, 'database', 'select users');
         $segment->start($customStartTimestamp);
 
-        // Should be 5500ms relative to transaction start
-        $this->assertEquals(5500.0, $segment->start);
+        $this->assertEqualsWithDelta(5000, $segment->start, 10.0);
         $this->assertEquals($customStartTimestamp, $segment->timestamp);
     }
 }

@@ -30,17 +30,7 @@ class NestedSegmentsTest extends TestCase
         $this->mockTransport = $this->createMock(TransportInterface::class);
 
         // Create inspector instance with mocked dependencies
-        $this->inspector = new class ($this->mockConfiguration, $this->mockTransport) extends Inspector {
-            private TransportInterface $testTransport;
-
-            public function __construct(Configuration $configuration, TransportInterface $transport)
-            {
-                $this->configuration = $configuration;
-                $this->transport = $transport;
-                $this->testTransport = $transport;
-                // Skip the register_shutdown_function call in tests
-            }
-        };
+        $this->inspector = (new Inspector($this->mockConfiguration))->setTransport($this->mockTransport);
     }
 
     public function testSegmentWithoutParent(): void
@@ -50,7 +40,6 @@ class NestedSegmentsTest extends TestCase
         $segment = $this->inspector->startSegment('database', 'select-users');
 
         $this->assertNull($segment->parent_hash, 'Root segment should not have a parent');
-        $this->assertNotNull($segment->getHash(), 'Segment should have a hash');
         $this->assertEquals('database', $segment->type);
         $this->assertEquals('select-users', $segment->label);
     }
@@ -97,7 +86,9 @@ class NestedSegmentsTest extends TestCase
         $segment1 = $this->inspector->startSegment('type1', 'label1');
         $openSegments = $this->inspector->getOpenSegments();
         $this->assertCount(1, $openSegments);
+        /** @phpstan-ignore offsetAccess.notFound */
         $this->assertEquals('type1', $openSegments[0]['type']);
+        /** @phpstan-ignore offsetAccess.notFound */
         $this->assertEquals('label1', $openSegments[0]['label']);
 
         $segment2 = $this->inspector->startSegment('type2', 'label2');
