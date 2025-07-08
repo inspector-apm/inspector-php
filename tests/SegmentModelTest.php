@@ -10,8 +10,8 @@ use Inspector\Inspector;
 
 class SegmentModelTest extends TestCase
 {
-    /** @var MockObject&Transaction */
-    private MockObject $mockTransaction;
+    /** @var Transaction */
+    private Transaction $mockTransaction;
 
     /** @var MockObject&Inspector */
     private MockObject $mockInspector;
@@ -21,12 +21,9 @@ class SegmentModelTest extends TestCase
         parent::setUp();
 
         // Mock Transaction
-        $this->mockTransaction = $this->createMock(Transaction::class);
-        $this->mockTransaction->method('only')->willReturn([
-            'name' => 'test-transaction',
-            'hash' => 'transaction-hash-123',
-            'timestamp' => \microtime(true)
-        ]);
+        $this->mockTransaction = new Transaction('test-transaction');
+        $this->mockTransaction->hash = 'transaction-hash-123';
+        $this->mockTransaction->start();
 
         // Mock Inspector
         $this->mockInspector = $this->createMock(Inspector::class);
@@ -81,7 +78,7 @@ class SegmentModelTest extends TestCase
         $segment2 = new Segment($this->mockTransaction, 'database', 'query1');
         $segment3 = new Segment($this->mockTransaction, 'cache', 'different-operation');
 
-        // Even with same type and label, hashes should be different
+        // Even with the same type and label, hashes should be different
         $this->assertNotEquals($segment1->getHash(), $segment2->getHash());
         $this->assertNotEquals($segment1->getHash(), $segment3->getHash());
         $this->assertNotEquals($segment2->getHash(), $segment3->getHash());
@@ -173,13 +170,8 @@ class SegmentModelTest extends TestCase
     public function testStartCalculatesRelativeTime(): void
     {
         $transactionTimestamp = \microtime(true);
-        $transactionData = [
-            'name' => 'test-transaction',
-            'hash' => 'trans-hash-123',
-            'timestamp' => $transactionTimestamp
-        ];
 
-        $this->mockTransaction->method('only')->willReturn($transactionData);
+        $this->mockTransaction->timestamp = $transactionTimestamp;
 
         $segment = new Segment($this->mockTransaction, 'database', 'select-users');
 
@@ -198,13 +190,7 @@ class SegmentModelTest extends TestCase
         $transactionTimestamp = \microtime(true);
         $customStartTimestamp = $transactionTimestamp + 5;
 
-        $transactionData = [
-            'name' => 'test-transaction',
-            'hash' => 'trans-hash-123',
-            'timestamp' => $transactionTimestamp
-        ];
-
-        $this->mockTransaction->method('only')->willReturn($transactionData);
+        $this->mockTransaction->timestamp = $transactionTimestamp;
 
         $segment = new Segment($this->mockTransaction, 'database', 'select users');
         $segment->start($customStartTimestamp);
