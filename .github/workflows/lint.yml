@@ -2,9 +2,9 @@ name: Linter
 
 on:
     push:
-        branches: ["mater"]
+        branches: ["master"]
     pull_request:
-        branches: ["mater" ]
+        branches: ["master" ]
 
 jobs:
   quality:
