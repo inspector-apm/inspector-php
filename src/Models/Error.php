@@ -20,7 +20,7 @@ class Error extends Model
 
     public int $line;
 
-    public int $code;
+    public int|string $code;
 
     public array $stack;
 
@@ -47,7 +47,7 @@ class Error extends Model
         $this->class = \get_class($throwable);
         $this->file = $throwable->getFile();
         $this->line = $throwable->getLine();
-        $this->code = \intval($throwable->getCode());
+        $this->code = $throwable->getCode();
 
         $this->stack = $this->stackTraceToArray($throwable);
 
