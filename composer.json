@@ -29,7 +29,7 @@
         "ext-curl": "*",
         "friendsofphp/php-cs-fixer": "^3.75",
         "inspector-apm/neuron-ai": "^1.2.22",
-        "phpunit/phpunit": "^9.0",
+        "phpunit/phpunit": "^10.5",
         "phpstan/phpstan": "^2.1",
         "rector/rector": "^2.0",
         "tomasvotruba/type-coverage": "^2.0"
