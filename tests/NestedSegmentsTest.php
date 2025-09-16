@@ -29,7 +29,7 @@ class NestedSegmentsTest extends TestCase
         // Mock the transport
         $this->mockTransport = $this->createMock(TransportInterface::class);
 
-        // Create inspector instance with mocked dependencies
+        // Create an inspector instance with mocked dependencies
         $this->inspector = (new Inspector($this->mockConfiguration))->setTransport($this->mockTransport);
     }
 
@@ -50,10 +50,15 @@ class NestedSegmentsTest extends TestCase
 
         $parentSegment = $this->inspector->startSegment('view', 'user-profile');
         $childSegment = $this->inspector->startSegment('database', 'fetch-user');
+        $child2Segment = $this->inspector->startSegment('workflow', 'run-workflow')->end();
+        $child3Segment = $this->inspector->startSegment('file', 'read-file')->end();
 
         $this->assertNull($parentSegment->parent_hash, 'Parent segment should not have a parent');
         $this->assertEquals($parentSegment->getHash(), $childSegment->parent_hash, 'Child segment should have parent hash set');
         $this->assertNotEquals($parentSegment->getHash(), $childSegment->getHash(), 'Parent and child should have different hashes');
+
+        $this->assertEquals($childSegment->getHash(), $child2Segment->parent_hash, 'Child segment should have parent hash set');
+        $this->assertEquals($childSegment->getHash(), $child3Segment->parent_hash, 'Child segment should have parent hash set');
     }
 
     public function testMultipleLevelsOfNesting(): void
