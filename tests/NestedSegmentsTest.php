@@ -230,7 +230,7 @@ class NestedSegmentsTest extends TestCase
 
         $this->assertCount(2, $this->inspector->getOpenSegments());
 
-        $this->inspector->flush();
+        $this->inspector->reset();
 
         $this->assertEmpty($this->inspector->getOpenSegments());
     }
@@ -318,7 +318,7 @@ class NestedSegmentsTest extends TestCase
         $this->assertEmpty($this->inspector->getOpenSegments());
 
         // This should not throw an exception but also not create segments
-        $this->inspector->addSegment(fn(): string => 'result', 'test', 'test-operation');
+        $this->inspector->addSegment(fn (): string => 'result', 'test', 'test-operation');
     }
 
     public function testGetOpenSegmentsFormat(): void

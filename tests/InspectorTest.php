@@ -69,7 +69,7 @@ class InspectorTest extends TestCase
         $inspector = new Inspector($configuration);
 
         // The configuration instance is passed to the callable.
-        $inspector->setTransport(fn(Configuration $configuration): \Inspector\Tests\TestingTransport => new TestingTransport($configuration));
+        $inspector->setTransport(fn (Configuration $configuration): \Inspector\Tests\TestingTransport => new TestingTransport($configuration));
 
         $property = new ReflectionProperty(Inspector::class, 'transport');
 

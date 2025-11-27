@@ -53,7 +53,7 @@ class AgentTest extends TestCase
 
     public function testCallbackReturn(): void
     {
-        $return = $this->inspector->addSegment(fn(): string => 'Hello!', 'callback', 'test callback');
+        $return = $this->inspector->addSegment(fn (): string => 'Hello!', 'callback', 'test callback');
 
         $this->assertSame('Hello!', $return);
     }
@@ -67,7 +67,7 @@ class AgentTest extends TestCase
 
     public function testAddSegmentWithInputContext(): void
     {
-        $segment = $this->inspector->addSegment(fn($segment) => $segment->setContext(['foo' => 'bar']), 'callback', 'test callback', true);
+        $segment = $this->inspector->addSegment(fn ($segment) => $segment->setContext(['foo' => 'bar']), 'callback', 'test callback', true);
 
         $this->assertEquals(['foo' => 'bar'], $segment->getContext());
     }
