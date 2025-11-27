@@ -1,10 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Inspector\Tests;
 
 use Inspector\Inspector;
 use Inspector\Configuration;
 use PHPUnit\Framework\TestCase;
+use Exception;
 
 class ModelTest extends TestCase
 {
@@ -14,7 +17,7 @@ class ModelTest extends TestCase
      * Sets up the fixture, for example, open a network connection.
      * This method is called before a test is executed.
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function setUp(): void
     {
@@ -25,13 +28,13 @@ class ModelTest extends TestCase
         $this->inspector->startTransaction('testcase');
     }
 
-    public function testTransactionData()
+    public function testTransactionData(): void
     {
         $this->assertSame('testcase', $this->inspector->transaction()->name);
         $this->assertSame('request', $this->inspector->transaction()->setType('request')->type);
     }
 
-    public function testSegmentData()
+    public function testSegmentData(): void
     {
         $segment = $this->inspector->startSegment(__FUNCTION__, 'hello segment!');
 
@@ -40,9 +43,9 @@ class ModelTest extends TestCase
         $this->assertSame($this->inspector->transaction()->only(['name', 'hash', 'timestamp']), $segment->transaction);
     }
 
-    public function testErrorData()
+    public function testErrorData(): void
     {
-        $error = $this->inspector->reportException(new \Exception('test error'));
+        $error = $this->inspector->reportException(new Exception('test error'));
         $error_arr = $error->jsonSerialize();
 
         $this->assertArrayHasKey('message', $error_arr);
@@ -57,7 +60,7 @@ class ModelTest extends TestCase
         $this->assertSame($this->inspector->transaction()->only(['name', 'hash']), $error->transaction);
     }
 
-    public function testSetContext()
+    public function testSetContext(): void
     {
         $this->inspector->transaction()->addContext('test', ['foo' => 'bar']);
 

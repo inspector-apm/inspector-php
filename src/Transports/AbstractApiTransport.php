@@ -1,37 +1,47 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Inspector\Transports;
 
 use Inspector\Configuration;
 use Inspector\Exceptions\InspectorException;
 use Inspector\Models\Model;
 
+use function array_chunk;
+use function base64_encode;
+use function ceil;
+use function count;
+use function file_put_contents;
+use function floor;
+use function json_encode;
+use function preg_match;
+use function strlen;
+use function sys_get_temp_dir;
+use function tempnam;
+
+use const LOCK_EX;
+
 abstract class AbstractApiTransport implements TransportInterface
 {
-    /**
-     * Key to authenticate remote calls.
-     *
-     * @var Configuration
-     */
-    protected $config;
-
     /**
      * Queue of messages to send.
      *
      * @var array
      */
-    protected $queue = [];
+    protected array $queue = [];
 
     /**
      * AbstractApiTransport constructor.
      *
-     * @param Configuration $configuration
      * @throws InspectorException
      */
-    public function __construct(Configuration $configuration)
+    public function __construct(/**
+     * Key to authenticate remote calls.
+     */
+    protected \Inspector\Configuration $config)
     {
-        $this->config = $configuration;
-        $this->verifyOptions($configuration->getOptions());
+        $this->verifyOptions($this->config->getOptions());
     }
 
     /**
@@ -44,7 +54,7 @@ abstract class AbstractApiTransport implements TransportInterface
         foreach ($this->getAllowedOptions() as $name => $regex) {
             if (isset($options[$name])) {
                 $value = $options[$name];
-                if (!\preg_match($regex, $value)) {
+                if (!preg_match($regex, $value)) {
                     throw new InspectorException("Option '$name' has invalid value");
                 }
             }
@@ -74,7 +84,7 @@ abstract class AbstractApiTransport implements TransportInterface
     public function addEntry(Model $model): TransportInterface
     {
         // Force insert when dealing with errors.
-        if ($model->model === 'error' || \count($this->queue) <= $this->config->getMaxItems()) {
+        if ($model->model === 'error' || count($this->queue) <= $this->config->getMaxItems()) {
             $this->queue[] = $model;
         }
         return $this;
@@ -85,7 +95,7 @@ abstract class AbstractApiTransport implements TransportInterface
      */
     public function flush(): TransportInterface
     {
-        if (empty($this->queue)) {
+        if ($this->queue === []) {
             return $this;
         }
 
@@ -100,25 +110,25 @@ abstract class AbstractApiTransport implements TransportInterface
      */
     public function send(array $items): void
     {
-        $json = \json_encode($items);
-        $jsonLength = \strlen($json);
-        $count = \count($items);
+        $json = json_encode($items);
+        $jsonLength = strlen($json);
+        $count = count($items);
 
         if ($jsonLength > $this->config->getMaxPostSize()) {
             if ($count === 1) {
                 // It makes no sense to divide into chunks, just try to send data via file
-                $this->sendViaFile(\base64_encode($json));
+                $this->sendViaFile(base64_encode($json));
                 return;
             }
 
-            $chunkSize = \floor($count / \ceil($jsonLength / $this->config->getMaxPostSize()));
-            $chunks = \array_chunk($items, $chunkSize > 0 ? $chunkSize : 1);
+            $chunkSize = floor($count / ceil($jsonLength / $this->config->getMaxPostSize()));
+            $chunks = array_chunk($items, $chunkSize > 0 ? $chunkSize : 1);
 
             foreach ($chunks as $chunk) {
                 $this->send($chunk);
             }
         } else {
-            $this->sendChunk(\base64_encode($json));
+            $this->sendChunk(base64_encode($json));
         }
     }
 
@@ -127,9 +137,9 @@ abstract class AbstractApiTransport implements TransportInterface
      */
     protected function sendViaFile(string $data): void
     {
-        $tmpfile = \tempnam(\sys_get_temp_dir(), 'inspector');
+        $tmpfile = tempnam(sys_get_temp_dir(), 'inspector');
 
-        \file_put_contents($tmpfile, $data, \LOCK_EX);
+        file_put_contents($tmpfile, $data, LOCK_EX);
 
         $this->sendChunk('@'.$tmpfile);
     }

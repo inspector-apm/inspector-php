@@ -1,7 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Inspector\Models;
 
+use function is_string;
+
+/**
+ ** @mixin Model
+ */
 trait HasContext
 {
     public array $context = [];
@@ -10,7 +17,7 @@ trait HasContext
      * Add contextual information.
      * If the key exists, it merges the given data instead of overwriting.
      */
-    public function addContext(string $key, mixed $data): Model
+    public function addContext(string $key, mixed $data): static
     {
         $this->context[$key] = $data;
 
@@ -20,7 +27,7 @@ trait HasContext
     /**
      * Set the entire context bag.
      */
-    public function setContext(array $data): Model
+    public function setContext(array $data): static
     {
         $this->context = $data;
         return $this;
@@ -31,7 +38,7 @@ trait HasContext
      */
     public function getContext(?string $label = null): array
     {
-        if (\is_string($label)) {
+        if (is_string($label)) {
             return $this->context[$label];
         }
 

@@ -1,9 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Inspector\Models;
 
 use Inspector\Inspector;
 use Inspector\Models\Partials\Host;
+
+use function hash;
+use function is_null;
+use function microtime;
+use function random_int;
+use function round;
 
 class Segment extends PerformanceModel
 {
@@ -56,9 +64,9 @@ class Segment extends PerformanceModel
      */
     public function start(int|float|null $timestamp = null): Segment
     {
-        $initial = \is_null($timestamp) ? \microtime(true) : $timestamp;
+        $initial = is_null($timestamp) ? microtime(true) : $timestamp;
 
-        $this->start = \round(($initial - $this->transaction['timestamp']) * 1000, 2);
+        $this->start = round(($initial - $this->transaction['timestamp']) * 1000, 2);
         parent::start($timestamp);
         return $this;
     }
@@ -87,7 +95,7 @@ class Segment extends PerformanceModel
      */
     protected function generateHash(): string
     {
-        return \hash('sha256', $this->type . $this->label . \microtime(true) . \random_int(1000, 9999));
+        return hash('sha256', $this->type . $this->label . microtime(true) . random_int(1000, 9999));
     }
 
     /**
