@@ -4,10 +4,10 @@ includes:
 parameters:
 
     type_coverage:
-        return: 10
-        param: 10
-        property: 10
-        declare: 0
+        return: 100
+        param: 90
+        property: 100
+        declare: 100
         constant: 0
 
 

@@ -29,7 +29,7 @@ abstract class AbstractApiTransport implements TransportInterface
      *
      * @var array
      */
-    protected $queue = [];
+    protected array $queue = [];
 
     /**
      * AbstractApiTransport constructor.
