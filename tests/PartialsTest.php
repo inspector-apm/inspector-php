@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Inspector\Tests;
 
 use Inspector\Models\Partials\Host;
@@ -10,20 +12,25 @@ use Inspector\Models\Partials\Url;
 use Inspector\Models\Partials\User;
 use PHPUnit\Framework\TestCase;
 
+use function gethostbyname;
+use function gethostname;
+
+use const PHP_OS_FAMILY;
+
 class PartialsTest extends TestCase
 {
     public function testHost()
     {
         $host = new Host();
-        $this->assertEquals(\gethostname(), $host->hostname);
-        $this->assertEquals(\gethostbyname(\gethostname()), $host->ip);
+        $this->assertEquals(gethostname(), $host->hostname);
+        $this->assertEquals(gethostbyname(gethostname()), $host->ip);
 
-        if (\PHP_OS_FAMILY !== 'Linux') {
+        if (PHP_OS_FAMILY !== 'Linux') {
             $this->assertEquals(0, $host->cpu);
             $this->assertEquals(0, $host->ram);
         }
 
-        $this->assertSame(\PHP_OS_FAMILY, $host->os);
+        $this->assertSame(PHP_OS_FAMILY, $host->os);
     }
 
     public function testHttp()

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Inspector\Tests;
 
 use Inspector\Inspector;
@@ -18,7 +20,7 @@ class InspectorTest extends TestCase
         $configuration = new Configuration('example-api-key');
 
         $inspector = new Inspector($configuration);
-        $property = new \ReflectionProperty(Inspector::class, 'transport');
+        $property = new ReflectionProperty(Inspector::class, 'transport');
         $property->setAccessible(true);
         $this->assertInstanceOf(AsyncTransport::class, $property->getValue($inspector));
     }
@@ -29,7 +31,7 @@ class InspectorTest extends TestCase
         $configuration->setTransport('sync');
 
         $inspector = new Inspector($configuration);
-        $property = new \ReflectionProperty(Inspector::class, 'transport');
+        $property = new ReflectionProperty(Inspector::class, 'transport');
         $property->setAccessible(true);
         $this->assertInstanceOf(CurlTransport::class, $property->getValue($inspector));
     }
@@ -59,7 +61,7 @@ class InspectorTest extends TestCase
             }
         });
 
-        $property = new \ReflectionProperty(Inspector::class, 'transport');
+        $property = new ReflectionProperty(Inspector::class, 'transport');
         $this->assertSame($transport, $property->getValue($inspector));
     }
 
@@ -73,7 +75,7 @@ class InspectorTest extends TestCase
             return new TestingTransport($configuration);
         });
 
-        $property = new \ReflectionProperty(Inspector::class, 'transport');
+        $property = new ReflectionProperty(Inspector::class, 'transport');
 
         $this->assertInstanceOf(TestingTransport::class, $property->getValue($inspector));
         $this->assertSame($configuration, $property->getValue($inspector)->config);
@@ -89,7 +91,6 @@ class InspectorTest extends TestCase
 
         $inspector->reset();
 
-        // @phpstan-ignore-next-line
         $this->assertTrue($_SERVER['TestingTransport::resetQueue']);
 
         unset($_SERVER['TestingTransport::resetQueue']);

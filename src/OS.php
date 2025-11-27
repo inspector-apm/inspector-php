@@ -1,6 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Inspector;
+
+use function in_array;
+use function strtoupper;
+use function substr;
+
+use const PHP_OS_FAMILY;
 
 class OS
 {
@@ -11,7 +19,7 @@ class OS
 
     public static function isLinux(): bool
     {
-        return \in_array(static::getOsPrefix(), ['LIN', 'BSD', 'SOL']);
+        return in_array(static::getOsPrefix(), ['LIN', 'BSD', 'SOL']);
     }
 
     public function isMacOs(): bool
@@ -21,6 +29,6 @@ class OS
 
     public static function getOsPrefix(): string
     {
-        return \strtoupper(\substr(\PHP_OS_FAMILY, 0, 3));
+        return strtoupper(substr(PHP_OS_FAMILY, 0, 3));
     }
 }

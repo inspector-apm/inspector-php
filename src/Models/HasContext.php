@@ -1,6 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Inspector\Models;
+
+use function is_string;
 
 trait HasContext
 {
@@ -31,7 +35,7 @@ trait HasContext
      */
     public function getContext(?string $label = null): array
     {
-        if (\is_string($label)) {
+        if (is_string($label)) {
             return $this->context[$label];
         }
 

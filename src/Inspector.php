@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Inspector;
 
 use Inspector\Exceptions\InspectorException;
@@ -10,6 +12,18 @@ use Inspector\Models\Error;
 use Inspector\Models\Segment;
 use Inspector\Models\Transaction;
 use Inspector\Transports\CurlTransport;
+use Exception;
+use Throwable;
+
+use function addslashes;
+use function array_map;
+use function array_values;
+use function call_user_func;
+use function end;
+use function get_class;
+use function is_array;
+use function is_callable;
+use function register_shutdown_function;
 
 class Inspector
 {
@@ -73,7 +87,7 @@ class Inspector
         };
 
         $this->configuration = $configuration;
-        \register_shutdown_function(array($this, 'flush'));
+        register_shutdown_function(array($this, 'flush'));
     }
 
     /**
@@ -93,7 +107,7 @@ class Inspector
      */
     public function setTransport(TransportInterface|callable $resolver): Inspector
     {
-        if (\is_callable($resolver)) {
+        if (is_callable($resolver)) {
             $this->transport = $resolver($this->configuration);
         } else {
             $this->transport = $resolver;
@@ -105,7 +119,7 @@ class Inspector
     /**
      * Create and start new Transaction.
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function startTransaction(string $name): Transaction
     {
@@ -203,7 +217,7 @@ class Inspector
      */
     protected function getCurrentParentSegment(): ?Segment
     {
-        return $this->openSegments === [] ? null : \end($this->openSegments);
+        return $this->openSegments === [] ? null : end($this->openSegments);
     }
 
     /**
@@ -211,7 +225,7 @@ class Inspector
      */
     public function startSegment(string $type, ?string $label = null): Segment
     {
-        $segment = new Segment($this->transaction, \addslashes($type), $label);
+        $segment = new Segment($this->transaction, addslashes($type), $label);
 
         // Set Inspector reference for lifecycle management
         $segment->setInspector($this);
@@ -234,7 +248,7 @@ class Inspector
     /**
      * Monitor the execution of a code block.
      *
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function addSegment(callable $callback, string $type, ?string $label = null, bool $throw = true): mixed
     {
@@ -245,7 +259,7 @@ class Inspector
         $segment = $this->startSegment($type, $label);
         try {
             return $callback($segment);
-        } catch (\Throwable $exception) {
+        } catch (Throwable $exception) {
             if ($throw === true) {
                 throw $exception;
             }
@@ -268,7 +282,7 @@ class Inspector
             if ($openSegment === $segment) {
                 unset($this->openSegments[$index]);
                 // Re-index array to maintain proper stack behavior
-                $this->openSegments = \array_values($this->openSegments);
+                $this->openSegments = array_values($this->openSegments);
                 break;
             }
         }
@@ -277,12 +291,12 @@ class Inspector
     /**
      * Error reporting.
      *
-     * @throws \Exception
+     * @throws Exception
      */
-    public function reportException(\Throwable $exception, bool $handled = true): Error
+    public function reportException(Throwable $exception, bool $handled = true): Error
     {
         if (!$this->hasTransaction()) {
-            $this->startTransaction(\get_class($exception))->setType('error');
+            $this->startTransaction(get_class($exception))->setType('error');
         }
 
         $segment = $this->startSegment('exception', $exception->getMessage());
@@ -304,7 +318,7 @@ class Inspector
     public function addEntries(array|Model $entries): Inspector
     {
         if ($this->isRecording()) {
-            $entries = \is_array($entries) ? $entries : [$entries];
+            $entries = is_array($entries) ? $entries : [$entries];
             foreach ($entries as $entry) {
                 $this->transport->addEntry($entry);
             }
@@ -323,7 +337,7 @@ class Inspector
     /**
      * Flush data to the remote platform.
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function flush(): void
     {
@@ -337,7 +351,7 @@ class Inspector
         }
 
         foreach (static::$beforeCallbacks as $callback) {
-            if (\call_user_func($callback, $this) === false) {
+            if (call_user_func($callback, $this) === false) {
                 $this->reset();
                 return;
             }
@@ -367,7 +381,7 @@ class Inspector
      */
     public function getOpenSegments(): array
     {
-        return \array_map(function (Segment $segment) {
+        return array_map(function (Segment $segment) {
             return [
                 'type' => $segment->type,
                 'label' => $segment->label,

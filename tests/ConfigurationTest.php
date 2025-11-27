@@ -1,9 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Inspector\Tests;
 
 use Inspector\Configuration;
 use PHPUnit\Framework\TestCase;
+use InvalidArgumentException;
 
 class ConfigurationTest extends TestCase
 {
@@ -61,7 +64,7 @@ class ConfigurationTest extends TestCase
     {
         $configuration = new Configuration('aaa');
 
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('URL can not be empty');
 
         $configuration->setUrl('');
@@ -71,7 +74,7 @@ class ConfigurationTest extends TestCase
     {
         $configuration = new Configuration();
 
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('URL is invalid');
 
         $configuration->setUrl('foobar');
@@ -81,7 +84,7 @@ class ConfigurationTest extends TestCase
     {
         $configuration = new Configuration();
 
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Ingestion key cannot be empty');
 
         $configuration->setIngestionKey('');

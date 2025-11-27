@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Inspector\Tests;
 
 use PHPUnit\Framework\TestCase;
@@ -10,6 +12,11 @@ use Inspector\Models\Transaction;
 use Inspector\Models\Segment;
 use Inspector\Transports\TransportInterface;
 use Inspector\Models\Error;
+use Exception;
+
+use function array_column;
+use function array_unique;
+use function count;
 
 class NestedSegmentsTest extends TestCase
 {
@@ -73,7 +80,7 @@ class NestedSegmentsTest extends TestCase
 
         // Verify all hashes are unique
         $hashes = [$level1->getHash(), $level2->getHash(), $level3->getHash(), $level4->getHash()];
-        $this->assertEquals(4, \count(\array_unique($hashes)), 'All segment hashes should be unique');
+        $this->assertEquals(4, count(array_unique($hashes)), 'All segment hashes should be unique');
     }
 
     public function testOpenSegmentsStack(): void
@@ -142,7 +149,7 @@ class NestedSegmentsTest extends TestCase
         $this->assertCount(2, $openSegments);
 
         // Verify that segment1 and segment3 are still in the stack
-        $types = \array_column($openSegments, 'type');
+        $types = array_column($openSegments, 'type');
         $this->assertContains('type1', $types);
         $this->assertContains('type3', $types);
         $this->assertNotContains('type2', $types);
@@ -242,7 +249,7 @@ class NestedSegmentsTest extends TestCase
 
         $parentSegment = $this->inspector->startSegment('controller', 'user-action');
 
-        $exception = new \Exception('Test exception');
+        $exception = new Exception('Test exception');
         $error = $this->inspector->reportException($exception);
 
         // Exception reporting should create its own segment hierarchy
@@ -262,7 +269,7 @@ class NestedSegmentsTest extends TestCase
 
         // Test with throw = false
         $result = $this->inspector->addSegment(function ($segment) {
-            throw new \Exception('Test exception');
+            throw new Exception('Test exception');
         }, 'child', 'child-operation', false);
 
         $this->assertNull($result);

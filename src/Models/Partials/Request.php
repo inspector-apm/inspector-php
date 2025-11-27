@@ -1,8 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Inspector\Models\Partials;
 
 use Inspector\Models\Model;
+
+use function array_key_exists;
+use function function_exists;
+use function strpos;
+use function substr;
 
 class Request extends Model
 {
@@ -20,17 +27,17 @@ class Request extends Model
         $this->method = $_SERVER['REQUEST_METHOD'] ?? null;
 
         $this->version = isset($_SERVER['SERVER_PROTOCOL'])
-            ? \substr($_SERVER['SERVER_PROTOCOL'], \strpos($_SERVER['SERVER_PROTOCOL'], '/'))
+            ? substr($_SERVER['SERVER_PROTOCOL'], strpos($_SERVER['SERVER_PROTOCOL'], '/'))
             : 'unknown';
 
         $this->socket = new Socket();
 
         $this->cookies = $_COOKIE;
 
-        if (\function_exists('apache_request_headers')) {
+        if (function_exists('apache_request_headers')) {
             $h = apache_request_headers();
 
-            if (\array_key_exists('sec-ch-ua', $h)) {
+            if (array_key_exists('sec-ch-ua', $h)) {
                 unset($h['sec-ch-ua']);
             }
 

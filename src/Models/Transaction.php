@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Inspector\Models;
 
 use Exception;
@@ -7,6 +9,13 @@ use Inspector\Exceptions\InspectorException;
 use Inspector\Models\Partials\Host;
 use Inspector\Models\Partials\Http;
 use Inspector\Models\Partials\User;
+
+use function bin2hex;
+use function function_exists;
+use function memory_get_peak_usage;
+use function openssl_random_pseudo_bytes;
+use function random_bytes;
+use function round;
 
 class Transaction extends PerformanceModel
 {
@@ -98,7 +107,7 @@ class Transaction extends PerformanceModel
 
     public function getMemoryPeak(): float
     {
-        return \round((\memory_get_peak_usage() / 1024 / 1024), 2); // MB
+        return round((memory_get_peak_usage() / 1024 / 1024), 2); // MB
     }
 
     /**
@@ -106,7 +115,7 @@ class Transaction extends PerformanceModel
      *
      * http://www.php.net/manual/en/function.uniqid.php
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function generateUniqueHash(int $length = 32): string
     {
@@ -114,10 +123,10 @@ class Transaction extends PerformanceModel
             $length = 32;
         }
 
-        if (\function_exists('random_bytes')) {
-            return \bin2hex(\random_bytes($length));
-        } elseif (\function_exists('openssl_random_pseudo_bytes')) {
-            return \bin2hex(\openssl_random_pseudo_bytes($length));
+        if (function_exists('random_bytes')) {
+            return bin2hex(random_bytes($length));
+        } elseif (function_exists('openssl_random_pseudo_bytes')) {
+            return bin2hex(openssl_random_pseudo_bytes($length));
         }
 
         throw new InspectorException('Can\'t create unique transaction hash.');

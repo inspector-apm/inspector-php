@@ -1,11 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Inspector\Tests;
 
 use Inspector\Inspector;
 use Inspector\Configuration;
 use Inspector\Models\Error;
 use PHPUnit\Framework\TestCase;
+use DomainException;
+use Exception;
+
+use function array_key_exists;
+use function str_contains;
 
 class ExceptionEncoderTest extends TestCase
 {
@@ -18,7 +25,7 @@ class ExceptionEncoderTest extends TestCase
      * Sets up the fixture, for example, open a network connection.
      * This method is called before a test is executed.
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function setUp(): void
     {
@@ -32,7 +39,7 @@ class ExceptionEncoderTest extends TestCase
     {
         $code = 1234;
         $message = 'Test Message';
-        $exception = new \DomainException($message, $code);
+        $exception = new DomainException($message, $code);
 
         $error = new Error($exception, $this->inspector->transaction());
 
@@ -45,14 +52,14 @@ class ExceptionEncoderTest extends TestCase
 
     public function testStackTraceResult()
     {
-        $exception = new \DomainException();
+        $exception = new DomainException();
         $error = new Error($exception, $this->inspector->currentTransaction());
         $originalStackTrace = $exception->getTrace();
 
         // Contains vendor folder
         $vendor = false;
         foreach ($error->stack as $stack) {
-            if (\array_key_exists('file', $stack) && \str_contains($stack['file'], 'vendor')) {
+            if (array_key_exists('file', $stack) && str_contains($stack['file'], 'vendor')) {
                 $vendor = true;
                 break;
             }
@@ -64,7 +71,7 @@ class ExceptionEncoderTest extends TestCase
 
     public function testEmptyExceptionMessageCase()
     {
-        $exception = new \DomainException();
+        $exception = new DomainException();
         $error = new Error($exception, $this->inspector->transaction());
 
         $this->assertSame('DomainException', $error->message);

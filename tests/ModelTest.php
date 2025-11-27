@@ -1,10 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Inspector\Tests;
 
 use Inspector\Inspector;
 use Inspector\Configuration;
 use PHPUnit\Framework\TestCase;
+use Exception;
 
 class ModelTest extends TestCase
 {
@@ -14,7 +17,7 @@ class ModelTest extends TestCase
      * Sets up the fixture, for example, open a network connection.
      * This method is called before a test is executed.
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function setUp(): void
     {
@@ -42,7 +45,7 @@ class ModelTest extends TestCase
 
     public function testErrorData()
     {
-        $error = $this->inspector->reportException(new \Exception('test error'));
+        $error = $this->inspector->reportException(new Exception('test error'));
         $error_arr = $error->jsonSerialize();
 
         $this->assertArrayHasKey('message', $error_arr);

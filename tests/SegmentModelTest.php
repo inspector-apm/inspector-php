@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Inspector\Tests;
 
 use PHPUnit\Framework\TestCase;
@@ -7,6 +9,10 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Inspector\Models\Segment;
 use Inspector\Models\Transaction;
 use Inspector\Inspector;
+
+use function microtime;
+use function round;
+use function usleep;
 
 class SegmentModelTest extends TestCase
 {
@@ -104,7 +110,7 @@ class SegmentModelTest extends TestCase
             ->with($segment);
 
         $segment->start();
-        \usleep(100);
+        usleep(100);
         $segment->end();
 
         // Verify the segment has a duration after ending
@@ -145,11 +151,11 @@ class SegmentModelTest extends TestCase
     {
         $segment = new Segment($this->mockTransaction, 'database', 'select-users');
 
-        $startTime = \microtime(true);
+        $startTime = microtime(true);
         $segment->start();
 
         // Simulate some work
-        \usleep(1000); // 1ms
+        usleep(1000); // 1ms
 
         $segment->end();
 
@@ -169,17 +175,17 @@ class SegmentModelTest extends TestCase
 
     public function testStartCalculatesRelativeTime(): void
     {
-        $transactionTimestamp = \microtime(true);
+        $transactionTimestamp = microtime(true);
 
         $this->mockTransaction->timestamp = $transactionTimestamp;
 
         $segment = new Segment($this->mockTransaction, 'database', 'select-users');
 
-        $segmentStartTime = \microtime(true);
+        $segmentStartTime = microtime(true);
         $segment->start();
 
         // The start time should be relative to the transaction timestamp in milliseconds
-        $expectedRelativeStart = \round(($segmentStartTime - $transactionTimestamp) * 1000, 2);
+        $expectedRelativeStart = round(($segmentStartTime - $transactionTimestamp) * 1000, 2);
 
         // Allow for small timing differences in test execution
         $this->assertEqualsWithDelta($expectedRelativeStart, $segment->start, 10.0);
@@ -187,7 +193,7 @@ class SegmentModelTest extends TestCase
 
     public function testSegmentStartWithCustomTimestamp(): void
     {
-        $transactionTimestamp = \microtime(true);
+        $transactionTimestamp = microtime(true);
         $customStartTimestamp = $transactionTimestamp + 5;
 
         $this->mockTransaction->timestamp = $transactionTimestamp;

@@ -1,8 +1,30 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Inspector\Models;
 
 use Inspector\Models\Partials\Host;
+use Exception;
+use SplFileObject;
+use Throwable;
+
+use function count;
+use function get_class;
+use function gettype;
+use function is_array;
+use function is_bool;
+use function is_float;
+use function is_int;
+use function is_object;
+use function is_string;
+use function max;
+use function microtime;
+use function min;
+use function rtrim;
+use function str_contains;
+
+use const PHP_INT_MAX;
 
 class Error extends Model
 {
@@ -31,20 +53,20 @@ class Error extends Model
     /**
      * Error constructor.
      *
-     * @param \Throwable $throwable
+     * @param Throwable $throwable
      * @param Transaction $transaction
      */
-    public function __construct(\Throwable $throwable, Transaction $transaction)
+    public function __construct(Throwable $throwable, Transaction $transaction)
     {
-        $this->timestamp = \microtime(true);
+        $this->timestamp = microtime(true);
 
         $this->host = new Host();
 
         $this->message = $throwable->getMessage()
             ? $throwable->getMessage()
-            : \get_class($throwable);
+            : get_class($throwable);
 
-        $this->class = \get_class($throwable);
+        $this->class = get_class($throwable);
         $this->file = $throwable->getFile();
         $this->line = $throwable->getLine();
         $this->code = $throwable->getCode();
@@ -66,7 +88,7 @@ class Error extends Model
     /**
      * Serialize stack trace to array
      */
-    public function stackTraceToArray(\Throwable $throwable): array
+    public function stackTraceToArray(Throwable $throwable): array
     {
         $stack = [];
         $counter = 0;
@@ -75,9 +97,9 @@ class Error extends Model
         // http://php.net/manual/en/exception.gettrace.php#107563
 
         $inApp = function ($file) {
-            return !\str_contains($file, 'vendor') &&
-                !\str_contains($file, 'index.php') &&
-                !\str_contains($file, 'web/core'); // Drupal
+            return !str_contains($file, 'vendor') &&
+                !str_contains($file, 'index.php') &&
+                !str_contains($file, 'web/core'); // Drupal
         };
 
         $stack[] = [
@@ -122,20 +144,20 @@ class Error extends Model
         }
 
         foreach ($trace['args'] as $arg) {
-            if (\is_array($arg)) {
-                $params[] = 'array(' . \count($arg) . ')';
-            } elseif (\is_object($arg)) {
-                $params[] = \get_class($arg);
-            } elseif (\is_string($arg)) {
+            if (is_array($arg)) {
+                $params[] = 'array(' . count($arg) . ')';
+            } elseif (is_object($arg)) {
+                $params[] = get_class($arg);
+            } elseif (is_string($arg)) {
                 $params[] = 'string(' . $arg . ')';
-            } elseif (\is_int($arg)) {
+            } elseif (is_int($arg)) {
                 $params[] = 'int(' . $arg . ')';
-            } elseif (\is_float($arg)) {
+            } elseif (is_float($arg)) {
                 $params[] = 'float(' . $arg . ')';
-            } elseif (\is_bool($arg)) {
+            } elseif (is_bool($arg)) {
                 $params[] = 'bool(' . ($arg ? 'true' : 'false') . ')';
             } else {
-                $params[] = \gettype($arg);
+                $params[] = gettype($arg);
             }
         }
 
@@ -148,27 +170,27 @@ class Error extends Model
     public function getCode(string $filePath, int $line, int $linesAround = 5): ?array
     {
         try {
-            $file = new \SplFileObject($filePath);
+            $file = new SplFileObject($filePath);
             $file->setMaxLineLen(250);
-            $file->seek(\PHP_INT_MAX);
+            $file->seek(PHP_INT_MAX);
 
             $codeLines = [];
 
-            $from = \max(0, $line - $linesAround);
-            $to = \min($line + $linesAround, $file->key());
+            $from = max(0, $line - $linesAround);
+            $to = min($line + $linesAround, $file->key());
 
             $file->seek($from);
 
             while ($file->key() <= $to && !$file->eof()) {
                 $codeLines[] = [
                     'line' => $file->key() + 1,
-                    'code' => \rtrim($file->current()),
+                    'code' => rtrim($file->current()),
                 ];
                 $file->next();
             }
 
             return $codeLines;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return null;
         }
     }

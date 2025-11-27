@@ -1,11 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Inspector\Tests;
 
 use Inspector\Inspector;
 use Inspector\Configuration;
 use Inspector\Models\Segment;
 use PHPUnit\Framework\TestCase;
+use Exception;
 
 class AgentTest extends TestCase
 {
@@ -18,7 +21,7 @@ class AgentTest extends TestCase
      * Sets up the fixture, for example, open a network connection.
      * This method is called before a test is executed.
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function setUp(): void
     {
@@ -44,10 +47,10 @@ class AgentTest extends TestCase
 
     public function testCallbackThrow()
     {
-        $this->expectException(\Exception::class);
+        $this->expectException(Exception::class);
 
         $this->inspector->addSegment(function () {
-            throw new \Exception('Error in segment');
+            throw new Exception('Error in segment');
         }, 'callback', 'test exception throw');
     }
 
