@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Inspector\Tests;
 
 use Inspector\Configuration;
@@ -9,7 +11,7 @@ use PHPUnit\Framework\TestCase;
 
 class TransportTest extends TestCase
 {
-    public function testDefaultMaxItems()
+    public function testDefaultMaxItems(): void
     {
         $transport = new CurlTransport(new Configuration('foo'));
 
@@ -27,7 +29,7 @@ class TransportTest extends TestCase
         $this->assertCount(101, $transport->getQueue());
     }
 
-    public function testIncreaseMaxItems()
+    public function testIncreaseMaxItems(): void
     {
         $transport = new CurlTransport(
             (new Configuration('foo'))->setMaxItems(150)

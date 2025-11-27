@@ -1,24 +1,24 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Inspector\Tests;
 
 use Inspector\Inspector;
 use Inspector\Configuration;
 use Inspector\Models\Segment;
 use PHPUnit\Framework\TestCase;
+use Exception;
 
 class AgentTest extends TestCase
 {
-    /**
-     * @var Inspector
-     */
     public Inspector $inspector;
 
     /**
      * Sets up the fixture, for example, open a network connection.
      * This method is called before a test is executed.
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function setUp(): void
     {
@@ -29,7 +29,7 @@ class AgentTest extends TestCase
         $this->inspector->startTransaction('transaction-test');
     }
 
-    public function testAddEntry()
+    public function testAddEntry(): void
     {
         $this->assertInstanceOf(
             Inspector::class,
@@ -42,41 +42,37 @@ class AgentTest extends TestCase
         );
     }
 
-    public function testCallbackThrow()
+    public function testCallbackThrow(): void
     {
-        $this->expectException(\Exception::class);
+        $this->expectException(Exception::class);
 
-        $this->inspector->addSegment(function () {
-            throw new \Exception('Error in segment');
+        $this->inspector->addSegment(function (): void {
+            throw new Exception('Error in segment');
         }, 'callback', 'test exception throw');
     }
 
-    public function testCallbackReturn()
+    public function testCallbackReturn(): void
     {
-        $return = $this->inspector->addSegment(function () {
-            return 'Hello!';
-        }, 'callback', 'test callback');
+        $return = $this->inspector->addSegment(fn(): string => 'Hello!', 'callback', 'test callback');
 
         $this->assertSame('Hello!', $return);
     }
 
-    public function testAddSegmentWithInput()
+    public function testAddSegmentWithInput(): void
     {
-        $this->inspector->addSegment(function ($segment) {
+        $this->inspector->addSegment(function ($segment): void {
             $this->assertInstanceOf(Segment::class, $segment);
         }, 'callback', 'test callback', true);
     }
 
-    public function testAddSegmentWithInputContext()
+    public function testAddSegmentWithInputContext(): void
     {
-        $segment = $this->inspector->addSegment(function ($segment) {
-            return $segment->setContext(['foo' => 'bar']);
-        }, 'callback', 'test callback', true);
+        $segment = $this->inspector->addSegment(fn($segment) => $segment->setContext(['foo' => 'bar']), 'callback', 'test callback', true);
 
         $this->assertEquals(['foo' => 'bar'], $segment->getContext());
     }
 
-    public function testStatusChecks()
+    public function testStatusChecks(): void
     {
         $this->assertFalse($this->inspector->isRecording());
         $this->assertFalse($this->inspector->needTransaction());

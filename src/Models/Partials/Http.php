@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Inspector\Models\Partials;
 
 use Inspector\Models\Model;

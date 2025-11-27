@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Inspector\Tests;
 
 use Inspector\Inspector;
@@ -13,28 +15,26 @@ use ReflectionProperty;
 
 class InspectorTest extends TestCase
 {
-    public function testItCreatesAsyncTransportByDefault()
+    public function testItCreatesAsyncTransportByDefault(): void
     {
         $configuration = new Configuration('example-api-key');
 
         $inspector = new Inspector($configuration);
-        $property = new \ReflectionProperty(Inspector::class, 'transport');
-        $property->setAccessible(true);
+        $property = new ReflectionProperty(Inspector::class, 'transport');
         $this->assertInstanceOf(AsyncTransport::class, $property->getValue($inspector));
     }
 
-    public function testItCreatesCurlTransport()
+    public function testItCreatesCurlTransport(): void
     {
         $configuration = new Configuration('example-api-key');
         $configuration->setTransport('sync');
 
         $inspector = new Inspector($configuration);
-        $property = new \ReflectionProperty(Inspector::class, 'transport');
-        $property->setAccessible(true);
+        $property = new ReflectionProperty(Inspector::class, 'transport');
         $this->assertInstanceOf(CurlTransport::class, $property->getValue($inspector));
     }
 
-    public function testSetTransportAcceptsTransportImplementation()
+    public function testSetTransportAcceptsTransportImplementation(): void
     {
         $configuration = new Configuration('example-api-key');
 
@@ -59,27 +59,25 @@ class InspectorTest extends TestCase
             }
         });
 
-        $property = new \ReflectionProperty(Inspector::class, 'transport');
+        $property = new ReflectionProperty(Inspector::class, 'transport');
         $this->assertSame($transport, $property->getValue($inspector));
     }
 
-    public function testSetTransportAcceptsTransportCallable()
+    public function testSetTransportAcceptsTransportCallable(): void
     {
         $configuration = new Configuration('example-api-key');
         $inspector = new Inspector($configuration);
 
         // The configuration instance is passed to the callable.
-        $inspector->setTransport(function (Configuration $configuration) {
-            return new TestingTransport($configuration);
-        });
+        $inspector->setTransport(fn(Configuration $configuration): \Inspector\Tests\TestingTransport => new TestingTransport($configuration));
 
-        $property = new \ReflectionProperty(Inspector::class, 'transport');
+        $property = new ReflectionProperty(Inspector::class, 'transport');
 
         $this->assertInstanceOf(TestingTransport::class, $property->getValue($inspector));
         $this->assertSame($configuration, $property->getValue($inspector)->config);
     }
 
-    public function testItCallsTransportResetQueue()
+    public function testItCallsTransportResetQueue(): void
     {
         $configuration = new Configuration('example-api-key');
         $inspector = new Inspector($configuration);
@@ -89,13 +87,12 @@ class InspectorTest extends TestCase
 
         $inspector->reset();
 
-        // @phpstan-ignore-next-line
         $this->assertTrue($_SERVER['TestingTransport::resetQueue']);
 
         unset($_SERVER['TestingTransport::resetQueue']);
     }
 
-    public function testCreateMethodWithoutConfigureCallback()
+    public function testCreateMethodWithoutConfigureCallback(): void
     {
         $inspector = Inspector::create('example-api-key');
 
@@ -108,9 +105,9 @@ class InspectorTest extends TestCase
         $this->assertSame('example-api-key', $configuration->getIngestionKey());
     }
 
-    public function testCreateMethodWithConfigureCallback()
+    public function testCreateMethodWithConfigureCallback(): void
     {
-        $inspector = Inspector::create('example-api-key', function (Configuration $config) {
+        $inspector = Inspector::create('example-api-key', function (Configuration $config): void {
             $config
                 ->setUrl('https://ingest.example.com')
                 ->setMaxItems(111);
@@ -124,11 +121,11 @@ class InspectorTest extends TestCase
         $this->assertSame(111, $configuration->getMaxItems());
     }
 
-    public function testConfigureMethod()
+    public function testConfigureMethod(): void
     {
         $inspector = Inspector::create('example-api-key');
 
-        $inspector->configure(function (Configuration $config) {
+        $inspector->configure(function (Configuration $config): void {
             $config->setIngestionKey('change-api-key');
         });
 

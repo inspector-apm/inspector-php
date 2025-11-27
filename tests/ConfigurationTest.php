@@ -1,13 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Inspector\Tests;
 
 use Inspector\Configuration;
 use PHPUnit\Framework\TestCase;
+use InvalidArgumentException;
 
 class ConfigurationTest extends TestCase
 {
-    public function testDefault()
+    public function testDefault(): void
     {
         $configuration = new Configuration('aaa');
         $this->assertSame('aaa', $configuration->getIngestionKey());
@@ -19,14 +22,14 @@ class ConfigurationTest extends TestCase
         $this->assertSame(100, $configuration->getMaxItems());
     }
 
-    public function testDisable()
+    public function testDisable(): void
     {
         $configuration = new Configuration();
 
         $this->assertFalse($configuration->isEnabled());
     }
 
-    public function testFluentApi()
+    public function testFluentApi(): void
     {
         $configuration = new Configuration('aaa');
 
@@ -57,31 +60,31 @@ class ConfigurationTest extends TestCase
         $this->assertSame([], $configuration->getOptions());
     }
 
-    public function testUrlCanNotBeEmpty()
+    public function testUrlCanNotBeEmpty(): void
     {
         $configuration = new Configuration('aaa');
 
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('URL can not be empty');
 
         $configuration->setUrl('');
     }
 
-    public function testUrlMustBeValid()
+    public function testUrlMustBeValid(): void
     {
         $configuration = new Configuration();
 
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('URL is invalid');
 
         $configuration->setUrl('foobar');
     }
 
-    public function testIngestionKeyCanNotBeEmpty()
+    public function testIngestionKeyCanNotBeEmpty(): void
     {
         $configuration = new Configuration();
 
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Ingestion key cannot be empty');
 
         $configuration->setIngestionKey('');

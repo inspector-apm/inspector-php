@@ -1,22 +1,31 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Inspector\Transports;
 
 use Inspector\Configuration;
 use Inspector\Exceptions\InspectorException;
 use Inspector\OS;
 
+use function array_key_exists;
+use function array_merge;
+use function function_exists;
+use function proc_close;
+use function proc_open;
+use function str_replace;
+use function str_starts_with;
+
 class AsyncTransport extends AbstractApiTransport
 {
     /**
      * AsyncTransport constructor.
      *
-     * @param Configuration $configuration
      * @throws InspectorException
      */
     public function __construct(Configuration $configuration)
     {
-        if (!\function_exists('proc_open')) {
+        if (!function_exists('proc_open')) {
             throw new InspectorException("PHP function 'proc_open' is not available.");
         }
 
@@ -32,7 +41,7 @@ class AsyncTransport extends AbstractApiTransport
      */
     protected function getAllowedOptions(): array
     {
-        return \array_merge(parent::getAllowedOptions(), [
+        return array_merge(parent::getAllowedOptions(), [
             'curlPath' => '/.+/',
         ]);
     }
@@ -50,14 +59,14 @@ class AsyncTransport extends AbstractApiTransport
             $cmd = "({$curl} > /dev/null 2>&1";
 
             // Delete temporary file after data transfer
-            if (\str_starts_with($data, '@')) {
-                $cmd .= '; rm ' . \str_replace('@', '', $data);
+            if (str_starts_with($data, '@')) {
+                $cmd .= '; rm ' . str_replace('@', '', $data);
             }
 
             $cmd .= ')&';
         }
 
-        \proc_close(\proc_open($cmd, [], $pipes));
+        proc_close(proc_open($cmd, [], $pipes));
     }
 
     /**
@@ -75,7 +84,7 @@ class AsyncTransport extends AbstractApiTransport
 
         $curl .= " --data {$data} {$this->config->getUrl()}";
 
-        if (\array_key_exists('proxy', $this->config->getOptions())) {
+        if (array_key_exists('proxy', $this->config->getOptions())) {
             $curl .= " --proxy \"{$this->config->getOptions()['proxy']}\"";
         }
 

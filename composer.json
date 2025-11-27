@@ -31,7 +31,8 @@
         "neuron-core/neuron-ai": "^2.8",
         "phpunit/phpunit": "^10.5",
         "phpstan/phpstan": "^2.1",
-        "rector/rector": "^2.0",
+        "phpunit/phpunit": "^9.0",
+        "rector/rector": "^2.2",
         "tomasvotruba/type-coverage": "^2.0"
     },
     "autoload-dev": {
@@ -41,13 +42,16 @@
     },
     "scripts": {
         "analyse": [
-            "vendor/bin/phpstan analyse --memory-limit=1G -v"
+            "vendor/bin/phpstan analyse -v"
         ],
         "format": [
             "php-cs-fixer fix --allow-risky=yes"
         ],
         "test": [
             "vendor/bin/phpunit --colors=always"
+        ],
+        "refactor": [
+            "vendor/bin/rector"
         ]
     },
     "extra": {
