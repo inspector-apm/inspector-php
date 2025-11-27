@@ -29,7 +29,6 @@
         "ext-curl": "*",
         "friendsofphp/php-cs-fixer": "^3.75",
         "neuron-core/neuron-ai": "^2.8",
-        "phpunit/phpunit": "^10.5",
         "phpstan/phpstan": "^2.1",
         "phpunit/phpunit": "^9.0",
         "rector/rector": "^2.2",
@@ -56,7 +55,8 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-develop": "3.16.x-dev"
+            "dev-develop": "3.16.x-dev",
+            "dev-master": "3.16.x-dev"
         }
     }
 }
