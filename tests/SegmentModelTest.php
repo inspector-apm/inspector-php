@@ -16,7 +16,6 @@ use function usleep;
 
 class SegmentModelTest extends TestCase
 {
-    /** @var Transaction */
     private Transaction $mockTransaction;
 
     /** @var MockObject&Inspector */
@@ -151,7 +150,7 @@ class SegmentModelTest extends TestCase
     {
         $segment = new Segment($this->mockTransaction, 'database', 'select-users');
 
-        $startTime = microtime(true);
+        microtime(true);
         $segment->start();
 
         // Simulate some work

@@ -43,7 +43,7 @@ class Configuration
      */
     public function __construct(?string $ingestionKey = null)
     {
-        if (!empty($ingestionKey)) {
+        if (!in_array($ingestionKey, [null, '', '0'], true)) {
             $this->setIngestionKey($ingestionKey);
         }
     }
@@ -65,7 +65,7 @@ class Configuration
     {
         $value = trim($value);
 
-        if (empty($value)) {
+        if ($value === '' || $value === '0') {
             throw new InvalidArgumentException('URL can not be empty');
         }
 
@@ -88,15 +88,13 @@ class Configuration
     /**
      * Verify if api key is well-formed.
      *
-     * @param string $value
-     * @return $this
      * @throws InvalidArgumentException
      */
     public function setIngestionKey(string $value): Configuration
     {
         $value = trim($value);
 
-        if (empty($value)) {
+        if ($value === '' || $value === '0') {
             throw new InvalidArgumentException('Ingestion key cannot be empty');
         }
 
@@ -117,10 +115,6 @@ class Configuration
         return $this->maxItems;
     }
 
-    /**
-     * @param int $maxItems
-     * @return $this
-     */
     public function setMaxItems(int $maxItems): Configuration
     {
         $this->maxItems = $maxItems;
@@ -134,10 +128,6 @@ class Configuration
 
     /**
      * Add a key-value pair to the options list.
-     *
-     * @param string $key
-     * @param mixed $value
-     * @return $this
      */
     public function addOption(string $key, mixed $value): Configuration
     {
@@ -147,9 +137,6 @@ class Configuration
 
     /**
      * Override the entire options.
-     *
-     * @param array $options
-     * @return $this
      */
     public function setOptions(array $options): Configuration
     {

@@ -27,7 +27,7 @@ class Request extends Model
         $this->method = $_SERVER['REQUEST_METHOD'] ?? null;
 
         $this->version = isset($_SERVER['SERVER_PROTOCOL'])
-            ? substr($_SERVER['SERVER_PROTOCOL'], strpos($_SERVER['SERVER_PROTOCOL'], '/'))
+            ? substr((string) $_SERVER['SERVER_PROTOCOL'], strpos((string) $_SERVER['SERVER_PROTOCOL'], '/'))
             : 'unknown';
 
         $this->socket = new Socket();

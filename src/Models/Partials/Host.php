@@ -21,7 +21,7 @@ class Host extends Model
 {
     public string $hostname;
     public string $ip;
-    public string $os;
+    public string $os = PHP_OS_FAMILY;
     public ?string $cpu = null;
     public ?string $ram = null;
     public ?string $hdd = null;
@@ -33,7 +33,6 @@ class Host extends Model
     {
         $this->hostname = gethostname();
         $this->ip = gethostbyname(gethostname());
-        $this->os = PHP_OS_FAMILY;
     }
 
     /**
@@ -54,7 +53,7 @@ class Host extends Model
                 $this->cpu = $status[0];
                 $this->ram = $status[1];
                 $this->hdd = $status[2];
-            } catch (Throwable $exception) {
+            } catch (Throwable) {
                 // do nothing
             }
         }

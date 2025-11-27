@@ -16,9 +16,6 @@ use function str_contains;
 
 class ExceptionEncoderTest extends TestCase
 {
-    /**
-     * @var Inspector
-     */
     public Inspector $inspector;
 
     /**
@@ -35,7 +32,7 @@ class ExceptionEncoderTest extends TestCase
         $this->inspector->startTransaction('transaction-test');
     }
 
-    public function testExceptionObjectResult()
+    public function testExceptionObjectResult(): void
     {
         $code = 1234;
         $message = 'Test Message';
@@ -50,7 +47,7 @@ class ExceptionEncoderTest extends TestCase
         $this->assertNotEmpty($error->line);
     }
 
-    public function testStackTraceResult()
+    public function testStackTraceResult(): void
     {
         $exception = new DomainException();
         $error = new Error($exception, $this->inspector->currentTransaction());
@@ -59,7 +56,7 @@ class ExceptionEncoderTest extends TestCase
         // Contains vendor folder
         $vendor = false;
         foreach ($error->stack as $stack) {
-            if (array_key_exists('file', $stack) && str_contains($stack['file'], 'vendor')) {
+            if (array_key_exists('file', $stack) && str_contains((string) $stack['file'], 'vendor')) {
                 $vendor = true;
                 break;
             }
@@ -69,7 +66,7 @@ class ExceptionEncoderTest extends TestCase
         $this->assertSame($originalStackTrace[0]['class'], $error->stack[1]['class']);
     }
 
-    public function testEmptyExceptionMessageCase()
+    public function testEmptyExceptionMessageCase(): void
     {
         $exception = new DomainException();
         $error = new Error($exception, $this->inspector->transaction());

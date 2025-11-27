@@ -52,9 +52,6 @@ class Error extends Model
 
     /**
      * Error constructor.
-     *
-     * @param Throwable $throwable
-     * @param Transaction $transaction
      */
     public function __construct(Throwable $throwable, Transaction $transaction)
     {
@@ -62,11 +59,9 @@ class Error extends Model
 
         $this->host = new Host();
 
-        $this->message = $throwable->getMessage()
-            ? $throwable->getMessage()
-            : get_class($throwable);
+        $this->message = $throwable->getMessage() ?: $throwable::class;
 
-        $this->class = get_class($throwable);
+        $this->class = $throwable::class;
         $this->file = $throwable->getFile();
         $this->line = $throwable->getLine();
         $this->code = $throwable->getCode();
@@ -96,7 +91,7 @@ class Error extends Model
         // Exception object `getTrace` does not return file and line number for the first line
         // http://php.net/manual/en/exception.gettrace.php#107563
 
-        $inApp = function ($file) {
+        $inApp = function ($file): bool {
             return !str_contains($file, 'vendor') &&
                 !str_contains($file, 'index.php') &&
                 !str_contains($file, 'web/core'); // Drupal
@@ -147,7 +142,7 @@ class Error extends Model
             if (is_array($arg)) {
                 $params[] = 'array(' . count($arg) . ')';
             } elseif (is_object($arg)) {
-                $params[] = get_class($arg);
+                $params[] = $arg::class;
             } elseif (is_string($arg)) {
                 $params[] = 'string(' . $arg . ')';
             } elseif (is_int($arg)) {
@@ -190,7 +185,7 @@ class Error extends Model
             }
 
             return $codeLines;
-        } catch (Exception $e) {
+        } catch (Exception) {
             return null;
         }
     }

@@ -34,8 +34,6 @@ class Inspector
 
     /**
      * Transport strategy.
-     *
-     * @var TransportInterface
      */
     protected TransportInterface $transport;
 
@@ -76,7 +74,6 @@ class Inspector
     /**
      * Inspector constructor.
      *
-     * @param Configuration $configuration
      * @throws Exceptions\InspectorException
      */
     final public function __construct(Configuration $configuration)
@@ -87,7 +84,7 @@ class Inspector
         };
 
         $this->configuration = $configuration;
-        register_shutdown_function(array($this, 'flush'));
+        register_shutdown_function([$this, 'flush']);
     }
 
     /**
@@ -107,11 +104,7 @@ class Inspector
      */
     public function setTransport(TransportInterface|callable $resolver): Inspector
     {
-        if (is_callable($resolver)) {
-            $this->transport = $resolver($this->configuration);
-        } else {
-            $this->transport = $resolver;
-        }
+        $this->transport = is_callable($resolver) ? $resolver($this->configuration) : $resolver;
 
         return $this;
     }
@@ -137,7 +130,6 @@ class Inspector
      * Get current transaction instance.
      *
      * @deprecated
-     * @return null|Transaction
      */
     public function currentTransaction(): ?Transaction
     {
@@ -146,8 +138,6 @@ class Inspector
 
     /**
      * Get current transaction instance.
-     *
-     * @return null|Transaction
      */
     public function transaction(): ?Transaction
     {
@@ -156,18 +146,14 @@ class Inspector
 
     /**
      * Determine if an active transaction exists.
-     *
-     * @return bool
      */
     public function hasTransaction(): bool
     {
-        return isset($this->transaction);
+        return $this->transaction instanceof \Inspector\Models\Transaction;
     }
 
     /**
      * Determine if the current cycle hasn't started its transaction yet.
-     *
-     * @return bool
      */
     public function needTransaction(): bool
     {
@@ -176,8 +162,6 @@ class Inspector
 
     /**
      * Determine if a new segment can be added.
-     *
-     * @return bool
      */
     public function canAddSegments(): bool
     {
@@ -186,8 +170,6 @@ class Inspector
 
     /**
      * Check if the monitoring is enabled.
-     *
-     * @return bool
      */
     public function isRecording(): bool
     {
@@ -232,7 +214,7 @@ class Inspector
 
         // Set a parent relationship if there's an open segment
         $parentSegment = $this->getCurrentParentSegment();
-        if ($parentSegment) {
+        if ($parentSegment instanceof \Inspector\Models\Segment) {
             $segment->setParent($parentSegment->getHash());
         }
 
@@ -260,7 +242,7 @@ class Inspector
         try {
             return $callback($segment);
         } catch (Throwable $exception) {
-            if ($throw === true) {
+            if ($throw) {
                 throw $exception;
             }
 
@@ -296,7 +278,7 @@ class Inspector
     public function reportException(Throwable $exception, bool $handled = true): Error
     {
         if (!$this->hasTransaction()) {
-            $this->startTransaction(get_class($exception))->setType('error');
+            $this->startTransaction($exception::class)->setType('error');
         }
 
         $segment = $this->startSegment('exception', $exception->getMessage());
@@ -381,12 +363,10 @@ class Inspector
      */
     public function getOpenSegments(): array
     {
-        return array_map(function (Segment $segment) {
-            return [
-                'type' => $segment->type,
-                'label' => $segment->label,
-                'hash' => $segment->getHash()
-            ];
-        }, $this->openSegments);
+        return array_map(fn(Segment $segment): array => [
+            'type' => $segment->type,
+            'label' => $segment->label,
+            'hash' => $segment->getHash()
+        ], $this->openSegments);
     }
 }

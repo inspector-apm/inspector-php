@@ -25,13 +25,6 @@ use const LOCK_EX;
 abstract class AbstractApiTransport implements TransportInterface
 {
     /**
-     * Key to authenticate remote calls.
-     *
-     * @var Configuration
-     */
-    protected $config;
-
-    /**
      * Queue of messages to send.
      *
      * @var array
@@ -41,13 +34,14 @@ abstract class AbstractApiTransport implements TransportInterface
     /**
      * AbstractApiTransport constructor.
      *
-     * @param Configuration $configuration
      * @throws InspectorException
      */
-    public function __construct(Configuration $configuration)
+    public function __construct(/**
+     * Key to authenticate remote calls.
+     */
+    protected \Inspector\Configuration $config)
     {
-        $this->config = $configuration;
-        $this->verifyOptions($configuration->getOptions());
+        $this->verifyOptions($this->config->getOptions());
     }
 
     /**
@@ -101,7 +95,7 @@ abstract class AbstractApiTransport implements TransportInterface
      */
     public function flush(): TransportInterface
     {
-        if (empty($this->queue)) {
+        if ($this->queue === []) {
             return $this;
         }
 

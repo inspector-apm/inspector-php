@@ -12,9 +12,6 @@ use Exception;
 
 class AgentTest extends TestCase
 {
-    /**
-     * @var Inspector
-     */
     public Inspector $inspector;
 
     /**
@@ -32,7 +29,7 @@ class AgentTest extends TestCase
         $this->inspector->startTransaction('transaction-test');
     }
 
-    public function testAddEntry()
+    public function testAddEntry(): void
     {
         $this->assertInstanceOf(
             Inspector::class,
@@ -45,41 +42,37 @@ class AgentTest extends TestCase
         );
     }
 
-    public function testCallbackThrow()
+    public function testCallbackThrow(): void
     {
         $this->expectException(Exception::class);
 
-        $this->inspector->addSegment(function () {
+        $this->inspector->addSegment(function (): void {
             throw new Exception('Error in segment');
         }, 'callback', 'test exception throw');
     }
 
-    public function testCallbackReturn()
+    public function testCallbackReturn(): void
     {
-        $return = $this->inspector->addSegment(function () {
-            return 'Hello!';
-        }, 'callback', 'test callback');
+        $return = $this->inspector->addSegment(fn(): string => 'Hello!', 'callback', 'test callback');
 
         $this->assertSame('Hello!', $return);
     }
 
-    public function testAddSegmentWithInput()
+    public function testAddSegmentWithInput(): void
     {
-        $this->inspector->addSegment(function ($segment) {
+        $this->inspector->addSegment(function ($segment): void {
             $this->assertInstanceOf(Segment::class, $segment);
         }, 'callback', 'test callback', true);
     }
 
-    public function testAddSegmentWithInputContext()
+    public function testAddSegmentWithInputContext(): void
     {
-        $segment = $this->inspector->addSegment(function ($segment) {
-            return $segment->setContext(['foo' => 'bar']);
-        }, 'callback', 'test callback', true);
+        $segment = $this->inspector->addSegment(fn($segment) => $segment->setContext(['foo' => 'bar']), 'callback', 'test callback', true);
 
         $this->assertEquals(['foo' => 'bar'], $segment->getContext());
     }
 
-    public function testStatusChecks()
+    public function testStatusChecks(): void
     {
         $this->assertFalse($this->inspector->isRecording());
         $this->assertFalse($this->inspector->needTransaction());

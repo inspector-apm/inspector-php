@@ -19,7 +19,7 @@ use const PHP_OS_FAMILY;
 
 class PartialsTest extends TestCase
 {
-    public function testHost()
+    public function testHost(): void
     {
         $host = new Host();
         $this->assertEquals(gethostname(), $host->hostname);
@@ -33,7 +33,7 @@ class PartialsTest extends TestCase
         $this->assertSame(PHP_OS_FAMILY, $host->os);
     }
 
-    public function testHttp()
+    public function testHttp(): void
     {
         $http = new Http();
 
@@ -41,7 +41,7 @@ class PartialsTest extends TestCase
         $this->assertInstanceOf(Url::class, $http->url);
     }
 
-    public function testRequestMethod()
+    public function testRequestMethod(): void
     {
         $_SERVER['REQUEST_METHOD'] = 'GET';
         $request = new Request();
@@ -52,7 +52,7 @@ class PartialsTest extends TestCase
         $this->assertSame('POST', $request->method);
     }
 
-    public function testRequestVersion()
+    public function testRequestVersion(): void
     {
         $_SERVER['SERVER_PROTOCOL'] = 'HTTP/1.1';
         $request = new Request();
@@ -63,13 +63,13 @@ class PartialsTest extends TestCase
         $this->assertSame('unknown', $request->version);
     }
 
-    public function testRequestSocket()
+    public function testRequestSocket(): void
     {
         $request = new Request();
         $this->assertInstanceOf(Socket::class, $request->socket);
     }
 
-    public function testSocketRemoteAddress()
+    public function testSocketRemoteAddress(): void
     {
         $_SERVER['HTTP_X_FORWARDED_FOR'] = '192.168.33.11';
         $socket = new Socket();
@@ -85,7 +85,7 @@ class PartialsTest extends TestCase
         $this->assertSame('', $socket->remote_address);
     }
 
-    public function testSocketEncrypted()
+    public function testSocketEncrypted(): void
     {
         $_SERVER['HTTPS'] = 'on';
         $socket = new Socket();
@@ -96,7 +96,7 @@ class PartialsTest extends TestCase
         $this->assertFalse($socket->encrypted);
     }
 
-    public function testUrlProtocol()
+    public function testUrlProtocol(): void
     {
         $_SERVER['HTTPS'] = 'on';
         $url = new Url();
@@ -107,7 +107,7 @@ class PartialsTest extends TestCase
         $this->assertSame('http', $url->protocol);
     }
 
-    public function testUrlPort()
+    public function testUrlPort(): void
     {
         $_SERVER['SERVER_PORT'] = 8000;
         $url = new Url();
@@ -118,7 +118,7 @@ class PartialsTest extends TestCase
         $this->assertSame('', $url->port);
     }
 
-    public function testUrlPath()
+    public function testUrlPath(): void
     {
         $_SERVER['SCRIPT_NAME'] = '/index.php';
         $url = new Url();
@@ -133,7 +133,7 @@ class PartialsTest extends TestCase
         $this->assertSame('', $url->path);
     }
 
-    public function testUrlSearch()
+    public function testUrlSearch(): void
     {
         $_SERVER['QUERY_STRING'] = 'name=inspector&language=php';
         $url = new Url();
@@ -144,7 +144,7 @@ class PartialsTest extends TestCase
         $this->assertSame('?', $url->search);
     }
 
-    public function testUrlFull()
+    public function testUrlFull(): void
     {
         $_SERVER['HTTPS'] = 'on';
         $_SERVER['REQUEST_URI'] = '/';
@@ -159,7 +159,7 @@ class PartialsTest extends TestCase
         $this->assertSame('https://localhost:8000/api/users', $url->full);
     }
 
-    public function testUser()
+    public function testUser(): void
     {
         $user = new User(1, 'Valerio');
         $this->assertEquals(1, $user->id);

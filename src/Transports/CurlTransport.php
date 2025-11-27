@@ -36,7 +36,6 @@ class CurlTransport extends AbstractApiTransport
     /**
      * CurlTransport constructor.
      *
-     * @param Configuration $configuration
      * @throws InspectorException
      */
     public function __construct(Configuration $configuration)
@@ -51,8 +50,6 @@ class CurlTransport extends AbstractApiTransport
 
     /**
      * Deliver items to Inspector.
-     *
-     * @param string $data
      */
     public function sendChunk(string $data): void
     {
@@ -81,7 +78,7 @@ class CurlTransport extends AbstractApiTransport
             curl_setopt($handle, CURLOPT_PROXY, $this->config->getOptions()['proxy']);
         }
 
-        $response = curl_exec($handle);
+        curl_exec($handle);
         $errorNo = curl_errno($handle);
         $code = curl_getinfo($handle, CURLINFO_HTTP_CODE);
         $error = curl_error($handle);
@@ -89,7 +86,7 @@ class CurlTransport extends AbstractApiTransport
         // 200 OK
         // 403 Account has reached no. transactions limit
         if (0 !== $errorNo || (200 !== $code && 201 !== $code && 403 !== $code)) {
-            error_log(date('Y-m-d H:i:s') . " - [Warning] [" . get_class($this) . "] $error - $code $errorNo");
+            error_log(date('Y-m-d H:i:s') . " - [Warning] [" . static::class . "] $error - $code $errorNo");
         }
 
         curl_close($handle);

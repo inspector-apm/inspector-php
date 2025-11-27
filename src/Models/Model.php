@@ -34,10 +34,9 @@ abstract class Model implements JsonSerializable
 
     public function jsonSerialize(): array
     {
-        return array_filter($this->getProperties(), function ($value) {
+        return array_filter($this->getProperties(), fn($value): bool|int =>
             // remove NULL, FALSE, empty strings and empty arrays, but keep values of 0 (zero)
-            return is_array($value) || is_object($value) ? !empty($value) : strlen($value ?? '');
-        });
+            is_array($value) || is_object($value) ? !empty($value) : strlen($value ?? ''));
     }
 
     protected function getProperties(): array

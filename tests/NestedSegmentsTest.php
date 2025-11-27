@@ -43,7 +43,7 @@ class NestedSegmentsTest extends TestCase
     public function testSegmentWithoutParent(): void
     {
         // Test backward compatibility - segments without parents should work as before
-        $transaction = $this->inspector->startTransaction('test-transaction');
+        $this->inspector->startTransaction('test-transaction');
         $segment = $this->inspector->startSegment('database', 'select-users');
 
         $this->assertNull($segment->parent_hash, 'Root segment should not have a parent');
@@ -90,7 +90,7 @@ class NestedSegmentsTest extends TestCase
         // Initially no open segments
         $this->assertEmpty($this->inspector->getOpenSegments());
 
-        $segment1 = $this->inspector->startSegment('type1', 'label1');
+        $this->inspector->startSegment('type1', 'label1');
         $openSegments = $this->inspector->getOpenSegments();
         $this->assertCount(1, $openSegments);
         /** @phpstan-ignore offsetAccess.notFound */
@@ -98,12 +98,12 @@ class NestedSegmentsTest extends TestCase
         /** @phpstan-ignore offsetAccess.notFound */
         $this->assertEquals('label1', $openSegments[0]['label']);
 
-        $segment2 = $this->inspector->startSegment('type2', 'label2');
+        $this->inspector->startSegment('type2', 'label2');
         $openSegments = $this->inspector->getOpenSegments();
         $this->assertCount(2, $openSegments);
         $this->assertEquals('type2', $openSegments[1]['type']); // Most recent is last
 
-        $segment3 = $this->inspector->startSegment('type3', 'label3');
+        $this->inspector->startSegment('type3', 'label3');
         $openSegments = $this->inspector->getOpenSegments();
         $this->assertCount(3, $openSegments);
         $this->assertEquals('type3', $openSegments[2]['type']); // Most recent is last
@@ -138,9 +138,9 @@ class NestedSegmentsTest extends TestCase
     {
         $this->inspector->startTransaction('test-transaction');
 
-        $segment1 = $this->inspector->startSegment('type1', 'label1');
+        $this->inspector->startSegment('type1', 'label1');
         $segment2 = $this->inspector->startSegment('type2', 'label2');
-        $segment3 = $this->inspector->startSegment('type3', 'label3');
+        $this->inspector->startSegment('type3', 'label3');
 
         // End segment2 (middle one) first
         $segment2->end();
@@ -178,9 +178,9 @@ class NestedSegmentsTest extends TestCase
     {
         $this->inspector->startTransaction('test-transaction');
 
-        $parentSegment = $this->inspector->startSegment('parent', 'parent-operation');
+        $this->inspector->startSegment('parent', 'parent-operation');
 
-        $result = $this->inspector->addSegment(function ($segment) {
+        $result = $this->inspector->addSegment(function ($segment): string {
             $this->assertEquals($this->inspector->getOpenSegments()[0]['hash'], $segment->parent_hash);
 
             // Start another segment inside the callback
@@ -247,7 +247,7 @@ class NestedSegmentsTest extends TestCase
     {
         $this->inspector->startTransaction('test-transaction');
 
-        $parentSegment = $this->inspector->startSegment('controller', 'user-action');
+        $this->inspector->startSegment('controller', 'user-action');
 
         $exception = new Exception('Test exception');
         $error = $this->inspector->reportException($exception);
@@ -265,10 +265,10 @@ class NestedSegmentsTest extends TestCase
     {
         $this->inspector->startTransaction('test-transaction');
 
-        $parentSegment = $this->inspector->startSegment('parent', 'parent-operation');
+        $this->inspector->startSegment('parent', 'parent-operation');
 
         // Test with throw = false
-        $result = $this->inspector->addSegment(function ($segment) {
+        $result = $this->inspector->addSegment(function ($segment): void {
             throw new Exception('Test exception');
         }, 'child', 'child-operation', false);
 
@@ -313,9 +313,7 @@ class NestedSegmentsTest extends TestCase
         $this->assertEmpty($this->inspector->getOpenSegments());
 
         // This should not throw an exception but also not create segments
-        $this->inspector->addSegment(function () {
-            return 'result';
-        }, 'test', 'test-operation');
+        $this->inspector->addSegment(fn(): string => 'result', 'test', 'test-operation');
     }
 
     public function testGetOpenSegmentsFormat(): void

@@ -21,7 +21,6 @@ class AsyncTransport extends AbstractApiTransport
     /**
      * AsyncTransport constructor.
      *
-     * @param Configuration $configuration
      * @throws InspectorException
      */
     public function __construct(Configuration $configuration)
