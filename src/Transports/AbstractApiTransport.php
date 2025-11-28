@@ -121,8 +121,7 @@ abstract class AbstractApiTransport implements TransportInterface
             }
 
             $chunkSize = (int) floor($count / ceil($jsonLength / $this->config->getMaxPostSize()));
-            $chunkSize = $chunkSize > 0 ? $chunkSize : 1;
-            $chunks = array_chunk($items, $chunkSize);
+            $chunks = array_chunk($items, $chunkSize > 0 ? $chunkSize : 1);
 
             foreach ($chunks as $chunk) {
                 $this->send($chunk);
