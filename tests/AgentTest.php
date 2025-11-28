@@ -60,14 +60,15 @@ class AgentTest extends TestCase
 
     public function testAddSegmentWithInput(): void
     {
-        $this->inspector->addSegment(function ($segment): void {
+        $this->inspector->addSegment(function (Segment $segment): void {
             $this->assertInstanceOf(Segment::class, $segment);
         }, 'callback', 'test callback', true);
     }
 
     public function testAddSegmentWithInputContext(): void
     {
-        $segment = $this->inspector->addSegment(fn($segment) => $segment->setContext(['foo' => 'bar']), 'callback', 'test callback', true);
+        $segment = $this->inspector
+            ->addSegment(fn(Segment $segment) => $segment->setContext(['foo' => 'bar']), 'callback', 'test callback', true);
 
         $this->assertEquals(['foo' => 'bar'], $segment->getContext());
     }

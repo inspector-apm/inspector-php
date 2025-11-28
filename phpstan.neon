@@ -5,7 +5,7 @@ parameters:
 
     type_coverage:
         return: 100
-        param: 90
+        param: 100
         property: 100
         declare: 100
         constant: 0

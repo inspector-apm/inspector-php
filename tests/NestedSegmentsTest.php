@@ -180,7 +180,7 @@ class NestedSegmentsTest extends TestCase
 
         $this->inspector->startSegment('parent', 'parent-operation');
 
-        $result = $this->inspector->addSegment(function ($segment): string {
+        $result = $this->inspector->addSegment(function (Segment $segment): string {
             $this->assertEquals($this->inspector->getOpenSegments()[0]['hash'], $segment->parent_hash);
 
             // Start another segment inside the callback
@@ -268,7 +268,7 @@ class NestedSegmentsTest extends TestCase
         $this->inspector->startSegment('parent', 'parent-operation');
 
         // Test with throw = false
-        $result = $this->inspector->addSegment(function ($segment): void {
+        $result = $this->inspector->addSegment(function (): void {
             throw new Exception('Test exception');
         }, 'child', 'child-operation', false);
 
