@@ -8,6 +8,7 @@ use InvalidArgumentException;
 
 use function filter_var;
 use function trim;
+use function in_array;
 
 use const FILTER_VALIDATE_URL;
 

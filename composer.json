@@ -28,7 +28,7 @@
     "require-dev": {
         "ext-curl": "*",
         "friendsofphp/php-cs-fixer": "^3.75",
-        "inspector-apm/neuron-ai": "^1.2.22",
+        "neuron-core/neuron-ai": "^2.8",
         "phpstan/phpstan": "^2.1",
         "phpunit/phpunit": "^9.0",
         "rector/rector": "^2.2",
@@ -52,5 +52,11 @@
         "refactor": [
             "vendor/bin/rector"
         ]
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-develop": "3.16.x-dev",
+            "dev-master": "3.16.x-dev"
+        }
     }
 }

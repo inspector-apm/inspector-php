@@ -18,7 +18,6 @@ use function curl_setopt;
 use function date;
 use function error_log;
 use function function_exists;
-use function get_class;
 
 use const CURLINFO_HTTP_CODE;
 use const CURLOPT_CONNECTTIMEOUT;

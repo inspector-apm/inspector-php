@@ -53,7 +53,7 @@ class AgentTest extends TestCase
 
     public function testCallbackReturn(): void
     {
-        $return = $this->inspector->addSegment(fn(): string => 'Hello!', 'callback', 'test callback');
+        $return = $this->inspector->addSegment(fn (): string => 'Hello!', 'callback', 'test callback');
 
         $this->assertSame('Hello!', $return);
     }

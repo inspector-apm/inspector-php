@@ -20,7 +20,6 @@ use function array_map;
 use function array_values;
 use function call_user_func;
 use function end;
-use function get_class;
 use function is_array;
 use function is_callable;
 use function register_shutdown_function;
@@ -149,7 +148,7 @@ class Inspector
      */
     public function hasTransaction(): bool
     {
-        return $this->transaction instanceof \Inspector\Models\Transaction;
+        return isset($this->transaction) && $this->transaction instanceof Transaction;
     }
 
     /**
@@ -363,7 +362,7 @@ class Inspector
      */
     public function getOpenSegments(): array
     {
-        return array_map(fn(Segment $segment): array => [
+        return array_map(fn (Segment $segment): array => [
             'type' => $segment->type,
             'label' => $segment->label,
             'hash' => $segment->getHash()
