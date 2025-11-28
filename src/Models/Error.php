@@ -90,7 +90,7 @@ class Error extends Model
         // Exception object `getTrace` does not return file and line number for the first line
         // http://php.net/manual/en/exception.gettrace.php#107563
 
-        $inApp = function ($file): bool {
+        $inApp = function (string $file): bool {
             return !str_contains($file, 'vendor') &&
                 !str_contains($file, 'index.php') &&
                 !str_contains($file, 'web/core'); // Drupal

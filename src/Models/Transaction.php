@@ -63,7 +63,7 @@ class Transaction extends PerformanceModel
      *
      * @param integer|string $id
      */
-    public function withUser($id, ?string $name = null, ?string $email = null): Transaction
+    public function withUser(int|string $id, ?string $name = null, ?string $email = null): Transaction
     {
         $this->user = new User($id, $name, $email);
         return $this;
