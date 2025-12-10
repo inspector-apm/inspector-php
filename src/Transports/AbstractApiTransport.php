@@ -109,7 +109,12 @@ abstract class AbstractApiTransport implements TransportInterface
      */
     public function send(array $items): void
     {
-        $json = json_encode($items);
+        try {
+            $json = json_encode($items, JSON_THROW_ON_ERROR);
+        } catch (\Throwable $e) {
+            return;
+        }
+
         $jsonLength = strlen($json);
         $count = count($items);
 
