@@ -287,7 +287,11 @@ class Inspector
 
         $this->addEntries($error);
 
-        $segment->addContext('Error', $error);
+        $segment->addContext('Error', [
+            'class' => $error->class,
+            'file' => $error->file,
+            'line' => $error->line,
+        ]);
         $segment->end();
 
         return $error;
