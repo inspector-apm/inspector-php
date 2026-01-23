@@ -270,6 +270,19 @@ class Inspector
     }
 
     /**
+     * Get information about currently open segments (useful for debugging).
+     * Returns an array of segment types and labels.
+     */
+    public function getOpenSegments(): array
+    {
+        return array_map(fn (Segment $segment): array => [
+            'type' => $segment->type,
+            'label' => $segment->label,
+            'hash' => $segment->getHash()
+        ], $this->openSegments);
+    }
+
+    /**
      * Error reporting.
      *
      * @throws Exception
@@ -295,6 +308,11 @@ class Inspector
         $segment->end();
 
         return $error;
+    }
+
+    public function registerGlobalHandler(): GlobalExceptionHandler
+    {
+        return new GlobalExceptionHandler($this);
     }
 
     /**
@@ -358,18 +376,5 @@ class Inspector
         unset($this->transaction);
         $this->openSegments = [];
         return $this;
-    }
-
-    /**
-     * Get information about currently open segments (useful for debugging).
-     * Returns an array of segment types and labels.
-     */
-    public function getOpenSegments(): array
-    {
-        return array_map(fn (Segment $segment): array => [
-            'type' => $segment->type,
-            'label' => $segment->label,
-            'hash' => $segment->getHash()
-        ], $this->openSegments);
     }
 }
