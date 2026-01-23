@@ -148,7 +148,7 @@ class Inspector
      */
     public function hasTransaction(): bool
     {
-        return $this->transaction instanceof Transaction;
+        return !is_null($this->transaction);
     }
 
     /**
@@ -361,7 +361,7 @@ class Inspector
         }
 
         $this->transport->flush();
-        unset($this->transaction);
+        $this->transaction = null;
 
         // Clear open segments when flushing
         $this->openSegments = [];
@@ -373,7 +373,7 @@ class Inspector
     public function reset(): Inspector
     {
         $this->transport->resetQueue();
-        unset($this->transaction);
+        $this->transaction = null;
         $this->openSegments = [];
         return $this;
     }
