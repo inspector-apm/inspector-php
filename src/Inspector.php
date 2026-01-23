@@ -148,7 +148,7 @@ class Inspector
      */
     public function hasTransaction(): bool
     {
-        return isset($this->transaction) && $this->transaction instanceof Transaction;
+        return $this->transaction instanceof Transaction;
     }
 
     /**

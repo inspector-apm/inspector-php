@@ -41,7 +41,7 @@
     },
     "scripts": {
         "analyse": [
-            "vendor/bin/phpstan analyse -v"
+            "vendor/bin/phpstan analyse -v --memory-limit=2G"
         ],
         "format": [
             "php-cs-fixer fix --allow-risky=yes"

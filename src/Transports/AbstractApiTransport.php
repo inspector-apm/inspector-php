@@ -6,6 +6,7 @@ namespace Inspector\Transports;
 
 use Inspector\Exceptions\InspectorException;
 use Inspector\Models\Model;
+use Throwable;
 
 use function array_chunk;
 use function base64_encode;
@@ -20,13 +21,12 @@ use function sys_get_temp_dir;
 use function tempnam;
 
 use const LOCK_EX;
+use const JSON_THROW_ON_ERROR;
 
 abstract class AbstractApiTransport implements TransportInterface
 {
     /**
      * Queue of messages to send.
-     *
-     * @var array
      */
     protected array $queue = [];
 
@@ -111,7 +111,7 @@ abstract class AbstractApiTransport implements TransportInterface
     {
         try {
             $json = json_encode($items, JSON_THROW_ON_ERROR);
-        } catch (\Throwable $e) {
+        } catch (Throwable) {
             return;
         }
 

@@ -1,6 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Inspector;
+
+use Exception;
+use Throwable;
+
+use function call_user_func;
+use function set_exception_handler;
 
 class GlobalExceptionHandler
 {
@@ -13,13 +21,13 @@ class GlobalExceptionHandler
     public function __construct(protected Inspector $inspector)
     {
         // Calling set_exception_handler() returns the previous handler, if any.
-        $this->previousHandler = set_exception_handler([$this, 'handleException']);
+        $this->previousHandler = set_exception_handler($this->handleException(...));
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
-    public function handleException(\Throwable $e): void
+    public function handleException(Throwable $e): void
     {
         $this->inspector->reportException($e, false);
 

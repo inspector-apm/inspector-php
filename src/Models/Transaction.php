@@ -60,8 +60,6 @@ class Transaction extends PerformanceModel
 
     /**
      * Attach user information.
-     *
-     * @param integer|string $id
      */
     public function withUser(int|string $id, ?string $name = null, ?string $email = null): Transaction
     {
