@@ -104,6 +104,17 @@ $inspector->setTransport(function (\Inspector\Configuration $configuration) {
 
 **[Chek out the official documentation](https://docs.inspector.dev/php)**
 
+<a name="agentic"></a>
+
+## Agentic Integration
+
+You can connect the Inspector library documentation to your coding assistant as a Model Context Protocol (MCP) server.
+
+It makes it easy for tools like Claude Code, Cursor, and VS Code extensions reliably understand what Inspector
+client library can do, its configurations, how to use it.
+
+[AI Assisted Integration](https://docs.inspector.dev/concepts/agentic-integration)
+
 ## Contributing
 
 We encourage you to contribute to Inspector! Please check out the [Contribution Guidelines](CONTRIBUTING.md) about how to proceed. Join us!
