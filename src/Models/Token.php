@@ -17,6 +17,7 @@ class Token extends Model
     {
         $this->timestamp = microtime(true);
         $this->transaction = $transaction->only(['name', 'hash', 'timestamp']);
+        $this->setAgent($transaction->name);
     }
 
     public function setInputTokens(int $input_tokens): Token
