@@ -6,7 +6,7 @@ namespace Inspector\Models;
 
 class Token extends Model
 {
-    public string $model = 'token';
+    public ?string $model = 'token';
     public int|float $timestamp;
     public int $input_tokens;
     public int $output_tokens;

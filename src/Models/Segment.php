@@ -15,7 +15,7 @@ use function round;
 
 class Segment extends PerformanceModel
 {
-    public string $model = 'segment';
+    public ?string $model = 'segment';
     public int|float $start;
     public ?string $color = null;
     public array $transaction;
