@@ -23,6 +23,7 @@ use function end;
 use function is_array;
 use function is_callable;
 use function register_shutdown_function;
+use function is_null;
 
 class Inspector
 {

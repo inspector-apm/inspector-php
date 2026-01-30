@@ -43,13 +43,18 @@
         "analyse": [
             "vendor/bin/phpstan analyse -v --memory-limit=2G"
         ],
-        "format": [
-            "php-cs-fixer fix --allow-risky=yes"
-        ],
         "test": [
             "vendor/bin/phpunit --colors=always"
         ],
         "refactor": [
+            "vendor/bin/rector",
+            "php-cs-fixer fix --allow-risky=yes"
+        ],
+        "format": [
+            "php-cs-fixer fix --allow-risky=yes"
+        ],
+        "style": [
+            "php-cs-fixer fix --allow-risky=yes",
             "vendor/bin/rector"
         ]
     },
