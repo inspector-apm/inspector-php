@@ -19,7 +19,7 @@ abstract class Model implements JsonSerializable
 {
     use HasContext;
 
-    public ?string $model = null;
+    public string $model;
 
     /**
      * Return a subarray that contains only the given keys.

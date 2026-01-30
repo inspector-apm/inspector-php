@@ -19,13 +19,13 @@ use function round;
 
 class Transaction extends PerformanceModel
 {
-    public ?string $model = 'transaction';
+    public string $model = 'transaction';
     public string $type = 'transaction';
     public string $hash;
     public ?string $result = null;
     public ?Http $http = null;
     public ?User $user = null;
-    public ?Host $host = null;
+    public Host $host;
     public ?float $memory_peak = null;
 
     /**

@@ -15,11 +15,11 @@ use function round;
 
 class Segment extends PerformanceModel
 {
-    public ?string $model = 'segment';
+    public string $model = 'segment';
     public int|float $start;
     public ?string $color = null;
-    public ?array $transaction = null;
-    public ?Host $host = null;
+    public array $transaction;
+    public Host $host;
     public string $hash;
     public ?string $parent_hash = null;
 
@@ -95,7 +95,7 @@ class Segment extends PerformanceModel
      */
     protected function generateHash(): string
     {
-        return hash('sha256', $this->type . $this->label . microtime(true) . random_int(1000, 9999));
+        return hash('sha256', $this->type . $this->label . microtime(true) . random_int(100, 9999));
     }
 
     /**
