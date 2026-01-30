@@ -41,7 +41,7 @@
     },
     "scripts": {
         "analyse": [
-            "vendor/bin/phpstan analyse -v --memory-limit=2G"
+            "vendor/bin/phpstan analyse -v --ansi --memory-limit=2G"
         ],
         "test": [
             "vendor/bin/phpunit --colors=always"
