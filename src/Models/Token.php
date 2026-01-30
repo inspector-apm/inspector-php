@@ -7,6 +7,7 @@ namespace Inspector\Models;
 class Token extends Model
 {
     public string $model = 'token';
+    public int|float $timestamp;
     public int $input_tokens;
     public int $output_tokens;
     public string $agent;
@@ -14,6 +15,7 @@ class Token extends Model
 
     public function __construct(Transaction $transaction)
     {
+        $this->timestamp = microtime(true);
         $this->transaction = $transaction->only(['name', 'hash', 'timestamp']);
     }
 
