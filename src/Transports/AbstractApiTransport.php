@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Inspector\Transports;
 
+use Inspector\Configuration;
 use Inspector\Exceptions\InspectorException;
 use Inspector\Models\Model;
 use Throwable;
@@ -35,10 +36,8 @@ abstract class AbstractApiTransport implements TransportInterface
      *
      * @throws InspectorException
      */
-    public function __construct(/**
-     * Key to authenticate remote calls.
-     */
-        protected \Inspector\Configuration $config
+    public function __construct(
+        protected Configuration $config
     ) {
         $this->verifyOptions($this->config->getOptions());
     }

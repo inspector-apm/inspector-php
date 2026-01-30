@@ -318,6 +318,8 @@ class Inspector
 
     /**
      * Add an entry to the queue.
+     *
+     * @param Model|Model[] $entries
      */
     public function addEntries(array|Model $entries): Inspector
     {
