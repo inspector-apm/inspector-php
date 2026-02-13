@@ -19,7 +19,7 @@ class ConfigurationTest extends TestCase
         $this->assertSame([], $configuration->getOptions());
         $this->assertSame('async', $configuration->getTransport());
         $this->assertSame(true, $configuration->isEnabled());
-        $this->assertSame(100, $configuration->getMaxItems());
+        $this->assertSame(150, $configuration->getMaxItems());
     }
 
     public function testDisable(): void
