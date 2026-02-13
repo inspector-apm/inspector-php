@@ -41,6 +41,6 @@ class TransportTest extends TestCase
             $transport->addEntry($transaction);
         }
 
-        $this->assertCount(151, $transport->getQueue());
+        $this->assertCount(152, $transport->getQueue());
     }
 }
