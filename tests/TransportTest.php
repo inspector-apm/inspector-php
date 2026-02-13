@@ -21,26 +21,26 @@ class TransportTest extends TestCase
 
         $this->assertCount(1, $transport->getQueue());
 
-        for ($i = 0; $i < 150; $i++) {
+        for ($i = 0; $i < 200; $i++) {
             $transport->addEntry($transaction);
         }
 
         // A transaction + 100 segments
-        $this->assertCount(101, $transport->getQueue());
+        $this->assertCount(151, $transport->getQueue());
     }
 
     public function testIncreaseMaxItems(): void
     {
         $transport = new CurlTransport(
-            (new Configuration('foo'))->setMaxItems(150)
+            (new Configuration('foo'))->setMaxItems(151)
         );
 
         $transaction = new Transaction('test');
 
-        for ($i = 0; $i < 150; $i++) {
+        for ($i = 0; $i < 200; $i++) {
             $transport->addEntry($transaction);
         }
 
-        $this->assertCount(150, $transport->getQueue());
+        $this->assertCount(151, $transport->getQueue());
     }
 }
