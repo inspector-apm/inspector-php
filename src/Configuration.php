@@ -26,11 +26,11 @@ class Configuration
     /**
      * Max numbers of items to collect in a single session.
      */
-    protected int $maxItems = 100;
+    protected int $maxItems = 150;
 
     protected string $transport = 'async';
 
-    protected ?string $version = '3.16.12';
+    protected ?string $version = '3.16.13';
 
     /**
      * General-purpose options, E.g., we can set the transport proxy.
