@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Inspector\Models;
 
+use function microtime;
+
 class Token extends Model
 {
     public ?string $model = 'token';

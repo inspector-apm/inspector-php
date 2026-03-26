@@ -22,6 +22,7 @@ use function microtime;
 use function min;
 use function rtrim;
 use function str_contains;
+use function str_ends_with;
 
 use const PHP_INT_MAX;
 
