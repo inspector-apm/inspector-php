@@ -93,6 +93,8 @@ class Error extends Model
         $inApp = function (string $file): bool {
             return !str_contains($file, 'vendor') &&
                 !str_contains($file, 'index.php') &&
+                !str_ends_with($file, 'artisan') && // Laravel
+                !str_ends_with($file, 'tempest') && // Tempest
                 !str_contains($file, 'web/core'); // Drupal
         };
 
