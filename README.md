@@ -102,6 +102,36 @@ $inspector->setTransport(function (\Inspector\Configuration $configuration) {
 });
 ```
 
+## Concurrent & Async Tasks
+
+When monitoring concurrent or async tasks (e.g. using Fibers, ReactPHP, Amp, or `pcntl_fork`), a single
+segment stack would produce incorrect parent-child relationships because tasks interleave on the shared stack.
+Use `fork()` to create an independent `Scope` for each concurrent task:
+
+```php
+$inspector->startTransaction('request');
+$controller = $inspector->startSegment('controller', 'handle');
+
+// Fork independent scopes — both capture $controller as base parent
+$scopeA = $inspector->fork();
+$scopeB = $inspector->fork();
+
+// Pass $scopeA and $scopeB to your async tasks
+// Task A (e.g. in a Fiber or child process)
+$scopeA->startSegment('http', 'api-call-A')->end();
+
+// Task B (running concurrently)
+$scopeB->startSegment('http', 'api-call-B')->end();
+
+// Segments in each scope maintain their own nesting hierarchy
+$nested = $scopeA->startSegment('database', 'query');
+// parent_hash points to api-call-A ✓
+$nested->end();
+```
+
+Each `Scope` has its own segment stack, so interleaving tasks never corrupt the parent-child hierarchy.
+Scopes also support `addSegment()`, `fork()` (for nested forking), and `getOpenSegments()`.
+
 **[Chek out the official documentation](https://docs.inspector.dev/php)**
 
 <a name="agentic"></a>

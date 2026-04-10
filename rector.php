@@ -18,6 +18,6 @@ return RectorConfig::configure()
         earlyReturn: true,
     )
     ->withRules([
-        AddReturnTypeDeclarationRector::class
+        AddReturnTypeDeclarationRector::class,
     ])
     ->withSkip([]);

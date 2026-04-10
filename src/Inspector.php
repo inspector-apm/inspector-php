@@ -25,7 +25,7 @@ use function is_callable;
 use function register_shutdown_function;
 use function is_null;
 
-class Inspector
+class Inspector implements SegmentStack
 {
     /**
      * Agent configuration.
@@ -210,11 +210,11 @@ class Inspector
         $segment = new Segment($this->transaction, addslashes($type), $label);
 
         // Set Inspector reference for lifecycle management
-        $segment->setInspector($this);
+        $segment->setStackManager($this);
 
         // Set a parent relationship if there's an open segment
         $parentSegment = $this->getCurrentParentSegment();
-        if ($parentSegment instanceof \Inspector\Models\Segment) {
+        if ($parentSegment instanceof Segment) {
             $segment->setParent($parentSegment->getHash());
         }
 
@@ -271,6 +271,29 @@ class Inspector
     }
 
     /**
+     * Fork the current context into an independent Scope.
+     * The new scope captures the current top of the open segments stack
+     * as its base parent, so segments created in the scope will be
+     * children of that segment regardless of what happens to the main stack.
+     *
+     * @throws InspectorException
+     */
+    public function fork(): Scope
+    {
+        if (!$this->hasTransaction()) {
+            throw new InspectorException('Cannot fork without an active transaction.');
+        }
+
+        $baseParentHash = null;
+        $parent = $this->getCurrentParentSegment();
+        if ($parent instanceof Segment) {
+            $baseParentHash = $parent->getHash();
+        }
+
+        return new Scope($this, $baseParentHash);
+    }
+
+    /**
      * Get information about currently open segments (useful for debugging).
      * Returns an array of segment types and labels.
      */
@@ -279,7 +302,7 @@ class Inspector
         return array_map(fn (Segment $segment): array => [
             'type' => $segment->type,
             'label' => $segment->label,
-            'hash' => $segment->getHash()
+            'hash' => $segment->getHash(),
         ], $this->openSegments);
     }
 
