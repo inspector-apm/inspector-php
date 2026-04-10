@@ -16,7 +16,7 @@ use function end;
 class Scope implements SegmentStack
 {
     /**
-     * This scope's independent stack of open segments.
+     * Scope is an independent stack of open segments.
      *
      * @var Segment[]
      */
