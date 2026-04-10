@@ -16,26 +16,40 @@ use function end;
 class Scope implements SegmentStack
 {
     /**
-     * This scope is an independent stack of open segments.
+     * This scope's independent stack of open segments.
      *
      * @var Segment[]
      */
     protected array $openSegments = [];
 
     /**
-     * @param string|null $baseParentHash The parent hash captured at fork time.
+     * Create a forked scope with a reference to the parent Inspector.
      */
     public function __construct(
         /**
-         * The Inspector instance that owns the transaction and transport.
+         * Reference to the Inspector instance for delegated operations.
+         * Null when this IS the Inspector (root scope).
          */
-        protected Inspector $inspector,
+        protected ?Inspector $inspector,
+        /**
+         * The hash of the segment that was the "current parent" at fork time.
+         * Null when this is the root scope (Inspector) or if no segment was open at fork time.
+         */
         protected ?string $baseParentHash
     ) {
     }
 
     /**
-     * Resolve the parent hash for a new segment in this scope.
+     * Resolve the Inspector instance that owns the transaction and transport.
+     * Overridden by Inspector to return itself.
+     */
+    protected function resolveInspector(): Inspector
+    {
+        return $this->inspector;
+    }
+
+    /**
+     * Resolve the parent hash for a new segment.
      * Uses the top of this scope's stack, or falls back to the captured base parent.
      */
     protected function resolveParentHash(): ?string
@@ -52,14 +66,10 @@ class Scope implements SegmentStack
      */
     public function startSegment(string $type, ?string $label = null): Segment
     {
-        $transaction = $this->inspector->transaction();
+        $segment = new Segment($this->resolveInspector()->transaction(), addslashes($type), $label);
 
-        $segment = new Segment($transaction, addslashes($type), $label);
-
-        // Set this Scope as the stack manager (not the Inspector)
         $segment->setStackManager($this);
 
-        // Set parent: scope stack > base parent > null
         $parentHash = $this->resolveParentHash();
         if ($parentHash !== null) {
             $segment->setParent($parentHash);
@@ -69,7 +79,7 @@ class Scope implements SegmentStack
 
         $this->openSegments[] = $segment;
 
-        $this->inspector->addEntries($segment);
+        $this->resolveInspector()->addEntries($segment);
 
         return $segment;
     }
@@ -81,7 +91,7 @@ class Scope implements SegmentStack
      */
     public function addSegment(callable $callback, string $type, ?string $label = null, bool $throw = true): mixed
     {
-        if (!$this->inspector->hasTransaction()) {
+        if (!$this->resolveInspector()->hasTransaction()) {
             return $callback();
         }
 
@@ -93,7 +103,7 @@ class Scope implements SegmentStack
                 throw $exception;
             }
 
-            $this->inspector->reportException($exception);
+            $this->resolveInspector()->reportException($exception);
         } finally {
             $segment->end();
         }
@@ -122,11 +132,11 @@ class Scope implements SegmentStack
      */
     public function fork(): Scope
     {
-        if (!$this->inspector->hasTransaction()) {
+        if (!$this->resolveInspector()->hasTransaction()) {
             throw new InspectorException('Cannot fork without an active transaction.');
         }
 
-        return new Scope($this->inspector, $this->resolveParentHash());
+        return new Scope($this->resolveInspector(), $this->resolveParentHash());
     }
 
     /**
