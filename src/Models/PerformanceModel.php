@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Inspector\Models;
 
-use function is_null;
 use function microtime;
 use function round;
 
@@ -18,7 +17,7 @@ abstract class PerformanceModel extends Model
      */
     public function start(int|float|null $timestamp = null): PerformanceModel
     {
-        $this->timestamp = is_null($timestamp) ? microtime(true) : $timestamp;
+        $this->timestamp = $timestamp ?? microtime(true);
         return $this;
     }
 

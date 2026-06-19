@@ -9,7 +9,6 @@ use Inspector\Models\Partials\Host;
 use Inspector\SegmentStack;
 
 use function hash;
-use function is_null;
 use function microtime;
 use function random_int;
 use function round;
@@ -76,7 +75,7 @@ class Segment extends PerformanceModel
      */
     public function start(int|float|null $timestamp = null): Segment
     {
-        $initial = is_null($timestamp) ? microtime(true) : $timestamp;
+        $initial = $timestamp ?? microtime(true);
 
         $this->start = round(($initial - $this->transaction['timestamp']) * 1000, 2);
         parent::start($timestamp);
