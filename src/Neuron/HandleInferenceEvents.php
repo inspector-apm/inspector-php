@@ -9,10 +9,10 @@ use Inspector\Models\Token;
 use NeuronAI\Chat\Messages\AssistantMessage;
 use NeuronAI\Chat\Messages\Message;
 use NeuronAI\Chat\Messages\Usage;
-use Inspector\Neuron\Events\InferenceStart;
-use Inspector\Neuron\Events\InferenceStop;
-use Inspector\Neuron\Events\MessageSaved;
-use Inspector\Neuron\Events\MessageSaving;
+use NeuronAI\Observability\Events\InferenceStart;
+use NeuronAI\Observability\Events\InferenceStop;
+use NeuronAI\Observability\Events\MessageSaved;
+use NeuronAI\Observability\Events\MessageSaving;
 
 use function array_key_exists;
 

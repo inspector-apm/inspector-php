@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace Inspector\Neuron;
 
 use Inspector\Models\Segment;
-use Inspector\Neuron\Events\Deserialized;
-use Inspector\Neuron\Events\Deserializing;
-use Inspector\Neuron\Events\Extracted;
-use Inspector\Neuron\Events\Extracting;
-use Inspector\Neuron\Events\SchemaGenerated;
-use Inspector\Neuron\Events\SchemaGeneration;
-use Inspector\Neuron\Events\Validated;
-use Inspector\Neuron\Events\Validating;
+use NeuronAI\Observability\Events\Deserialized;
+use NeuronAI\Observability\Events\Deserializing;
+use NeuronAI\Observability\Events\Extracted;
+use NeuronAI\Observability\Events\Extracting;
+use NeuronAI\Observability\Events\SchemaGenerated;
+use NeuronAI\Observability\Events\SchemaGeneration;
+use NeuronAI\Observability\Events\Validated;
+use NeuronAI\Observability\Events\Validating;
 
 use function json_decode;
 

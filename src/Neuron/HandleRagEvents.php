@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Inspector\Neuron;
 
-use Inspector\Neuron\Events\PostProcessed;
-use Inspector\Neuron\Events\PostProcessing;
-use Inspector\Neuron\Events\PreProcessed;
-use Inspector\Neuron\Events\PreProcessing;
-use Inspector\Neuron\Events\Retrieved;
-use Inspector\Neuron\Events\Retrieving;
+use NeuronAI\Observability\Events\PostProcessed;
+use NeuronAI\Observability\Events\PostProcessing;
+use NeuronAI\Observability\Events\PreProcessed;
+use NeuronAI\Observability\Events\PreProcessing;
+use NeuronAI\Observability\Events\Retrieved;
+use NeuronAI\Observability\Events\Retrieving;
 
 use function array_key_exists;
 use function count;
