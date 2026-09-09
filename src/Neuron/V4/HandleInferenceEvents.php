@@ -83,7 +83,9 @@ trait HandleInferenceEvents
             $segment->addContext('Message', $this->prepareMessageItem($event->message));
         }
 
-        $usage = ($event->message instanceof Message ? $event->message : $event->response->message())->getUsage();
+        // The event carries the inbound message the inference started from,
+        // while the provider attaches token usage to the response message.
+        $usage = $event->response->message()->getUsage();
 
         if ($usage instanceof Usage) {
             $token = new Token($this->inspector->transaction());

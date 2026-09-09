@@ -82,22 +82,43 @@ class InspectorSubscriberTest extends TestCase
 
         $recorder->dispatch(new WorkflowStart([]));
 
+        // ChatNode emits both events with the last inbound message, while
+        // the provider attaches the usage to the response message only.
+        $question = new Message(MessageRole::USER, 'question');
+
         $response = new Message(MessageRole::ASSISTANT, 'the answer');
         $response->setUsage(new Usage(12, 34));
 
-        $recorder->dispatch(new InferenceStart(new Message(MessageRole::USER, 'question')));
-        $recorder->dispatch(new InferenceStop($response, new ProviderResponse($response)));
+        $recorder->dispatch(new InferenceStart($question));
+        $recorder->dispatch(new InferenceStop($question, new ProviderResponse($response)));
 
         $segment = $recorder->segment('agent.inference', 'inference( Message )');
 
         $this->assertNotNull($segment);
         $this->assertNotNull($segment->duration);
-        $this->assertSame('the answer', $segment->getContext()['Message']['content'][0]['content']);
+        $this->assertSame('question', $segment->getContext()['Message']['content'][0]['content']);
 
         $token = $recorder->firstOf(Token::class);
         $this->assertInstanceOf(Token::class, $token);
         $this->assertSame(12, $token->input_tokens);
         $this->assertSame(34, $token->output_tokens);
+        $this->assertSame($recorder->inspector()->transaction()->hash, $token->transaction['hash']);
+    }
+
+    public function testInferenceWithoutUsageReportsNoTokens(): void
+    {
+        $recorder = new Recorder();
+
+        $recorder->dispatch(new WorkflowStart([]));
+
+        $question = new Message(MessageRole::USER, 'question');
+        $response = new Message(MessageRole::ASSISTANT, 'the answer');
+
+        $recorder->dispatch(new InferenceStart($question));
+        $recorder->dispatch(new InferenceStop($question, new ProviderResponse($response)));
+
+        $this->assertNotNull($recorder->segment('agent.inference', 'inference( Message )'));
+        $this->assertNull($recorder->firstOf(Token::class));
     }
 
     public function testToolEventsCreateSegmentWithInputsAndOutput(): void
