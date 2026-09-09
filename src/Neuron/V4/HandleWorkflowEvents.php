@@ -117,7 +117,7 @@ trait HandleWorkflowEvents
     }
 
     /**
-     * @throws InspectorException
+     * @throws \Exception
      */
     public function error(AgentError $event): void
     {
@@ -131,6 +131,7 @@ trait HandleWorkflowEvents
     /**
      * A channel delivery failure never fails the run: report it as a
      * handled exception.
+     * @throws \Exception
      */
     public function channelError(ChannelError $event): void
     {
