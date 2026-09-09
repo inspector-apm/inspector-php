@@ -19,6 +19,8 @@ use NeuronAI\Observability\Events\WorkflowNodeStart;
 use NeuronAI\Observability\Events\WorkflowStart;
 use NeuronAI\Workflow\Interrupt\InterruptRequest;
 use NeuronAI\Workflow\NodeInterface;
+use Exception;
+
 use function array_key_exists;
 use function array_keys;
 use function array_map;
@@ -44,6 +46,8 @@ trait HandleWorkflowEvents
         $name = $event->source !== null ? $event->source::class : 'workflow';
 
         if ($this->inspector->needTransaction()) {
+            $this->ownsTransaction = true;
+
             $this->inspector->startTransaction($name)
                 ->setResult('success') // success by default, it can be changed during execution
                 ->addContext('Mapping', $mapping);
@@ -60,7 +64,10 @@ trait HandleWorkflowEvents
 
     /**
      * Close the workflow segment, or enrich the transaction with the final
-     * state and the agent context, flushing when autoFlush is enabled.
+     * state and the agent context, then flush the payload. The executor
+     * dispatches WorkflowEnd for every terminal state — completed,
+     * interrupted (paused), and failed (after AgentError) — so each run
+     * cycle is always reported and closed.
      */
     public function workflowEnd(WorkflowEnd $event): void
     {
@@ -95,7 +102,8 @@ trait HandleWorkflowEvents
             }
         }
 
-        if ($this->autoFlush) {
+        if ($this->ownsTransaction) {
+            $this->ownsTransaction = false;
             $this->inspector->flush();
         }
     }
@@ -117,7 +125,7 @@ trait HandleWorkflowEvents
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function error(AgentError $event): void
     {
@@ -131,7 +139,7 @@ trait HandleWorkflowEvents
     /**
      * A channel delivery failure never fails the run: report it as a
      * handled exception.
-     * @throws \Exception
+     * @throws Exception
      */
     public function channelError(ChannelError $event): void
     {

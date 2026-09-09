@@ -53,11 +53,10 @@ use NeuronAI\Tools\ToolInterface;
 use NeuronAI\Tools\Toolkits\ToolkitInterface;
 use NeuronAI\Tools\ToolPropertyInterface;
 use NeuronAI\Workflow\Workflow;
+
 use function array_map;
-use function filter_var;
 use function strrchr;
 use function substr;
-use const FILTER_VALIDATE_BOOL;
 
 /**
  * Trace your AI agents and workflows built with Neuron AI 4.x through the
@@ -101,9 +100,18 @@ class InspectorSubscriber
 
     protected static ?InspectorSubscriber $instance = null;
 
+    /**
+     * Whether the subscriber started the current transaction itself. The
+     * payload is flushed automatically at WorkflowEnd only when the
+     * subscriber owns the transaction lifecycle; a transaction opened by the
+     * host application is left to the host.
+     *
+     * @var bool
+     */
+    protected bool $ownsTransaction = false;
+
     public function __construct(
         protected Inspector $inspector,
-        protected bool $autoFlush = false,
     ) {
     }
 
@@ -117,7 +125,6 @@ class InspectorSubscriber
         ?string $key = null,
         ?string $transport = null,
         ?int $maxItems = null,
-        bool $autoFlush = false,
         bool $splitMonitoring = false,
     ): self {
         $configuration = new Configuration($key ?? $_ENV['INSPECTOR_INGESTION_KEY'] ?? null);
@@ -133,16 +140,12 @@ class InspectorSubscriber
          * Each workflow owns its own dispatcher, so a shared listener instance
          * is safe by default; splitting creates a dedicated Inspector per class.
          */
-        $autoFlush = isset($_ENV['NEURON_AUTOFLUSH'])
-            ? filter_var($_ENV['NEURON_AUTOFLUSH'], FILTER_VALIDATE_BOOL)
-            : $autoFlush;
-
         if (isset($_ENV['NEURON_SPLIT_MONITORING']) || $splitMonitoring) {
-            return new self(new Inspector($configuration), $autoFlush);
+            return new self(new Inspector($configuration));
         }
 
         if (!self::$instance instanceof self) {
-            self::$instance = new self(new Inspector($configuration), $autoFlush);
+            self::$instance = new self(new Inspector($configuration));
         }
 
         return self::$instance;

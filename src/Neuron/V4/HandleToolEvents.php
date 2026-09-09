@@ -8,6 +8,7 @@ use Inspector\Exceptions\InspectorException;
 use Inspector\Models\Segment;
 use NeuronAI\Observability\Events\ToolCalled;
 use NeuronAI\Observability\Events\ToolCalling;
+
 use function array_key_exists;
 use function spl_object_id;
 

@@ -8,6 +8,7 @@ use NeuronAI\Observability\Events\MemoryRecalled;
 use NeuronAI\Observability\Events\MemoryRecalling;
 use NeuronAI\Observability\Events\MemoryStored;
 use NeuronAI\Observability\Events\MemoryStoring;
+
 use function array_key_exists;
 
 trait HandleMemoryEvents

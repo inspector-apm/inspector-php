@@ -12,6 +12,7 @@ use NeuronAI\Observability\Events\SchemaGenerated;
 use NeuronAI\Observability\Events\SchemaGeneration;
 use NeuronAI\Observability\Events\Validated;
 use NeuronAI\Observability\Events\Validating;
+
 use function array_key_exists;
 use function json_decode;
 

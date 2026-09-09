@@ -146,14 +146,68 @@ class InspectorSubscriberTest extends TestCase
         $this->assertNull($recorder->firstOf(Error::class));
     }
 
-    public function testAutoFlushFlushesOnWorkflowEnd(): void
+    public function testWorkflowEndFlushesAutomatically(): void
     {
-        $recorder = new Recorder(true);
+        $recorder = new Recorder();
 
         $recorder->dispatch(new WorkflowStart([]));
         $recorder->dispatch(new WorkflowEnd(new WorkflowState()));
 
         $this->assertTrue($recorder->flushed());
+    }
+
+    public function testWorkflowEndFlushesAfterError(): void
+    {
+        $recorder = new Recorder();
+
+        $recorder->dispatch(new WorkflowStart([]));
+        $recorder->dispatch(new AgentError(new RuntimeException('boom')));
+
+        $transaction = $recorder->inspector()->transaction();
+
+        $recorder->dispatch(new WorkflowEnd(new WorkflowState()));
+
+        $this->assertTrue($recorder->flushed());
+        $this->assertSame('error', $transaction->result);
+        $this->assertInstanceOf(Error::class, $recorder->firstOf(Error::class));
+    }
+
+    public function testWorkflowEndFlushesAfterInterruption(): void
+    {
+        $recorder = new Recorder();
+
+        $recorder->dispatch(new WorkflowStart([]));
+        $recorder->dispatch(new WorkflowInterrupted(new WorkflowState()));
+
+        $transaction = $recorder->inspector()->transaction();
+
+        $recorder->dispatch(new WorkflowEnd(new WorkflowState()));
+
+        $this->assertTrue($recorder->flushed());
+        $this->assertArrayHasKey('Interrupt', $transaction->getContext());
+        $this->assertSame('success', $transaction->result);
+    }
+
+    public function testHostOwnedTransactionIsNotFlushed(): void
+    {
+        $recorder = new Recorder();
+        $inspector = $recorder->inspector();
+
+        // The host application started the transaction: the subscriber must
+        // not end it, it only opens a workflow segment inside it.
+        $inspector->startTransaction('host-request');
+
+        $start = new WorkflowStart([]);
+        $start->source = new HostedWorkflowFixture();
+        $recorder->dispatch($start);
+
+        $end = new WorkflowEnd(new WorkflowState());
+        $end->source = new HostedWorkflowFixture();
+        $recorder->dispatch($end);
+
+        $this->assertFalse($recorder->flushed());
+        $this->assertNotNull($inspector->transaction());
+        $this->assertNotNull($recorder->segment('agent.workflow', 'HostedWorkflowFixture'));
     }
 
     public function testBranchEventsIsolateSegmentScopes(): void
@@ -212,6 +266,10 @@ class StartEventFixture implements Event
 {
 }
 
+class HostedWorkflowFixture
+{
+}
+
 class MiddlewareFixture implements WorkflowMiddleware
 {
     public function before(NodeInterface $node, Event $event, WorkflowState $state): void
@@ -235,14 +293,14 @@ class Recorder
 
     private CapturingTransport $transport;
 
-    public function __construct(bool $autoFlush = false)
+    public function __construct()
     {
         $this->inspector = new Inspector(new Configuration('example-ingestion-key'));
 
         $this->transport = new CapturingTransport();
         $this->inspector->setTransport($this->transport);
 
-        $this->subscriber = new InspectorSubscriber($this->inspector, $autoFlush);
+        $this->subscriber = new InspectorSubscriber($this->inspector);
     }
 
     public function dispatch(ObservabilityEvent $event): void

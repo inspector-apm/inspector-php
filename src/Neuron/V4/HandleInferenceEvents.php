@@ -12,6 +12,7 @@ use NeuronAI\Observability\Events\InferenceStart;
 use NeuronAI\Observability\Events\InferenceStop;
 use NeuronAI\Observability\Events\MessageSaved;
 use NeuronAI\Observability\Events\MessageSaving;
+
 use function array_key_exists;
 
 trait HandleInferenceEvents

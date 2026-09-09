@@ -10,6 +10,7 @@ use NeuronAI\Observability\Events\PreProcessed;
 use NeuronAI\Observability\Events\PreProcessing;
 use NeuronAI\Observability\Events\Retrieved;
 use NeuronAI\Observability\Events\Retrieving;
+
 use function array_key_exists;
 use function count;
 use function md5;
