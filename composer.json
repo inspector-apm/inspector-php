@@ -9,12 +9,6 @@
             "email": "valerio@inspector.dev"
         }
     ],
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/neuron-core/neuron-ai"
-        }
-    ],
     "require": {
         "php": "^8.1"
     },
@@ -34,7 +28,7 @@
     "require-dev": {
         "ext-curl": "*",
         "friendsofphp/php-cs-fixer": "^3.75",
-        "neuron-core/neuron-ai": "4.x-dev",
+        "neuron-core/neuron-ai": "^4.0",
         "phpstan/phpstan": "^2.1",
         "phpunit/phpunit": "^9.0",
         "rector/rector": "^2.2",
