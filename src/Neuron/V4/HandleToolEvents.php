@@ -6,8 +6,8 @@ namespace Inspector\Neuron\V4;
 
 use Inspector\Exceptions\InspectorException;
 use Inspector\Models\Segment;
-use NeuronAI\Observability\Events\ToolCalled;
-use NeuronAI\Observability\Events\ToolCalling;
+use NeuronAI\Agent\Observability\ToolCalled;
+use NeuronAI\Agent\Observability\ToolCalling;
 
 use function array_key_exists;
 use function spl_object_id;

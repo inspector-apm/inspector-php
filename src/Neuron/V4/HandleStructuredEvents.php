@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Inspector\Neuron\V4;
 
-use NeuronAI\Observability\Events\Deserialized;
-use NeuronAI\Observability\Events\Deserializing;
-use NeuronAI\Observability\Events\Extracted;
-use NeuronAI\Observability\Events\Extracting;
-use NeuronAI\Observability\Events\SchemaGenerated;
-use NeuronAI\Observability\Events\SchemaGeneration;
-use NeuronAI\Observability\Events\Validated;
-use NeuronAI\Observability\Events\Validating;
+use NeuronAI\Agent\Observability\Deserialized;
+use NeuronAI\Agent\Observability\Deserializing;
+use NeuronAI\Agent\Observability\Extracted;
+use NeuronAI\Agent\Observability\Extracting;
+use NeuronAI\Agent\Observability\SchemaGenerated;
+use NeuronAI\Agent\Observability\SchemaGeneration;
+use NeuronAI\Agent\Observability\Validated;
+use NeuronAI\Agent\Observability\Validating;
 
 use function array_key_exists;
 use function json_decode;

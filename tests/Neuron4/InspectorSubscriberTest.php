@@ -15,30 +15,38 @@ use Inspector\Transports\TransportInterface;
 use NeuronAI\Chat\Enums\MessageRole;
 use NeuronAI\Chat\Messages\Message;
 use NeuronAI\Chat\Messages\Usage;
-use NeuronAI\Observability\Events\AgentError;
-use NeuronAI\Observability\Events\BranchEnd;
-use NeuronAI\Observability\Events\BranchStart;
-use NeuronAI\Observability\Events\InferenceStart;
-use NeuronAI\Observability\Events\InferenceStop;
-use NeuronAI\Observability\Events\MiddlewareEnd;
-use NeuronAI\Observability\Events\MiddlewareStart;
-use NeuronAI\Observability\Events\ToolCalled;
-use NeuronAI\Observability\Events\ToolCalling;
-use NeuronAI\Observability\Events\WorkflowEnd;
-use NeuronAI\Observability\Events\WorkflowInterrupted;
-use NeuronAI\Observability\Events\WorkflowNodeEnd;
-use NeuronAI\Observability\Events\WorkflowNodeStart;
-use NeuronAI\Observability\Events\WorkflowStart;
+use NeuronAI\Agent\Observability\InferenceStart;
+use NeuronAI\Agent\Observability\InferenceStop;
+use NeuronAI\Agent\Observability\ToolCalled;
+use NeuronAI\Agent\Observability\ToolCalling;
 use NeuronAI\Observability\ObservabilityEvent;
 use NeuronAI\Providers\ProviderResponse;
 use NeuronAI\Tools\ToolCall;
 use NeuronAI\Workflow\Events\Event;
+use NeuronAI\Workflow\ExecutionContext;
+use NeuronAI\Workflow\Executor\Ignition;
+use NeuronAI\Workflow\Interrupt\WaitForEventRequest;
 use NeuronAI\Workflow\Middleware\WorkflowMiddleware;
 use NeuronAI\Workflow\NodeInterface;
+use NeuronAI\Workflow\Observability\BranchEnd;
+use NeuronAI\Workflow\Observability\BranchStart;
+use NeuronAI\Workflow\Observability\MiddlewareEnd;
+use NeuronAI\Workflow\Observability\MiddlewareStart;
+use NeuronAI\Workflow\Observability\NodeOutcome;
+use NeuronAI\Workflow\Observability\WorkflowEnd;
+use NeuronAI\Workflow\Observability\WorkflowError;
+use NeuronAI\Workflow\Observability\WorkflowInterrupted;
+use NeuronAI\Workflow\Observability\WorkflowNodeEnd;
+use NeuronAI\Workflow\Observability\WorkflowNodeStart;
+use NeuronAI\Workflow\Observability\WorkflowStart;
+use NeuronAI\Workflow\WorkflowResources;
 use NeuronAI\Workflow\WorkflowState;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use stdClass;
+
+use function array_filter;
+use function array_values;
 
 class InspectorSubscriberTest extends TestCase
 {
@@ -71,6 +79,7 @@ class InspectorSubscriberTest extends TestCase
         $segment = $recorder->segment('agent.node', 'MyNode');
 
         $this->assertNotNull($segment);
+        $this->assertSame('completed', $segment->getContext()['Outcome']);
         $this->assertSame(['answer' => '42'], $segment->getContext('State Before'));
         $this->assertSame(['answer' => '42'], $segment->getContext('State After'));
         $this->assertNotNull($segment->duration);
@@ -141,12 +150,12 @@ class InspectorSubscriberTest extends TestCase
         $this->assertNotNull($segment->duration);
     }
 
-    public function testAgentErrorIsReportedAndMarksTransaction(): void
+    public function testUnhandledWorkflowErrorIsReportedAndMarksTransaction(): void
     {
         $recorder = new Recorder();
 
         $recorder->dispatch(new WorkflowStart([]));
-        $recorder->dispatch(new AgentError(new RuntimeException('boom')));
+        $recorder->dispatch(new WorkflowError(new RuntimeException('boom')));
 
         $error = $recorder->firstOf(Error::class);
         $this->assertInstanceOf(Error::class, $error);
@@ -160,7 +169,7 @@ class InspectorSubscriberTest extends TestCase
 
         $recorder->dispatch(new WorkflowStart([]));
 
-        $recorder->dispatch(new WorkflowInterrupted(new WorkflowState()));
+        $recorder->dispatch(new WorkflowInterrupted($this->suspendedState()));
 
         $this->assertArrayHasKey('Interrupt', $recorder->inspector()->transaction()->getContext());
         $this->assertSame('success', $recorder->inspector()->transaction()->result);
@@ -182,7 +191,7 @@ class InspectorSubscriberTest extends TestCase
         $recorder = new Recorder();
 
         $recorder->dispatch(new WorkflowStart([]));
-        $recorder->dispatch(new AgentError(new RuntimeException('boom')));
+        $recorder->dispatch(new WorkflowError(new RuntimeException('boom')));
 
         $transaction = $recorder->inspector()->transaction();
 
@@ -198,15 +207,54 @@ class InspectorSubscriberTest extends TestCase
         $recorder = new Recorder();
 
         $recorder->dispatch(new WorkflowStart([]));
-        $recorder->dispatch(new WorkflowInterrupted(new WorkflowState()));
+        $recorder->dispatch(new WorkflowInterrupted($this->suspendedState()));
 
         $transaction = $recorder->inspector()->transaction();
 
-        $recorder->dispatch(new WorkflowEnd(new WorkflowState()));
+        $recorder->dispatch(new WorkflowEnd($this->suspendedState()));
 
         $this->assertTrue($recorder->flushed());
         $this->assertArrayHasKey('Interrupt', $transaction->getContext());
+        $this->assertSame('suspended', $transaction->getContext()['Status']);
         $this->assertSame('success', $transaction->result);
+    }
+
+    public function testFailedRunMarksTransactionAsErrorAtWorkflowEnd(): void
+    {
+        $recorder = new Recorder();
+
+        $recorder->dispatch(new WorkflowStart([]));
+
+        // The executor reports run failures as handled WorkflowErrors: the
+        // failed state status carried by WorkflowEnd decides the result.
+        $recorder->dispatch(new WorkflowError(new RuntimeException('boom'), false));
+
+        $transaction = $recorder->inspector()->transaction();
+        $this->assertSame('success', $transaction->result);
+
+        $state = new WorkflowState();
+        $state->markAsFailed();
+        $recorder->dispatch(new WorkflowEnd($state));
+
+        $this->assertTrue($recorder->flushed());
+        $this->assertSame('error', $transaction->result);
+        $this->assertSame('failed', $transaction->getContext()['Status']);
+        $this->assertTrue($recorder->firstOf(Error::class)->handled);
+    }
+
+    public function testWorkflowStartAddsExecutionContext(): void
+    {
+        $recorder = new Recorder();
+
+        $start = new WorkflowStart([]);
+        $start->execution = $this->execution('run-1');
+        $recorder->dispatch($start);
+
+        $this->assertSame([
+            'workflowId' => 'workflow-1',
+            'runId' => 'run-1',
+            'executionAttempt' => 1,
+        ], $recorder->inspector()->transaction()->getContext('Execution'));
     }
 
     public function testHostOwnedTransactionIsNotFlushed(): void
@@ -279,7 +327,68 @@ class InspectorSubscriberTest extends TestCase
 
         $this->assertNotNull($segment);
         $this->assertSame(StartEventFixture::class, $segment->getContext()['Event']);
+        $this->assertArrayNotHasKey('Outcome', $segment->getContext());
         $this->assertNotNull($segment->duration);
+    }
+
+    public function testFailedOutcomesAreRecordedOnSegments(): void
+    {
+        $recorder = new Recorder();
+
+        $recorder->dispatch(new WorkflowStart([]));
+
+        $state = new WorkflowState();
+        $middleware = new MiddlewareFixture();
+
+        $recorder->dispatch(new WorkflowNodeStart('App\MyNode', $state));
+        $recorder->dispatch(new MiddlewareStart($middleware, new StartEventFixture()));
+        $recorder->dispatch(new MiddlewareEnd($middleware, 'before', NodeOutcome::Failed));
+        $recorder->dispatch(new WorkflowNodeEnd('App\MyNode', $state, NodeOutcome::Failed));
+
+        $this->assertSame('failed', $recorder->segment('agent.middleware', 'MiddlewareFixture::before()')->getContext()['Outcome']);
+        $this->assertSame('failed', $recorder->segment('agent.node', 'MyNode')->getContext()['Outcome']);
+    }
+
+    public function testConcurrentRunsDoNotShareOpenSegments(): void
+    {
+        $recorder = new Recorder();
+
+        $recorder->inspector()->startTransaction('host-request');
+
+        $state = new WorkflowState();
+
+        // Two runs of the same node interleave on the shared subscriber:
+        // each end event must close the segment opened by its own run.
+        $startA = new WorkflowNodeStart('App\MyNode', $state);
+        $startA->execution = $this->execution('run-a');
+        $recorder->dispatch($startA);
+
+        $startB = new WorkflowNodeStart('App\MyNode', $state);
+        $startB->execution = $this->execution('run-b');
+        $recorder->dispatch($startB);
+
+        $endA = new WorkflowNodeEnd('App\MyNode', $state);
+        $endA->execution = $this->execution('run-a');
+        $recorder->dispatch($endA);
+
+        $segments = $recorder->segments('agent.node', 'MyNode');
+
+        $this->assertCount(2, $segments);
+        $this->assertNotNull($segments[0]->duration);
+        $this->assertNull($segments[1]->duration);
+    }
+
+    private function suspendedState(): WorkflowState
+    {
+        $state = new WorkflowState();
+        $state->markAsSuspended(new WaitForEventRequest('approval'));
+
+        return $state;
+    }
+
+    private function execution(string $runId): ExecutionContext
+    {
+        return new ExecutionContext('workflow-1', $runId, 1, new Ignition($runId, new StartEventFixture()));
     }
 }
 
@@ -293,11 +402,11 @@ class HostedWorkflowFixture
 
 class MiddlewareFixture implements WorkflowMiddleware
 {
-    public function before(NodeInterface $node, Event $event, WorkflowState $state): void
+    public function before(NodeInterface $node, Event $event, WorkflowState $state, WorkflowResources $resources): void
     {
     }
 
-    public function after(NodeInterface $node, Event $result, WorkflowState $state): void
+    public function after(NodeInterface $node, Event $result, WorkflowState $state, WorkflowResources $resources): void
     {
     }
 }
@@ -352,6 +461,14 @@ class Recorder
     {
         return $this->transport->segment($type, $label);
     }
+
+    /**
+     * @return array<Segment>
+     */
+    public function segments(string $type, string $label): array
+    {
+        return $this->transport->segments($type, $label);
+    }
 }
 
 class CapturingTransport implements TransportInterface
@@ -392,12 +509,17 @@ class CapturingTransport implements TransportInterface
 
     public function segment(string $type, string $label): ?Segment
     {
-        foreach ($this->captured as $entry) {
-            if ($entry instanceof Segment && $entry->type === $type && $entry->label === $label) {
-                return $entry;
-            }
-        }
+        return $this->segments($type, $label)[0] ?? null;
+    }
 
-        return null;
+    /**
+     * @return array<Segment>
+     */
+    public function segments(string $type, string $label): array
+    {
+        return array_values(array_filter(
+            $this->captured,
+            fn (Model $entry): bool => $entry instanceof Segment && $entry->type === $type && $entry->label === $label
+        ));
     }
 }

@@ -6,19 +6,22 @@ namespace Inspector\Neuron\V4;
 
 use Inspector\Exceptions\InspectorException;
 use NeuronAI\Agent\Agent;
-use NeuronAI\Observability\Events\AgentError;
-use NeuronAI\Observability\Events\BranchEnd;
-use NeuronAI\Observability\Events\BranchStart;
-use NeuronAI\Observability\Events\ChannelError;
-use NeuronAI\Observability\Events\MiddlewareEnd;
-use NeuronAI\Observability\Events\MiddlewareStart;
-use NeuronAI\Observability\Events\WorkflowEnd;
-use NeuronAI\Observability\Events\WorkflowInterrupted;
-use NeuronAI\Observability\Events\WorkflowNodeEnd;
-use NeuronAI\Observability\Events\WorkflowNodeStart;
-use NeuronAI\Observability\Events\WorkflowStart;
+use NeuronAI\Observability\ObservabilityEvent;
+use NeuronAI\Workflow\Observability\BranchEnd;
+use NeuronAI\Workflow\Observability\BranchStart;
+use NeuronAI\Workflow\Observability\ChannelError;
+use NeuronAI\Workflow\Observability\MiddlewareEnd;
+use NeuronAI\Workflow\Observability\MiddlewareStart;
+use NeuronAI\Workflow\Observability\NodeOutcome;
+use NeuronAI\Workflow\Observability\WorkflowEnd;
+use NeuronAI\Workflow\Observability\WorkflowError;
+use NeuronAI\Workflow\Observability\WorkflowInterrupted;
+use NeuronAI\Workflow\Observability\WorkflowNodeEnd;
+use NeuronAI\Workflow\Observability\WorkflowNodeStart;
+use NeuronAI\Workflow\Observability\WorkflowStart;
 use NeuronAI\Workflow\Interrupt\InterruptRequest;
 use NeuronAI\Workflow\NodeInterface;
+use NeuronAI\Workflow\WorkflowStatus;
 use Exception;
 
 use function array_key_exists;
@@ -50,7 +53,8 @@ trait HandleWorkflowEvents
 
             $this->inspector->startTransaction($name)
                 ->setResult('success') // success by default, it can be changed during execution
-                ->addContext('Mapping', $mapping);
+                ->addContext('Mapping', $mapping)
+                ->addContext('Execution', $this->getExecutionContext($event));
             $this->inspector->transaction()->setType('agent');
         } elseif ($this->inspector->canAddSegments()) {
             $this->segments['workflow:'.$this->scopeKey($event)] = $this->resolveScope($event)
@@ -58,7 +62,8 @@ trait HandleWorkflowEvents
                 ->setColor(self::STANDARD_COLOR);
 
             $this->segments['workflow:'.$this->scopeKey($event)]
-                ->addContext('Mapping', $mapping);
+                ->addContext('Mapping', $mapping)
+                ->addContext('Execution', $this->getExecutionContext($event));
         }
     }
 
@@ -66,8 +71,9 @@ trait HandleWorkflowEvents
      * Close the workflow segment, or enrich the transaction with the final
      * state and the agent context, then flush the payload. The executor
      * dispatches WorkflowEnd for every terminal state — completed,
-     * interrupted (paused), and failed (after AgentError) — so each run
-     * cycle is always reported and closed.
+     * suspended, and failed — so each run cycle is always reported and
+     * closed. The state status is the authoritative run outcome: a failed
+     * run marks the transaction as error.
      */
     public function workflowEnd(WorkflowEnd $event): void
     {
@@ -78,7 +84,8 @@ trait HandleWorkflowEvents
             unset($this->segments[$key]);
 
             $segment->end()
-                ->addContext('State', $event->state->except('__steps'));
+                ->addContext('State', $event->state->except('__steps'))
+                ->addContext('Status', $event->state->getStatus()->value);
 
             if ($event->source instanceof Agent) {
                 foreach ($this->getAgentContext($event->source) as $contextKey => $value) {
@@ -94,7 +101,12 @@ trait HandleWorkflowEvents
         }
 
         $transaction = $this->inspector->transaction();
-        $transaction->addContext('State', $event->state->except('__steps'));
+        $transaction->addContext('State', $event->state->except('__steps'))
+            ->addContext('Status', $event->state->getStatus()->value);
+
+        if ($event->state->getStatus() === WorkflowStatus::Failed) {
+            $transaction->setResult('error');
+        }
 
         if ($event->source instanceof Agent) {
             foreach ($this->getAgentContext($event->source) as $contextKey => $value) {
@@ -110,7 +122,7 @@ trait HandleWorkflowEvents
 
     /**
      * A run suspended waiting for external input is a scheduled pause, not
-     * a failure: record the interrupt requests as transaction context.
+     * a failure: record the current interrupt request as transaction context.
      */
     public function workflowInterrupted(WorkflowInterrupted $event): void
     {
@@ -118,16 +130,22 @@ trait HandleWorkflowEvents
             return;
         }
 
-        $this->inspector->transaction()->addContext('Interrupt', array_map(
-            fn (InterruptRequest $request): array => $request->jsonSerialize(),
-            array_values($event->state->getInterruptRequests()),
-        ));
+        $request = $event->state->getInterruptRequest();
+
+        if ($request instanceof InterruptRequest) {
+            $this->inspector->transaction()->addContext('Interrupt', $request->jsonSerialize());
+        }
     }
 
     /**
+     * The executor reports both run failures and isolated listener failures
+     * as handled WorkflowErrors: the transaction result is decided at
+     * WorkflowEnd from the state status, unless the error is explicitly
+     * flagged as unhandled.
+     *
      * @throws Exception
      */
-    public function error(AgentError $event): void
+    public function error(WorkflowError $event): void
     {
         $this->inspector->reportException($event->exception, !$event->unhandled);
 
@@ -158,12 +176,12 @@ trait HandleWorkflowEvents
         // Fork at the moment the branch starts, while the triggering node's
         // segment is still open in the parent scope — this gives branches
         // correct nesting.
-        $this->branchScopes[$event->branchId] = $this->inspector->fork();
+        $this->branchScopes[$this->scopeKey($event)] = $this->inspector->fork();
     }
 
     public function branchEnd(BranchEnd $event): void
     {
-        unset($this->branchScopes[$event->branchId]);
+        unset($this->branchScopes[$this->scopeKey($event)]);
     }
 
     public function nodeStart(WorkflowNodeStart $event): void
@@ -193,7 +211,8 @@ trait HandleWorkflowEvents
         unset($this->segments[$key]);
 
         $segment->end()
-            ->addContext('State After', $event->state->except('__steps'));
+            ->addContext('State After', $event->state->except('__steps'))
+            ->addContext('Outcome', $event->outcome->value);
     }
 
     public function middlewareStart(MiddlewareStart $event): void
@@ -224,7 +243,31 @@ trait HandleWorkflowEvents
             return;
         }
 
-        $this->segments[$key]->end();
+        $segment = $this->segments[$key];
         unset($this->segments[$key]);
+
+        $segment->end();
+
+        if ($event->outcome !== NodeOutcome::Completed) {
+            $segment->addContext('Outcome', $event->outcome->value);
+        }
+    }
+
+    /**
+     * Run identity stamped on the event at dispatch time.
+     *
+     * @return array<string, mixed>
+     */
+    protected function getExecutionContext(ObservabilityEvent $event): array
+    {
+        if ($event->execution === null) {
+            return [];
+        }
+
+        return [
+            'workflowId' => $event->execution->workflowId,
+            'runId' => $event->execution->runId,
+            'executionAttempt' => $event->execution->executionAttempt,
+        ];
     }
 }

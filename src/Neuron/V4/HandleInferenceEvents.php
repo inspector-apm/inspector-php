@@ -8,10 +8,10 @@ use Inspector\Models\Segment;
 use Inspector\Models\Token;
 use NeuronAI\Chat\Messages\Message;
 use NeuronAI\Chat\Messages\Usage;
-use NeuronAI\Observability\Events\InferenceStart;
-use NeuronAI\Observability\Events\InferenceStop;
-use NeuronAI\Observability\Events\MessageSaved;
-use NeuronAI\Observability\Events\MessageSaving;
+use NeuronAI\Agent\Observability\InferenceStart;
+use NeuronAI\Agent\Observability\InferenceStop;
+use NeuronAI\Agent\Observability\MessageSaved;
+use NeuronAI\Agent\Observability\MessageSaving;
 
 use function array_key_exists;
 

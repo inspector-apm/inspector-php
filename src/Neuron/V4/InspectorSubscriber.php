@@ -12,46 +12,42 @@ use Inspector\Scope;
 use NeuronAI\Agent\Agent;
 use NeuronAI\Chat\Enums\SourceType;
 use NeuronAI\Chat\Messages\Message;
-use NeuronAI\Observability\Events\AgentError;
-use NeuronAI\Observability\Events\BranchEnd;
-use NeuronAI\Observability\Events\BranchStart;
-use NeuronAI\Observability\Events\ChannelError;
-use NeuronAI\Observability\Events\Deserialized;
-use NeuronAI\Observability\Events\Deserializing;
-use NeuronAI\Observability\Events\Extracted;
-use NeuronAI\Observability\Events\Extracting;
-use NeuronAI\Observability\Events\InferenceStart;
-use NeuronAI\Observability\Events\InferenceStop;
-use NeuronAI\Observability\Events\MemoryRecalled;
-use NeuronAI\Observability\Events\MemoryRecalling;
-use NeuronAI\Observability\Events\MemoryStored;
-use NeuronAI\Observability\Events\MemoryStoring;
-use NeuronAI\Observability\Events\MessageSaved;
-use NeuronAI\Observability\Events\MessageSaving;
-use NeuronAI\Observability\Events\MiddlewareEnd;
-use NeuronAI\Observability\Events\MiddlewareStart;
-use NeuronAI\Observability\Events\PostProcessed;
-use NeuronAI\Observability\Events\PostProcessing;
-use NeuronAI\Observability\Events\PreProcessed;
-use NeuronAI\Observability\Events\PreProcessing;
-use NeuronAI\Observability\Events\Retrieved;
-use NeuronAI\Observability\Events\Retrieving;
-use NeuronAI\Observability\Events\SchemaGenerated;
-use NeuronAI\Observability\Events\SchemaGeneration;
-use NeuronAI\Observability\Events\ToolCalled;
-use NeuronAI\Observability\Events\ToolCalling;
-use NeuronAI\Observability\Events\Validated;
-use NeuronAI\Observability\Events\Validating;
-use NeuronAI\Observability\Events\WorkflowEnd;
-use NeuronAI\Observability\Events\WorkflowInterrupted;
-use NeuronAI\Observability\Events\WorkflowNodeEnd;
-use NeuronAI\Observability\Events\WorkflowNodeStart;
-use NeuronAI\Observability\Events\WorkflowStart;
+use NeuronAI\Agent\Observability\Deserialized;
+use NeuronAI\Agent\Observability\Deserializing;
+use NeuronAI\Agent\Observability\Extracted;
+use NeuronAI\Agent\Observability\Extracting;
+use NeuronAI\Agent\Observability\InferenceStart;
+use NeuronAI\Agent\Observability\InferenceStop;
+use NeuronAI\Agent\Observability\MessageSaved;
+use NeuronAI\Agent\Observability\MessageSaving;
+use NeuronAI\Agent\Observability\SchemaGenerated;
+use NeuronAI\Agent\Observability\SchemaGeneration;
+use NeuronAI\Agent\Observability\ToolCalled;
+use NeuronAI\Agent\Observability\ToolCalling;
+use NeuronAI\Agent\Observability\Validated;
+use NeuronAI\Agent\Observability\Validating;
 use NeuronAI\Observability\ObservabilityEvent;
+use NeuronAI\RAG\Observability\PostProcessed;
+use NeuronAI\RAG\Observability\PostProcessing;
+use NeuronAI\RAG\Observability\PreProcessed;
+use NeuronAI\RAG\Observability\PreProcessing;
+use NeuronAI\RAG\Observability\Retrieved;
+use NeuronAI\RAG\Observability\Retrieving;
 use NeuronAI\Tools\ProviderToolInterface;
 use NeuronAI\Tools\ToolInterface;
 use NeuronAI\Tools\Toolkits\ToolkitInterface;
 use NeuronAI\Tools\ToolPropertyInterface;
+use NeuronAI\Workflow\Observability\BranchEnd;
+use NeuronAI\Workflow\Observability\BranchStart;
+use NeuronAI\Workflow\Observability\ChannelError;
+use NeuronAI\Workflow\Observability\MiddlewareEnd;
+use NeuronAI\Workflow\Observability\MiddlewareStart;
+use NeuronAI\Workflow\Observability\WorkflowEnd;
+use NeuronAI\Workflow\Observability\WorkflowError;
+use NeuronAI\Workflow\Observability\WorkflowInterrupted;
+use NeuronAI\Workflow\Observability\WorkflowNodeEnd;
+use NeuronAI\Workflow\Observability\WorkflowNodeStart;
+use NeuronAI\Workflow\Observability\WorkflowStart;
 use NeuronAI\Workflow\Workflow;
 
 use function array_map;
@@ -79,7 +75,6 @@ class InspectorSubscriber
     use HandleToolEvents;
     use HandleRagEvents;
     use HandleStructuredEvents;
-    use HandleMemoryEvents;
 
     public const SEGMENT_TYPE = 'agent';
     public const STANDARD_COLOR = '#FF800C';
@@ -92,7 +87,8 @@ class InspectorSubscriber
     protected array $segments = [];
 
     /**
-     * Forked Inspector scopes for concurrent parallel branches, keyed by branchId.
+     * Forked Inspector scopes for concurrent parallel branches, keyed by
+     * run and branch (see scopeKey()).
      *
      * @var array<string, Scope>
      */
@@ -167,7 +163,7 @@ class InspectorSubscriber
     public function __invoke(ObservabilityEvent $event): void
     {
         match ($event::class) {
-            AgentError::class => $this->error($event),
+            WorkflowError::class => $this->error($event),
             ChannelError::class => $this->channelError($event),
 
             WorkflowStart::class => $this->workflowStart($event),
@@ -186,11 +182,6 @@ class InspectorSubscriber
             InferenceStop::class => $this->inferenceStop($event),
             ToolCalling::class => $this->toolCalling($event),
             ToolCalled::class => $this->toolCalled($event),
-
-            MemoryRecalling::class => $this->memoryRecalling($event),
-            MemoryRecalled::class => $this->memoryRecalled($event),
-            MemoryStoring::class => $this->memoryStoring($event),
-            MemoryStored::class => $this->memoryStored($event),
 
             SchemaGeneration::class => $this->schemaGeneration($event),
             SchemaGenerated::class => $this->schemaGenerated($event),
@@ -220,19 +211,20 @@ class InspectorSubscriber
      */
     protected function resolveScope(ObservabilityEvent $event): Inspector|Scope
     {
-        if ($event->branchId !== null && isset($this->branchScopes[$event->branchId])) {
-            return $this->branchScopes[$event->branchId];
+        if ($event->branchId !== null && isset($this->branchScopes[$this->scopeKey($event)])) {
+            return $this->branchScopes[$this->scopeKey($event)];
         }
 
         return $this->inspector;
     }
 
     /**
-     * Stable scope key for segment registries, isolating concurrent branches.
+     * Stable scope key for segment registries, isolating concurrent runs
+     * sharing this subscriber and concurrent branches within a run.
      */
     protected function scopeKey(ObservabilityEvent $event): string
     {
-        return $event->branchId ?? '__main__';
+        return ($event->execution->runId ?? '__run__').':'.($event->branchId ?? '__main__');
     }
 
     /**
