@@ -21,6 +21,7 @@ use NeuronAI\Agent\Observability\ToolCalled;
 use NeuronAI\Agent\Observability\ToolCalling;
 use NeuronAI\Observability\ObservabilityEvent;
 use NeuronAI\Providers\ProviderResponse;
+use NeuronAI\Testing\FakeAIProvider;
 use NeuronAI\Tools\ToolCall;
 use NeuronAI\Workflow\Events\Event;
 use NeuronAI\Workflow\ExecutionContext;
@@ -99,7 +100,7 @@ class InspectorSubscriberTest extends TestCase
         $response->setUsage(new Usage(12, 34));
 
         $recorder->dispatch(new InferenceStart($question));
-        $recorder->dispatch(new InferenceStop($question, new ProviderResponse($response)));
+        $recorder->dispatch(new InferenceStop($question, new ProviderResponse($response), new FakeAIProvider()));
 
         $segment = $recorder->segment('agent.inference', 'inference( Message )');
 
@@ -124,7 +125,7 @@ class InspectorSubscriberTest extends TestCase
         $response = new Message(MessageRole::ASSISTANT, 'the answer');
 
         $recorder->dispatch(new InferenceStart($question));
-        $recorder->dispatch(new InferenceStop($question, new ProviderResponse($response)));
+        $recorder->dispatch(new InferenceStop($question, new ProviderResponse($response), new FakeAIProvider()));
 
         $this->assertNotNull($recorder->segment('agent.inference', 'inference( Message )'));
         $this->assertNull($recorder->firstOf(Token::class));
